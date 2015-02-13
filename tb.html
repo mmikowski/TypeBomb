@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+  <head>
+    <meta content="">
+    <title>TypeBomb</title>
+    <style>
+      * {
+        margin : 0;
+        padding : 0;
+      }
+      body {
+        position : absolute;
+        min-width : 50em;
+        min-height : 50em;
+        top : 0;
+        bottom : 0;
+        left : 0;
+        right : 0;
+        font-size : 14px;
+        font-family : Arial, Helvetica, sans;
+      }
+      .tb-announce {
+        position  : absolute;
+        display   : block;
+        font-size : 4em;
+        top       : 1em;
+        width     : 100%;
+
+        text-align  : center;
+        color       : #888;
+        font-weight : 800;
+      }
+      .tb-announce span {
+        vertical-align: sub;
+        color : red;
+      }
+      .tb-typearea {
+        position  : absolute;
+        font-size : 2em;
+        bottom    : 0em;
+        height    : 2em;
+        width     : 40%;
+        line-height : 2em;
+        left      : 50%;
+        margin-left : -20%;
+        border    : 0.5em solid blue;
+        background-color : #ddd;
+        border-radius : 2em 2em 0.5em 0.5em;
+        text-align : center;
+        overflow : hidden;
+      }
+      .tb-bg-svg {
+        position : absolute;
+        width : 100%;
+        height: 100%;
+        fill : #ccc;
+        stroke-width: 0;
+        stroke: #aaa;
+      }
+    </style>
+    <script
+      src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"
+    ></script>
+    <script src="js/tb.js"></script>
+  </head>
+
+  <body>
+    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" class="tb-bg-svg"
+    viewbox="0 0 100 100" preserveAspectRatio="none">
+      <path d="M 0,0 40,100 0,100 M 100,0 60,100 100,100"/>
+    </svg>
+    <!-- style="fill:#000000;stroke:#000000;stroke-opacity:1;fill-opacity:1" -->
+    <div class="tb-announce">TypeB<span>o</span>mb</div>
+    <div class="tb-typearea">Type here...</div>
+  </body>
+
