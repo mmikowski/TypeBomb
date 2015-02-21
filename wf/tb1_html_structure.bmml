@@ -1,4 +1,4 @@
-<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="366" measuredH="509" mockupW="291" mockupH="437">
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="427" measuredH="509" mockupW="420" mockupH="505">
   <controls>
     <control controlID="1" controlTypeID="com.balsamiq.mockups::FieldSet" x="126" y="160" w="200" h="160" measuredW="200" measuredH="170" zOrder="2" locked="false" isInGroup="-1">
       <controlProperties>
@@ -38,7 +38,7 @@
     </control>
     <control controlID="7" controlTypeID="com.balsamiq.mockups::FieldSet" x="75" y="72" w="291" h="437" measuredW="200" measuredH="170" zOrder="0" locked="false" isInGroup="-1">
       <controlProperties>
-        <text>file</text>
+        <text>tb.html%20-%20file</text>
       </controlProperties>
     </control>
     <control controlID="8" controlTypeID="com.balsamiq.mockups::FieldSet" x="146" y="393" w="165" h="41" measuredW="200" measuredH="170" zOrder="7" locked="false" isInGroup="-1">
@@ -53,5 +53,14 @@
         <text>meta</text>
       </controlProperties>
     </control>
+    <control controlID="11" controlTypeID="com.balsamiq.mockups::Paragraph" x="43" y="19" w="384" h="80" measuredW="275" measuredH="80" zOrder="9" locked="false" isInGroup="-1">
+      <controlProperties>
+        <align>center</align>
+        <color>3700253</color>
+        <size>16</size>
+        <text>This%20is%20the%20stamdard%20structure%20of%20any%20HTML%20file.%0ASince%20tb.html%20is%20an%20HTML%20file%2C%20it%20describes%20it%20too%21</text>
+      </controlProperties>
+    </control>
+    <control controlID="12" controlTypeID="com.balsamiq.mockups::CallOut" x="7" y="4" w="-1" h="-1" measuredW="36" measuredH="43" zOrder="10" locked="false" isInGroup="-1"/>
   </controls>
 </mockup>

@@ -1,0 +1,140 @@
+* {
+   _box_sizing      : border-box;
+   -moz-box-sizing  : border-box;
+   float            : none;
+   margin           : 0;
+   clip             : auto;
+   border           : 0;
+   height           : auto;
+   width            : auto;
+   padding          : 0;
+   text-align       : left;
+   text-indent      : 0;
+   line-height      : inherit;
+   vertical-align   : inherit;
+   font-family      : inherit;
+   font-size        : inherit;
+   font-weight      : inherit;
+   font-style       : inherit;
+   text-decoration  : inherit;
+   color            : inherit;
+   background-color : transparent;
+}
+
+body {
+  position    : absolute;
+  min-width   : 50em;
+  min-height  : 50em;
+  top         : 0;
+  bottom      : 0;
+  left        : 0;
+  right       : 0;
+  font-size   : 14px;
+  font-family : Arial, Helvetica, sans;
+}
+
+.tb-shell-announce, .tb-shell-subtext {
+  display     : block;
+  position    : absolute;
+  left        : 50%;
+  width       : 56%;
+  margin-left : -28%;
+
+  text-align  : center;
+  font-weight : 800;
+}
+  .tb-shell-announce span {
+    vertical-align : sub;
+    color          : red;
+  }
+
+.tb-shell-announce {
+  font-size   : 4em;
+  top         : 1em;
+  color       : #aaa;
+}
+
+.tb-shell-subtext {
+  font-size : 3em;
+  top       : 3em;
+  border    : 1px solid red;
+  color     : #888;
+}
+
+.tb-shell-hiscore {
+  display     : block;
+  position    : absolute;
+  left        : 50%;
+  width       : 36%;
+  margin-left : -18%;
+  padding     : 0.5em;
+  text-align  : left;
+  font-size   : 2em;
+  top         : 8em;
+  border      : 1px solid blue;
+}
+
+.tb-shell-level {
+  display   : block;
+  position  : absolute;
+  font-size : 1.5em;
+  bottom    : 4em;
+  left      : 1em;
+  width     : 5em;
+  height    : 2em;
+  line-height : 2em;
+  padding     : 0.25em;
+}
+  .tb-shell-level-label {
+    float : left;
+  }
+  .tb-shell-level-count {
+    float : left;
+  }
+
+.tb-shell-lives {}
+  .tb-shell-lives-count {}
+  .tb-shel-lives-gfx {}
+  .tb-shel-lives-label {}
+
+.tb-shell-start {}
+  .tb-shell-start-label {}
+  .tb-shell-start-descr {}
+  .tb-shell-start-select {}
+  .tb-shell-start-btn {}
+
+.tb-shell-typebox {
+  display          : block;
+  position         : absolute;
+  font-size        : 2em;
+  bottom           : 0;
+  height           : 2em;
+  width            : 40%;
+  line-height      : 2em;
+  left             : 50%;
+  margin-left      : -20%;
+  border           : 0.5em solid blue;
+  background-color : #ddd;
+  border-radius    : 2em 2em 0.5em 0.5em;
+  text-align       : center;
+  overflow         : hidden;
+}
+
+.tb-shell-score {}
+  .tb-shell-score-count {}
+  .tb-shell-score-label {}
+
+
+.tb-shell-bg-svg {
+  position     : absolute;
+  width        : 100%;
+  height       : 100%;
+  fill         : #ccc;
+  stroke-width : 0;
+  stroke       : #aaa;
+  /* fill:#000000;
+     stroke:#000000;
+     stroke-opacity:1;
+     fill-opacity:1"
+  */
+}

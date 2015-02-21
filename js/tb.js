@@ -11,7 +11,7 @@
       var
         onKeypress, onKeydown,
         $body = $(document.body),
-        $typearea = $body.find( '.tb-typearea' );
+        $typearea = $body.find( '.tb-shell-typebox' );
 
       onKeypress = function ( event_obj ) {
         console.log( 'onKeypress run', event_obj );
