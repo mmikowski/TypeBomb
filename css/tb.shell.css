@@ -30,7 +30,7 @@ body {
   left        : 0;
   right       : 0;
   font-size   : 14px;
-  font-family : Arial, Helvetica, sans;
+  font-family : Arial, Helvetica, sans-serif;
 }
 
 .tb-shell-announce, .tb-shell-subtext {
@@ -84,18 +84,37 @@ body {
   height    : 2em;
   line-height : 2em;
   padding     : 0.25em;
+  border : 1px solid #444;
 }
   .tb-shell-level-label {
+    border : 1px solid #080;
     float : left;
   }
   .tb-shell-level-count {
-    float : left;
+    border : 1px solid #008;
+    float : right;
   }
 
-.tb-shell-lives {}
-  .tb-shell-lives-count {}
-  .tb-shel-lives-gfx {}
-  .tb-shel-lives-label {}
+.tb-shell-lives {
+  display   : block;
+  position  : absolute;
+  font-size : 1.5em;
+  bottom    : 1em;
+  left      : 1em;
+  width     : 5em;
+  height    : 2em;
+  line-height : 2em;
+  padding     : 0.25em;
+  border : 1px solid #800;
+}
+  .tb-shell-lives-count {
+    float : right;
+    border : 1px solid #080;
+  }
+  .tb-shell-lives-gfx {
+    float : left;
+    border : 1px solid #008;
+  }
 
 .tb-shell-start {}
   .tb-shell-start-label {}
@@ -120,9 +139,47 @@ body {
   overflow         : hidden;
 }
 
-.tb-shell-score {}
-  .tb-shell-score-count {}
-  .tb-shell-score-label {}
+.tb-shell-start {}
+  .tb-shell-start-label {}
+  .tb-shell-start-select {}
+  .tb-shell-start-btn {}
+
+.tb-shell-typebox {
+  display          : block;
+  position         : absolute;
+  font-size        : 2em;
+  bottom           : 0;
+  height           : 2em;
+  width            : 40%;
+  line-height      : 2em;
+  left             : 50%;
+  margin-left      : -20%;
+  border           : 0.5em solid blue;
+  background-color : #ddd;
+  border-radius    : 2em 2em 0.5em 0.5em;
+  text-align       : center;
+  overflow         : hidden;
+}
+
+.tb-shell-score {
+  display   : block;
+  position  : absolute;
+  font-size : 1.5em;
+  bottom    : 1em;
+  right     : 1em;
+  width     : 5em;
+  height    : 2em;
+  padding     : 0.25em;
+  border : 1px solid #800;
+}
+  .tb-shell-score-label {
+    border : 1px solid #008;
+    text-align: center;
+  }
+  .tb-shell-score-count {
+    border : 1px solid #080;
+    text-align: right;
+  }
 
 
 .tb-shell-bg-svg {
