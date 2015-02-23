@@ -19,6 +19,29 @@
    text-decoration  : inherit;
    color            : inherit;
    background-color : transparent;
+
+  -webkit-user-select   : none;
+  -khtml-user-select    : none;
+  -moz-user-select      : -moz-none;
+  -o-user-select        : none;
+  -ms-user-select       : none;
+  user-select           : none;
+
+  -webkit-user-drag     : none;
+  -moz-user-drag        : none;
+  user-drag             : none;
+
+  -webkit-tap-highlight-color : transparent;
+  -webkit-touch-callout : none;
+}
+
+input, textarea, .tb-x-user-select {
+  -webkit-user-select : text;
+  -khtml-user-select  : text;
+  -moz-user-select    : text;
+  -o-user-select      : text;
+  -ms-user-select     : text;
+  user-select         : text;
 }
 
 body {
@@ -49,16 +72,17 @@ body {
   }
 
 .tb-shell-announce {
-  font-size   : 4em;
-  top         : 1em;
-  color       : #aaa;
+  font-size : 4em;
+  top       : 1em;
+  color     : #aaa;
+  border    : 1px solid #888;
 }
 
 .tb-shell-subtext {
   font-size : 3em;
-  top       : 3em;
+  top       : 3.5em;
   border    : 1px solid red;
-  color     : #888;
+  color     : #999;
 }
 
 .tb-shell-hiscore {
@@ -80,18 +104,17 @@ body {
   font-size : 1.5em;
   bottom    : 4em;
   left      : 1em;
-  width     : 5em;
+  width     : 6em;
   height    : 2em;
   line-height : 2em;
-  padding     : 0.25em;
-  border : 1px solid #444;
+  font-weight : 800;
+  color : #666;
+  border-bottom : 1px solid #aaa;
 }
   .tb-shell-level-label {
-    border : 1px solid #080;
     float : left;
   }
   .tb-shell-level-count {
-    border : 1px solid #008;
     float : right;
   }
 
@@ -101,19 +124,20 @@ body {
   font-size : 1.5em;
   bottom    : 1em;
   left      : 1em;
-  width     : 5em;
+  width     : 6em;
   height    : 2em;
   line-height : 2em;
-  padding     : 0.25em;
-  border : 1px solid #800;
+  font-weight : 800;
+  border-bottom : 1px solid #aaa;
 }
   .tb-shell-lives-count {
+    color : #666;
     float : right;
-    border : 1px solid #080;
   }
   .tb-shell-lives-gfx {
     float : left;
-    border : 1px solid #008;
+    font-weight : 800;
+    color : #800;
   }
 
 .tb-shell-start {}
@@ -168,19 +192,19 @@ body {
   bottom    : 1em;
   right     : 1em;
   width     : 5em;
-  height    : 2em;
-  padding     : 0.25em;
-  border : 1px solid #800;
+  height    : 3.2em;
+  font-weight : 800;
+  border-bottom : 1px solid #aaa;
+  color : #666;
 }
   .tb-shell-score-label {
-    border : 1px solid #008;
-    text-align: center;
+    line-height: 1.5em;
+    text-align : center;
   }
   .tb-shell-score-count {
-    border : 1px solid #080;
-    text-align: right;
+    line-height: 1.5em;
+    text-align : center;
   }
-
 
 .tb-shell-bg-svg {
   position     : absolute;
