@@ -51,14 +51,14 @@ tb.model = (function () {
       // clear default text if present
       if ( typebox_str === cfgMap._init_map_._typebox_str_ ) {
         typebox_str = '';
-        type_length = 0;
+        type_length = tb._nmap_._0_;
       }
 
       // prevent duplicate spaces
       if ( key_code === spc_code ) {
         end_idx = type_length - 1;
         if ( typebox_str.charAt( end_idx ) === ' ' ) {
-          return false;
+          return tb._smap_._true_;
         }
       }
 
@@ -102,7 +102,7 @@ tb.model = (function () {
       $.gevent.publish( '_update_typebox_', typebox_str + '|' );
       $.gevent.publish( '_acknowledge_key_', [ resp_name ]);
       stateMap._typebox_str_  = typebox_str;
-      return true;
+      return tb._smap_._true_;
     };
 
     return report_keypress;

@@ -220,7 +220,7 @@ tb.shell = (function () {
 
     // Begin Shell browser event bindings
     $body.on( 'keypress', onKeypress );
-    $body.on( 'keydown',onKeydown );
+    $body.on( 'keydown',  onKeydown  );
     // End Shell browser event bindings
 
     // Begin Shell model event bindings
