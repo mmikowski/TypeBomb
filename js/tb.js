@@ -12,8 +12,10 @@ var tb = {
   _smap_ : {
     _blank_   : '',
     _false_   : false,
+    _hide_    : 'hide',
     _keys_    : 'keys',
     _length_  : 'length',
+    _show_    : 'show',
     _true_    : true,
     _undef_   : undefined
   },

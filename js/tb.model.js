@@ -17,7 +17,8 @@ tb.model = (function () {
         _level_count_ : tb._nmap_._1_,
         _lives_count_ : tb._nmap_._5_,
         _score_count_ : tb._nmap_._0_,
-        _typebox_str_ : 'Type here ...'
+        _typebox_str_ : 'Type here ...',
+        _is_ingame_   : tb._smap_._true_
       },
       _max_typebox_int_  : tb._nmap_._22_
     },
@@ -28,7 +29,7 @@ tb.model = (function () {
       _score_count_ : tb._smap_._undef_,
       _is_ingame_   : tb._smap_._true_
     },
-    reportKeyPress, initModule
+    reportKeyPress, startGame, initModule
     ;
   //----------------- END MODULE SCOPE VARIABLES ---------------
 
@@ -109,12 +110,11 @@ tb.model = (function () {
   }());
   // End public method /reportKeyPress/
 
-  // Begin public method /initModule/
-  initModule = function () {
+  // Begin public method /startGame/
+  // Begin initialize for game play (we will move this later)
+  startGame = function ( level_count ){
     var init_map, key_list, key_name, list_count, i;
-    $.gevent.publish( '_acknowledge_init_' );
 
-    // Begin initialize for game play (we will move this later)
     init_map   = cfgMap._init_map_;
     key_list   = __Object[ tb._smap_._keys_ ]( init_map );
     list_count = key_list[ tb._smap_._length_ ];
@@ -124,16 +124,28 @@ tb.model = (function () {
       stateMap[ key_name ] = init_map[ key_name ];
     }
 
+    $.gevent.publish( '_update_ingame_',  stateMap._is_ingame_ );
     $.gevent.publish( '_update_level_',   stateMap._level_count_ );
     $.gevent.publish( '_update_lives_',   stateMap._lives_count_ );
     $.gevent.publish( '_update_score_',   stateMap._score_count_ );
     $.gevent.publish( '_update_typebox_', stateMap._typebox_str_ );
-    // End initialize for game play (we will move this later)
+  };
+  // End initialize for game play (we will move this later)
+
+  // End public method /startGame/
+
+  // Begin public method /initModule/
+  initModule = function () {
+    stateMap._is_ingame_ = tb._smap_._false_;
+
+    $.gevent.publish( '_acknowledge_init_' );
+    $.gevent.publish( '_update_ingame_',  stateMap._is_ingame_ );
   };
   // End public method /initModule/
 
   return {
     _initModule_     : initModule,
+    _startGame_      : startGame,
     _reportKeyPress_ : reportKeyPress
   };
   //-------------------- END PUBLIC METHODS --------------------

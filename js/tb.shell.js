@@ -18,7 +18,7 @@ tb.shell = (function () {
           + 'viewbox="0 0 100 100" preserveAspectRatio="none">'
           + '<path d="M 0,0 40,100 0,100 M 100,0 60,100 100,100"></path>'
         + '</svg>'
-        + '<div class="tb-_shell-announce_">TypeB<span>o</span>mb</div>'
+        + '<div class="tb-_shell-title_">TypeB<span>o</span>mb</div>'
         + '<div class="tb-_shell-subtext_">subtext</div>'
         + '<div class="tb-_shell-hiscore_">hi-score</div>'
         + '<div class="tb-_shell-level_">'
@@ -30,7 +30,7 @@ tb.shell = (function () {
           + '<div class="tb-_shell-lives-gfx_"></div>'
         + '</div>'
         + '<div class="tb-_shell-start_">'
-          + '<div class="tb-_shell-start-label_"></div>'
+          + '<div class="tb-_shell-start-label_">Start</div>'
           + '<div class="tb-_shell-start-select_"></div>'
           + '<div class="tb-_shell-start-btn_"></div>'
         + '</div>'
@@ -51,7 +51,7 @@ tb.shell = (function () {
     playSnd, setJqueryMap, animateExplode,
 
     onKeypress, onKeydown,
-    onAcknowledgeKey, onUpdateLevel, onUpdateLives,
+    onAcknowledgeKey, onUpdateIngame, onUpdateLevel, onUpdateLives,
     onUpdateScore, onUpdateTypebox,
 
     initModule
@@ -65,22 +65,37 @@ tb.shell = (function () {
   // Begin DOM method /setJqueryMap/
   setJqueryMap = function ( $body ) {
     var
-      $level = $body.find( '.tb-_shell-level_' ),
-      $lives = $body.find( '.tb-_shell-lives_' ),
-      $score = $body.find( '.tb-_shell-score_' )
-      ;
+      $hiscore = $body.find( '.tb-_shell-hiscore_' ),
+      $level   = $body.find( '.tb-_shell-level_'   ),
+      $lives   = $body.find( '.tb-_shell-lives_'   ),
+      $score   = $body.find( '.tb-_shell-score_'   ),
+      $start   = $body.find( '.tb-_shell-start_'   ),
+      $subtext = $body.find( '.tb-_shell-subtext_' ),
+      $title   = $body.find( '.tb-_shell-title_'   ),
+      $ingame_hide = $( [
+        $hiscore.get(0),
+        $title.get(0),
+        $start.get(0),
+        $subtext.get(0)
+      ] );
 
     jqueryMap = {
-      _$body_        : $body,
-      _$bg_svg_      : $body.find( '.tb-_shell-bg-svg_' ),
-      _$level_       : $level,
-      _$level_count_ : $level.find( '.tb-_shell-level-count_' ),
-      _$lives_       : $lives,
-      _$lives_count_ : $lives.find( '.tb-_shell-lives-count_' ),
-      _$lives_gfx_   : $lives.find( '.tb-_shell-lives-gfx_'   ),
-      _$score_       : $score,
-      _$score_count_ : $score.find( '.tb-_shell-score-count_' ),
-      _$type_box_    : $body.find(  '.tb-_shell-typebox_'     )
+      _$body_         : $body,
+      _$bg_svg_       : $body.find( '.tb-_shell-bg-svg_' ),
+      _$ingame_hide_  : $ingame_hide,
+      _$hiscore_      : $hiscore,
+      _$level_        : $level,
+      _$level_count_  : $level.find( '.tb-_shell-level-count_'  ),
+      _$lives_        : $lives,
+      _$lives_count_  : $lives.find( '.tb-_shell-lives-count_'  ),
+      _$lives_gfx_    : $lives.find( '.tb-_shell-lives-gfx_'    ),
+      _$score_        : $score,
+      _$score_count_  : $score.find( '.tb-_shell-score-count_'  ),
+      _$start_        : $start,
+      _$start_select_ : $start.find( '.tb-_shell-start-select_' ),
+      _$subtext_      : $subtext,
+      _$title_        : $title,
+      _$type_box_     : $body.find(  '.tb-_shell-typebox_'      )
     };
   };
   // End DOM method /setJqueryMap/
@@ -202,6 +217,13 @@ tb.shell = (function () {
     lives_str = life_list.join( tb._smap_._blank_ );
     jqueryMap._$lives_gfx_.html( lives_str );
   };
+  onUpdateIngame = function ( event, is_ingame ) {
+    if ( is_ingame ) {
+      jqueryMap._$ingame_hide_[ tb._smap_._hide_ ]();
+      return;
+    }
+    jqueryMap._$ingame_hide_[ tb._smap_._show_ ]();
+  };
   onUpdateScore = function ( event, score_count ) {
     jqueryMap._$score_count_.text( String( score_count ) );
   };
@@ -225,6 +247,7 @@ tb.shell = (function () {
 
     // Begin Shell model event bindings
     $.gevent.subscribe( $body, '_acknowledge_key_', onAcknowledgeKey );
+    $.gevent.subscribe( $body, '_update_ingame_',   onUpdateIngame   );
     $.gevent.subscribe( $body, '_update_level_',    onUpdateLevel    );
     $.gevent.subscribe( $body, '_update_lives_',    onUpdateLives    );
     $.gevent.subscribe( $body, '_update_score_',    onUpdateScore    );
