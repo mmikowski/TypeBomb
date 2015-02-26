@@ -35,7 +35,7 @@
   -webkit-touch-callout : none;
 }
 
-input, textarea, .tb-x-user-select {
+input, textarea, .tb-_x-user-select_ {
   -webkit-user-select : text;
   -khtml-user-select  : text;
   -moz-user-select    : text;
@@ -56,7 +56,7 @@ body {
   font-family : Arial, Helvetica, sans-serif;
 }
 
-.tb-shell-announce, .tb-shell-subtext {
+.tb-_shell-announce_, .tb-_shell-subtext_ {
   display     : block;
   position    : absolute;
   left        : 50%;
@@ -66,26 +66,26 @@ body {
   text-align  : center;
   font-weight : 800;
 }
-  .tb-shell-announce span {
+  .tb-_shell-announce_ span {
     vertical-align : sub;
     color          : red;
   }
 
-.tb-shell-announce {
+.tb-_shell-announce_ {
   font-size : 4em;
   top       : 1em;
   color     : #aaa;
   border    : 1px solid #888;
 }
 
-.tb-shell-subtext {
+.tb-_shell-subtext_ {
   font-size : 3em;
   top       : 3.5em;
   border    : 1px solid red;
   color     : #999;
 }
 
-.tb-shell-hiscore {
+.tb-_shell-hiscore_ {
   display     : block;
   position    : absolute;
   left        : 50%;
@@ -99,7 +99,7 @@ body {
   text-align  : center;
 }
 
-.tb-shell-level {
+.tb-_shell-level_ {
   display   : block;
   position  : absolute;
   font-size : 1.5em;
@@ -112,14 +112,14 @@ body {
   color : #666;
   border-bottom : 1px solid #aaa;
 }
-  .tb-shell-level-label {
+  .tb-_shell-level-label_ {
     float : left;
   }
-  .tb-shell-level-count {
+  .tb-_shell-level-count_ {
     float : right;
   }
 
-.tb-shell-lives {
+.tb-_shell-lives_ {
   display   : block;
   position  : absolute;
   font-size : 1.5em;
@@ -131,23 +131,23 @@ body {
   font-weight : 800;
   border-bottom : 1px solid #aaa;
 }
-  .tb-shell-lives-count {
+  .tb-_shell-lives-count_ {
     color : #666;
     float : right;
   }
-  .tb-shell-lives-gfx {
+  .tb-_shell-lives-gfx_ {
     float : left;
     font-weight : 800;
     color : #800;
   }
 
-.tb-shell-start {}
-  .tb-shell-start-label {}
-  .tb-shell-start-descr {}
-  .tb-shell-start-select {}
-  .tb-shell-start-btn {}
+.tb-_shell-start_ {}
+  .tb-_shell-start-label_ {}
+  .tb-_shell-start-descr_ {}
+  .tb-_shell-start-select_ {}
+  .tb-_shell-start-btn_ {}
 
-.tb-shell-typebox {
+.tb-_shell-typebox_ {
   display          : block;
   position         : absolute;
   font-size        : 2em;
@@ -164,12 +164,12 @@ body {
   overflow         : hidden;
 }
 
-.tb-shell-start {}
-  .tb-shell-start-label {}
-  .tb-shell-start-select {}
-  .tb-shell-start-btn {}
+.tb-_shell-start_ {}
+  .tb-_shell-start-label_ {}
+  .tb-_shell-start-select_ {}
+  .tb-_shell-start-btn_ {}
 
-.tb-shell-typebox {
+.tb-_shell-typebox_ {
   display          : block;
   position         : absolute;
   font-size        : 2em;
@@ -186,7 +186,7 @@ body {
   overflow         : hidden;
 }
 
-.tb-shell-score {
+.tb-_shell-score_ {
   display   : block;
   position  : absolute;
   font-size : 1.5em;
@@ -198,16 +198,16 @@ body {
   border-bottom : 1px solid #aaa;
   color : #666;
 }
-  .tb-shell-score-label {
+  .tb-_shell-score-label_ {
     line-height: 1.5em;
     text-align : center;
   }
-  .tb-shell-score-count {
+  .tb-_shell-score-count_ {
     line-height: 1.5em;
     text-align : center;
   }
 
-.tb-shell-bg-svg {
+.tb-_shell-bg-svg_ {
   position     : absolute;
   width        : 100%;
   height       : 100%;

@@ -10,46 +10,51 @@ tb.shell = (function () {
   //---------------- BEGIN MODULE SCOPE VARIABLES --------------
   'use strict';
   var
+    __setTO = setTimeout,
     cfgMap = {
-      main_html : String()
+      _main_html_ : tb._smap_._blank_
         + '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"'
-          + 'class="tb-shell-bg-svg"'
+          + 'class="tb-_shell-bg-svg_"'
           + 'viewbox="0 0 100 100" preserveAspectRatio="none">'
-          + '<path d="M 0,0 40,100 0,100 M 100,0 60,100 100,100"/>'
+          + '<path d="M 0,0 40,100 0,100 M 100,0 60,100 100,100"></path>'
         + '</svg>'
-        + '<div class="tb-shell-announce">TypeB<span>o</span>mb</div>'
-        + '<div class="tb-shell-subtext">subtext</div>'
-        + '<div class="tb-shell-hiscore">hi-score</div>'
-        + '<div class="tb-shell-level">'
-          + '<div class="tb-shell-level-label">Level</div>'
-          + '<div class="tb-shell-level-count">1</div>'
+        + '<div class="tb-_shell-announce_">TypeB<span>o</span>mb</div>'
+        + '<div class="tb-_shell-subtext_">subtext</div>'
+        + '<div class="tb-_shell-hiscore_">hi-score</div>'
+        + '<div class="tb-_shell-level_">'
+          + '<div class="tb-_shell-level-label_">Level</div>'
+          + '<div class="tb-_shell-level-count_"></div>'
         + '</div>'
-        + '<div class="tb-shell-lives">'
-          + '<div class="tb-shell-lives-count">5</div>'
-          + '<div class="tb-shell-lives-gfx">&#9825;&#9825;&#9825;&#9825;&#9825;</div>'
+        + '<div class="tb-_shell-lives_">'
+          + '<div class="tb-_shell-lives-count_"></div>'
+          + '<div class="tb-_shell-lives-gfx_"></div>'
         + '</div>'
-        + '<div class="tb-shell-start">'
-          + '<div class="tb-shell-start-label"></div>'
-          + '<div class="tb-shell-start-select"></div>'
-          + '<div class="tb-shell-start-btn"></div>'
+        + '<div class="tb-_shell-start_">'
+          + '<div class="tb-_shell-start-label_"></div>'
+          + '<div class="tb-_shell-start-select_"></div>'
+          + '<div class="tb-_shell-start-btn_"></div>'
         + '</div>'
-        + '<div class="tb-shell-typebox"><span>Typebox</span></div>'
-        + '<div class="tb-shell-score">'
-          + '<div class="tb-shell-score-label">Score</div>'
-          + '<div class="tb-shell-score-count">105</div>'
+        + '<div class="tb-_shell-typebox_"></div>'
+        + '<div class="tb-_shell-score_">'
+          + '<div class="tb-_shell-score-label_">Score</div>'
+          + '<div class="tb-_shell-score-count_"></div>'
         + '</div>',
-      key_sound_map : {
-        bkspc    : 'clack',
-        enterd   : 'kick',
-        char_add : 'click',
-        at_limit : 'honk'
+      _life_char_code_ : '&#9825;',
+      _key_sound_map_ : {
+        _bkspc_     : 'clack',
+        _returnd_   : 'kick',
+        _char_add_  : 'click',
+        _at_limit_  : 'honk'
       }
     },
     jqueryMap,
-    playSnd, setJqueryMap,
+    playSnd, setJqueryMap, animateExplode,
 
     onKeypress, onKeydown,
-    onAcknowledgeKey, onUpdateTypebox, initModule
+    onAcknowledgeKey, onUpdateLevel, onUpdateLives,
+    onUpdateScore, onUpdateTypebox,
+
+    initModule
     ;
   //----------------- END MODULE SCOPE VARIABLES ---------------
 
@@ -58,11 +63,24 @@ tb.shell = (function () {
 
   //--------------------- BEGIN DOM METHODS --------------------
   // Begin DOM method /setJqueryMap/
-  setJqueryMap = function () {
-    var $body = $( document.body );
+  setJqueryMap = function ( $body ) {
+    var
+      $level = $body.find( '.tb-_shell-level_' ),
+      $lives = $body.find( '.tb-_shell-lives_' ),
+      $score = $body.find( '.tb-_shell-score_' )
+      ;
+
     jqueryMap = {
-      $body     : $body,
-      $type_box : $body.find( '.tb-shell-typebox span' )
+      _$body_        : $body,
+      _$bg_svg_      : $body.find( '.tb-_shell-bg-svg_' ),
+      _$level_       : $level,
+      _$level_count_ : $level.find( '.tb-_shell-level-count_' ),
+      _$lives_       : $lives,
+      _$lives_count_ : $lives.find( '.tb-_shell-lives-count_' ),
+      _$lives_gfx_   : $lives.find( '.tb-_shell-lives-gfx_'   ),
+      _$score_       : $score,
+      _$score_count_ : $score.find( '.tb-_shell-score-count_' ),
+      _$type_box_    : $body.find(  '.tb-_shell-typebox_'     )
     };
   };
   // End DOM method /setJqueryMap/
@@ -70,49 +88,81 @@ tb.shell = (function () {
   // Begin DOM method /playSnd/
   playSnd = (function () {
     var
-      sndNameList, sndCount, sndObjMap,
-      initSnd, playIt;
+      snd_name_list, snd_count, snd_obj_map,
+      init_snd, play_sound;
 
     // Begin playSnd data
-    sndNameList = [ 'clack','click','honk','kick','thunder','wind' ];
-    sndObjMap = {};
+    snd_name_list = [ 'clack','click','honk','kick','thunder','wind' ];
+    snd_obj_map = {};
     // End playSnd data
 
-    // Begin initSnd
-    initSnd = function () {
+    // Begin init_snd
+    init_snd = function () {
       var i, name_count, snd_name;
-      if ( sndCount > 0 ) { return; }// already initialized
+      if ( snd_count > 0 ) { return; }// already initialized
 
-      name_count = sndNameList.length;
+      name_count = snd_name_list[ tb._smap_._length_ ];
 
-      for ( i = 0; i < name_count; i++ ) {
-        snd_name = sndNameList[i];
-        sndObjMap[ snd_name ] = new Audio( 'snd/' + snd_name + '.mp3' );
+      for ( i = tb._nmap_._0_; i < name_count; i++ ) {
+        snd_name = snd_name_list[i];
+        snd_obj_map[ snd_name ] = new Audio( 'snd/' + snd_name + '.mp3' );
       }
-      sndCount = name_count;
+      snd_count = name_count;
     };
-    // End initSnd
+    // End init_snd
 
-    // Begin playIt
-    playIt = function ( snd_name ) {
+    // Begin playI
+    play_sound = function ( snd_name ) {
       var snd_obj;
 
       // initialize if required
-      if ( ! sndCount ) { initSnd(); }
+      if ( ! snd_count ) { init_snd(); }
 
-      snd_obj = sndObjMap[ snd_name ];
+      snd_obj = snd_obj_map[ snd_name ];
       if ( ! snd_obj ) {
         console.warn( 'Snd name not known' );
         return false;
       }
 
-      snd_obj.currentTime = 0;
+      snd_obj.currentTime = tb._nmap_._0_;
       snd_obj.play();
     };
-    // End playIt
-    return playIt;
+    // End play_sound
+
+    return play_sound;
   }());
   // End DOM method /playSnd/
+
+  // Begin DOM method /animateExplode/
+  animateExplode = (function () {
+    var flash_count, animate_explode;
+
+    animate_explode = function () {
+      var hex_list, i, hex_str;
+      if ( flash_count === tb._smap_._undef_ ) { flash_count = tb._nmap_._20_; }
+      flash_count--;
+      if ( flash_count < tb._nmap_._1_ ) {
+        flash_count = tb._smap_._undef_;
+        jqueryMap._$bg_svg_.css( 'fill', tb._smap_._blank_ );
+        return;
+      }
+
+      hex_list = [];
+      for ( i = tb._nmap_._0_ ; i < tb._nmap_._3_; i++ ) {
+        hex_list.push(
+          tb._fmap_._floor_(  tb._fmap_._rnd_() * tb._nmap_._9d99_ )
+        );
+      }
+
+      hex_str = '#' + hex_list.join( tb._smap_._blank_ );
+      jqueryMap._$bg_svg_.css( 'fill', hex_str );
+      //noinspection DynamicallyGeneratedCodeJS
+      __setTO( animate_explode, tb._nmap_._50_ );
+    };
+    return animate_explode;
+  }());
+  // End DOM method /animateExplode/
+
   //--------------------- END DOM METHODS ----------------------
 
   //------------------- BEGIN EVENT HANDLERS -------------------
@@ -120,24 +170,43 @@ tb.shell = (function () {
   onKeypress = function ( event_obj ) {
     var key_code = event_obj.keyCode;
     event_obj.preventDefault();
-    tb.model.reportKeyPress( key_code );
+    tb.model._reportKeyPress_( key_code );
   };
 
   onKeydown = function ( event_obj ) {
     var key_code = event_obj.keyCode;
     if ( key_code !== 8 ) { return; }
     event_obj.preventDefault();
-    tb.model.reportKeyPress( key_code );
+    tb.model._reportKeyPress_( key_code );
   };
   // End browser-event handlers
 
   // Begin model-event handlers
   onAcknowledgeKey = function ( event, key_name ) {
-    var snd_name = cfgMap.key_sound_map[ key_name ];
+    var snd_name = cfgMap._key_sound_map_[ key_name ];
     playSnd( snd_name );
+    if ( key_name === '_returnd_' ) {
+      animateExplode();
+      playSnd( 'thunder' );
+    }
+  };
+  onUpdateLevel = function ( event, level_count ) {
+    jqueryMap._$level_count_.text( String( level_count ) );
+  };
+  onUpdateLives = function ( event, lives_count ) {
+    var i, life_list = [], lives_str;
+    jqueryMap._$lives_count_.text( lives_count );
+    for ( i = tb._nmap_._0_; i < lives_count; i++ ) {
+      life_list.push( cfgMap._life_char_code_ );
+    }
+    lives_str = life_list.join( tb._smap_._blank_ );
+    jqueryMap._$lives_gfx_.html( lives_str );
+  };
+  onUpdateScore = function ( event, score_count ) {
+    jqueryMap._$score_count_.text( String( score_count ) );
   };
   onUpdateTypebox = function ( event, typebox_str ) {
-    jqueryMap.$type_box.text( typebox_str );
+    jqueryMap._$type_box_.text( typebox_str );
   };
   // End model-event handlers
   //-------------------- END EVENT HANDLERS --------------------
@@ -145,8 +214,8 @@ tb.shell = (function () {
   //------------------- BEGIN PUBLIC METHODS -------------------
   // Begin Shell public method /initModule/
   initModule = function () {
-    var $body = $( document.body );
-    $body.html( cfgMap.main_html );
+    var $body = $( 'body' );
+    $body.html( cfgMap._main_html_ );
     setJqueryMap( $body );
 
     // Begin Shell browser event bindings
@@ -155,15 +224,20 @@ tb.shell = (function () {
     // End Shell browser event bindings
 
     // Begin Shell model event bindings
-    $.gevent.subscribe( $body, 'acknowledge_key', onAcknowledgeKey );
-    $.gevent.subscribe( $body, 'update_typebox',  onUpdateTypebox );
+    $.gevent.subscribe( $body, '_acknowledge_key_', onAcknowledgeKey );
+    $.gevent.subscribe( $body, '_update_level_',    onUpdateLevel    );
+    $.gevent.subscribe( $body, '_update_lives_',    onUpdateLives    );
+    $.gevent.subscribe( $body, '_update_score_',    onUpdateScore    );
+    $.gevent.subscribe( $body, '_update_typebox_',  onUpdateTypebox  );
     // End Shell model event bindings
 
     // Initialize model
-    tb.model.initModule();
+    tb.model._initModule_();
   };
   // End Shell public method /initModule/
-  return { initModule : initModule };
+  return {
+    _initModule_     : initModule,
+    _animateExplode_ : animateExplode
+  };
   //------------------- END PUBLIC METHODS ---------------------
 }());
-

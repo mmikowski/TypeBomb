@@ -102,12 +102,12 @@
     subscribeEvent = function ( $collection, event_name, fn ) {
       $collection.on( event_name, fn );
 
-      if ( ! $customSubMap[ event_name ] ) {
-        $customSubMap[ event_name ] = $collection;
-      }
-      else {
+      if ( $customSubMap[ event_name ] ) {
         $customSubMap[ event_name ]
           = $customSubMap[ event_name ].add( $collection );
+      }
+      else {
+        $customSubMap[ event_name ] = $collection;
       }
     };
     // END public method /subscribeEvent/
