@@ -10,7 +10,7 @@ tb.shell = (function () {
   //---------------- BEGIN MODULE SCOPE VARIABLES --------------
   'use strict';
   var
-    __setTO = setTimeout,
+    __setTo = setTimeout,
     cfgMap = {
       _main_html_ : tb._smap_._blank_
         + '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"'
@@ -31,7 +31,7 @@ tb.shell = (function () {
         + '</div>'
         + '<div class="tb-_shell-start_">'
           + '<div class="tb-_shell-start-label_">Start</div>'
-          + '<div class="tb-_shell-start-select_"></div>'
+          + '<div class="tb-_shell-start-select_"><select><option>1</option><option>2</option><option>3</option></select></div>'
           + '<div class="tb-_shell-start-btn_"></div>'
         + '</div>'
         + '<div class="tb-_shell-typebox_"></div>'
@@ -39,7 +39,7 @@ tb.shell = (function () {
           + '<div class="tb-_shell-score-label_">Score</div>'
           + '<div class="tb-_shell-score-count_"></div>'
         + '</div>',
-      _life_char_code_ : '&#9825;',
+      _lives_char_code_ : '&#9825;',
       _key_sound_map_ : {
         _bkspc_     : 'clack',
         _returnd_   : 'kick',
@@ -72,7 +72,7 @@ tb.shell = (function () {
       $start   = $body.find( '.tb-_shell-start_'   ),
       $subtext = $body.find( '.tb-_shell-subtext_' ),
       $title   = $body.find( '.tb-_shell-title_'   ),
-      $ingame_hide = $( [
+      $pregame = $( [
         $hiscore.get(0),
         $title.get(0),
         $start.get(0),
@@ -82,7 +82,7 @@ tb.shell = (function () {
     jqueryMap = {
       _$body_         : $body,
       _$bg_svg_       : $body.find( '.tb-_shell-bg-svg_' ),
-      _$ingame_hide_  : $ingame_hide,
+      _$pregame_      : $pregame,
       _$hiscore_      : $hiscore,
       _$level_        : $level,
       _$level_count_  : $level.find( '.tb-_shell-level-count_'  ),
@@ -92,6 +92,7 @@ tb.shell = (function () {
       _$score_        : $score,
       _$score_count_  : $score.find( '.tb-_shell-score-count_'  ),
       _$start_        : $start,
+      _$start_label_  : $start.find( '.tb-_shell-start-label_'  ),
       _$start_select_ : $start.find( '.tb-_shell-start-select_' ),
       _$subtext_      : $subtext,
       _$title_        : $title,
@@ -154,7 +155,10 @@ tb.shell = (function () {
 
     animate_explode = function () {
       var hex_list, i, hex_str;
-      if ( flash_count === tb._smap_._undef_ ) { flash_count = tb._nmap_._20_; }
+      if ( flash_count === tb._smap_._undef_ ) {
+        flash_count = tb._nmap_._20_;
+      }
+
       flash_count--;
       if ( flash_count < tb._nmap_._1_ ) {
         flash_count = tb._smap_._undef_;
@@ -172,7 +176,7 @@ tb.shell = (function () {
       hex_str = '#' + hex_list.join( tb._smap_._blank_ );
       jqueryMap._$bg_svg_.css( 'fill', hex_str );
       //noinspection DynamicallyGeneratedCodeJS
-      __setTO( animate_explode, tb._nmap_._50_ );
+      __setTo( animate_explode, tb._nmap_._50_ );
     };
     return animate_explode;
   }());
@@ -209,20 +213,20 @@ tb.shell = (function () {
     jqueryMap._$level_count_.text( String( level_count ) );
   };
   onUpdateLives = function ( event, lives_count ) {
-    var i, life_list = [], lives_str;
+    var i, lives_list = [], lives_str;
     jqueryMap._$lives_count_.text( lives_count );
     for ( i = tb._nmap_._0_; i < lives_count; i++ ) {
-      life_list.push( cfgMap._life_char_code_ );
+      lives_list.push( cfgMap._lives_char_code_ );
     }
-    lives_str = life_list.join( tb._smap_._blank_ );
+    lives_str = lives_list.join( tb._smap_._blank_ );
     jqueryMap._$lives_gfx_.html( lives_str );
   };
   onUpdateIngame = function ( event, is_ingame ) {
     if ( is_ingame ) {
-      jqueryMap._$ingame_hide_[ tb._smap_._hide_ ]();
+      jqueryMap._$pregame_[ tb._smap_._hide_ ]();
       return;
     }
-    jqueryMap._$ingame_hide_[ tb._smap_._show_ ]();
+    jqueryMap._$pregame_[ tb._smap_._show_ ]();
   };
   onUpdateScore = function ( event, score_count ) {
     jqueryMap._$score_count_.text( String( score_count ) );

@@ -141,11 +141,29 @@ body {
     color : #800;
   }
 
-.tb-_shell-start_ {}
-  .tb-_shell-start-label_ {}
-  .tb-_shell-start-descr_ {}
-  .tb-_shell-start-select_ {}
-  .tb-_shell-start-btn_ {}
+.tb-_shell-start_ {
+  display   : block;
+  position  : absolute;
+  font-size : 1.5em;
+  bottom    : 5em;
+  height    : 5em;
+  left      : 50%;
+  margin-left : -10%;
+  width       : 20%;
+  border : 1px solid red;
+}
+  .tb-_shell-start-label_ {
+    text-align  : center;
+    font-weight : bold;
+    color  : #666;
+  }
+  .tb-_shell-start-select_ {
+    text-align : center;
+  }
+  .tb-_shell-start-btn_ {
+    text-align : center;
+  }
+
 
 .tb-_shell-typebox_ {
   display          : block;
@@ -164,11 +182,6 @@ body {
   overflow         : hidden;
 }
 
-.tb-_shell-start_ {}
-  .tb-_shell-start-label_ {}
-  .tb-_shell-start-select_ {}
-  .tb-_shell-start-btn_ {}
-
 .tb-_shell-typebox_ {
   display          : block;
   position         : absolute;
@@ -185,6 +198,7 @@ body {
   text-align       : center;
   overflow         : hidden;
 }
+
 
 .tb-_shell-score_ {
   display   : block;

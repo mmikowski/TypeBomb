@@ -17,8 +17,7 @@ tb.model = (function () {
         _level_count_ : tb._nmap_._1_,
         _lives_count_ : tb._nmap_._5_,
         _score_count_ : tb._nmap_._0_,
-        _typebox_str_ : 'Type here ...',
-        _is_ingame_   : tb._smap_._true_
+        _typebox_str_ : 'Type here ...'
       },
       _max_typebox_int_  : tb._nmap_._22_
     },
@@ -29,9 +28,40 @@ tb.model = (function () {
       _score_count_ : tb._smap_._undef_,
       _is_ingame_   : tb._smap_._true_
     },
-    reportKeyPress, startGame, initModule
+    initGameVals, setIsIngame,
+    reportKeyPress, startGame, endGame, initModule
     ;
   //----------------- END MODULE SCOPE VARIABLES ---------------
+
+  //-------------------- BEGIN UTILITY METHODS -----------------
+  // Begin utility method /setInGame/
+  setIsIngame = function ( is_ingame ) {
+    stateMap._is_ingame_ = !! is_ingame;
+    $.gevent.publish( '_update_ingame_', stateMap._is_ingame_ );
+  };
+  // End utility method /setInGame/
+
+  // Begin utility method /initGameVals/
+  initGameVals = function () {
+    var init_map, key_list, key_name, list_count, i;
+
+    init_map = cfgMap._init_map_;
+    key_list = __Object[tb._smap_._keys_]( init_map );
+    list_count = key_list[tb._smap_._length_];
+
+    for ( i = tb._nmap_._0_; i < list_count; i++ ) {
+      key_name = key_list[i];
+      stateMap[key_name] = init_map[key_name];
+    }
+
+    $.gevent.publish( '_update_ingame_', stateMap._is_ingame_ );
+    $.gevent.publish( '_update_level_', stateMap._level_count_ );
+    $.gevent.publish( '_update_lives_', stateMap._lives_count_ );
+    $.gevent.publish( '_update_score_', stateMap._score_count_ );
+    $.gevent.publish( '_update_typebox_', stateMap._typebox_str_ );
+  };
+  // End utility method /initGameVals/
+  //--------------------- END UTILITY METHODS ------------------
 
   //------------------- BEGIN PUBLIC METHODS -------------------
   // Begin public method /reportKeyPress/
@@ -46,6 +76,10 @@ tb.model = (function () {
     report_keypress = function ( key_code ) {
       var typebox_str, type_length, end_idx, resp_name;
 
+      // do not handle if not in game
+      if ( ! stateMap._is_ingame_ ) { return tb._smap_._false_; }
+
+      // get typebox content and length
       typebox_str = stateMap._typebox_str_;
       type_length = typebox_str[ tb._smap_._length_ ];
 
@@ -110,41 +144,30 @@ tb.model = (function () {
   }());
   // End public method /reportKeyPress/
 
-  // Begin public method /startGame/
-  // Begin initialize for game play (we will move this later)
-  startGame = function ( level_count ){
-    var init_map, key_list, key_name, list_count, i;
-
-    init_map   = cfgMap._init_map_;
-    key_list   = __Object[ tb._smap_._keys_ ]( init_map );
-    list_count = key_list[ tb._smap_._length_ ];
-
-    for ( i = tb._nmap_._0_; i < list_count; i++ ) {
-      key_name = key_list[ i ];
-      stateMap[ key_name ] = init_map[ key_name ];
-    }
-
-    $.gevent.publish( '_update_ingame_',  stateMap._is_ingame_ );
-    $.gevent.publish( '_update_level_',   stateMap._level_count_ );
-    $.gevent.publish( '_update_lives_',   stateMap._lives_count_ );
-    $.gevent.publish( '_update_score_',   stateMap._score_count_ );
-    $.gevent.publish( '_update_typebox_', stateMap._typebox_str_ );
+  // Begin public method /endGame/
+  endGame = function (){
+    setIsIngame( tb._smap_._false_);
   };
-  // End initialize for game play (we will move this later)
+  // End public method /endGame/
 
+  // Begin public method /startGame/
+  startGame = function ( level_count ){
+    initGameVals( level_count );
+    setIsIngame( tb._smap_._true_);
+  };
   // End public method /startGame/
 
   // Begin public method /initModule/
   initModule = function () {
-    stateMap._is_ingame_ = tb._smap_._false_;
-
+    initGameVals();
     $.gevent.publish( '_acknowledge_init_' );
-    $.gevent.publish( '_update_ingame_',  stateMap._is_ingame_ );
+    setIsIngame( tb._smap_._false_);
   };
   // End public method /initModule/
 
   return {
     _initModule_     : initModule,
+    _endGame_        : endGame,
     _startGame_      : startGame,
     _reportKeyPress_ : reportKeyPress
   };
