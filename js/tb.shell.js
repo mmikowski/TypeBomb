@@ -10,9 +10,12 @@ tb.shell = (function () {
   //---------------- BEGIN MODULE SCOPE VARIABLES --------------
   'use strict';
   var
-    __setTo = setTimeout,
+    fMap     = tb._fMap_,
+    nMap     = tb._nMap_,
+    vMap     = tb._vMap_,
+    __setTo  = fMap._setTo_,
     cfgMap = {
-      _main_html_ : tb._smap_._blank_
+      _main_html_ : vMap._blank_
         + '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"'
           + 'class="tb-_shell-bg-svg_"'
           + 'viewbox="0 0 100 100" preserveAspectRatio="none">'
@@ -117,9 +120,9 @@ tb.shell = (function () {
       var i, name_count, snd_name;
       if ( snd_count > 0 ) { return; }// already initialized
 
-      name_count = snd_name_list[ tb._smap_._length_ ];
+      name_count = snd_name_list[ vMap._length_ ];
 
-      for ( i = tb._nmap_._0_; i < name_count; i++ ) {
+      for ( i = nMap._0_; i < name_count; i++ ) {
         snd_name = snd_name_list[i];
         snd_obj_map[ snd_name ] = new Audio( 'snd/' + snd_name + '.mp3' );
       }
@@ -140,7 +143,7 @@ tb.shell = (function () {
         return false;
       }
 
-      snd_obj.currentTime = tb._nmap_._0_;
+      snd_obj.currentTime = nMap._0_;
       snd_obj.play();
     };
     // End play_sound
@@ -155,28 +158,28 @@ tb.shell = (function () {
 
     animate_explode = function () {
       var hex_list, i, hex_str;
-      if ( flash_count === tb._smap_._undef_ ) {
-        flash_count = tb._nmap_._20_;
+      if ( flash_count === vMap._undef_ ) {
+        flash_count = nMap._20_;
       }
 
       flash_count--;
-      if ( flash_count < tb._nmap_._1_ ) {
-        flash_count = tb._smap_._undef_;
-        jqueryMap._$bg_svg_.css( 'fill', tb._smap_._blank_ );
+      if ( flash_count < nMap._1_ ) {
+        flash_count = vMap._undef_;
+        jqueryMap._$bg_svg_.css( 'fill', vMap._blank_ );
         return;
       }
 
       hex_list = [];
-      for ( i = tb._nmap_._0_ ; i < tb._nmap_._3_; i++ ) {
+      for ( i = nMap._0_ ; i < nMap._3_; i++ ) {
         hex_list.push(
-          tb._fmap_._floor_(  tb._fmap_._rnd_() * tb._nmap_._9d99_ )
+          fMap._floor_(  fMap._rnd_() * nMap._9d99_ )
         );
       }
 
-      hex_str = '#' + hex_list.join( tb._smap_._blank_ );
+      hex_str = '#' + hex_list[ vMap._join_ ]( vMap._blank_ );
       jqueryMap._$bg_svg_.css( 'fill', hex_str );
       //noinspection DynamicallyGeneratedCodeJS
-      __setTo( animate_explode, tb._nmap_._50_ );
+      __setTo( animate_explode, nMap._50_ );
     };
     return animate_explode;
   }());
@@ -215,18 +218,18 @@ tb.shell = (function () {
   onUpdateLives = function ( event, lives_count ) {
     var i, lives_list = [], lives_str;
     jqueryMap._$lives_count_.text( lives_count );
-    for ( i = tb._nmap_._0_; i < lives_count; i++ ) {
+    for ( i = nMap._0_; i < lives_count; i++ ) {
       lives_list.push( cfgMap._lives_char_code_ );
     }
-    lives_str = lives_list.join( tb._smap_._blank_ );
-    jqueryMap._$lives_gfx_.html( lives_str );
+    lives_str = lives_list[ vMap._join_ ]( vMap._blank_ );
+    jqueryMap._$lives_gfx_[ vMap._html_ ]( lives_str );
   };
   onUpdateIngame = function ( event, is_ingame ) {
     if ( is_ingame ) {
-      jqueryMap._$pregame_[ tb._smap_._hide_ ]();
+      jqueryMap._$pregame_[ vMap._hide_ ]();
       return;
     }
-    jqueryMap._$pregame_[ tb._smap_._show_ ]();
+    jqueryMap._$pregame_[ vMap._show_ ]();
   };
   onUpdateScore = function ( event, score_count ) {
     jqueryMap._$score_count_.text( String( score_count ) );
@@ -241,6 +244,10 @@ tb.shell = (function () {
   // Begin Shell public method /initModule/
   initModule = function () {
     var $body = $( 'body' );
+
+    // initialize our styling first
+    tb.css._initModule_();
+
     $body.html( cfgMap._main_html_ );
     setJqueryMap( $body );
 
@@ -258,7 +265,7 @@ tb.shell = (function () {
     $.gevent.subscribe( $body, '_update_typebox_',  onUpdateTypebox  );
     // End Shell model event bindings
 
-    // Initialize model
+    // Initialize model after we hook up our event handlers
     tb.model._initModule_();
   };
   // End Shell public method /initModule/
