@@ -13,8 +13,9 @@
  *          a non-array variable as the second argument
  *          to a subscribed function (the first argument
  *          is always the event object).
- *  0.1.7-10
+ *  0.1.7-10, 0.2.0
  *        - documentation changes
+ *  1.0.2 - cleaned-up logic, bumped version
  *
 */
 
@@ -24,11 +25,11 @@
   regexp : true, sloppy  : true, vars     : false,
   white  : true
 */
-/*global jQuery */
+/*global jQuery*/
 
 (function ( $ ) {
   'use strict';
-  $.gevent = ( function () {
+  $.gevent = (function () {
     //---------------- BEGIN MODULE SCOPE VARIABLES --------------
     var
       subscribeEvent, publishEvent, unsubscribeEvent,
