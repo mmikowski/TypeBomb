@@ -7,7 +7,7 @@
 /*global $, tb*/
 
 // Begin model
-tb.model = (function () {
+tb._model_ = (function () {
   'use strict';
   //---------------- BEGIN MODULE SCOPE VARIABLES --------------
   var
@@ -35,7 +35,7 @@ tb.model = (function () {
     initGameVals, setIsIngame,
     reportKeyPress,
     runTimeTick,
-    startGame, endGame, initModule
+    startGame, stopGame, initModule
     ;
   //----------------- END MODULE SCOPE VARIABLES ---------------
 
@@ -169,11 +169,11 @@ tb.model = (function () {
   }());
   // End public method /reportKeyPress/
 
-  // Begin public method /endGame/
-  endGame = function (){
+  // Begin public method /stopGame/
+  stopGame = function (){
     setIsIngame( vMap._false_);
   };
-  // End public method /endGame/
+  // End public method /stopGame/
 
   // Begin public method /startGame/
   startGame = function ( level_count ){
@@ -191,7 +191,7 @@ tb.model = (function () {
 
   return {
     _initModule_     : initModule,
-    _endGame_        : endGame,
+    _stopGame_       : stopGame,
     _startGame_      : startGame,
     _reportKeyPress_ : reportKeyPress
   };

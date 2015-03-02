@@ -6,7 +6,7 @@
 */
 /*global $, tb, Audio*/
 
-tb.shell = (function () {
+tb._shell_ = (function () {
   //---------------- BEGIN MODULE SCOPE VARIABLES --------------
   'use strict';
   var
@@ -192,14 +192,14 @@ tb.shell = (function () {
   onKeypress = function ( event_obj ) {
     var key_code = event_obj.keyCode;
     event_obj.preventDefault();
-    tb.model._reportKeyPress_( key_code );
+    tb._model_._reportKeyPress_( key_code );
   };
 
   onKeydown = function ( event_obj ) {
     var key_code = event_obj.keyCode;
     if ( key_code !== 8 ) { return; }
     event_obj.preventDefault();
-    tb.model._reportKeyPress_( key_code );
+    tb._model_._reportKeyPress_( key_code );
   };
   // End browser-event handlers
 
@@ -246,7 +246,7 @@ tb.shell = (function () {
     var $body = $( 'body' );
 
     // initialize our styling first
-    tb.css._initModule_();
+    tb._css_._initModule_();
 
     $body.html( cfgMap._main_html_ );
     setJqueryMap( $body );
@@ -266,12 +266,11 @@ tb.shell = (function () {
     // End Shell model event bindings
 
     // Initialize model after we hook up our event handlers
-    tb.model._initModule_();
+    tb._model_._initModule_();
   };
   // End Shell public method /initModule/
-  return {
-    _initModule_     : initModule,
-    _animateExplode_ : animateExplode
-  };
+
+  // Start the entire application
+  $(function (){ initModule(); });
   //------------------- END PUBLIC METHODS ---------------------
 }());

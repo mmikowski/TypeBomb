@@ -6,7 +6,7 @@
  */
 /*global $, tb*/
 
-tb.css = (function () {
+tb._css_ = (function () {
   'use strict';
   var
     vMap = tb._vMap_,
