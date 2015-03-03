@@ -329,6 +329,15 @@ tb._css_ = (function () {
         _fill_         : V._xccc_,
         _stroke_width_ : V._0_,
         _stroke_       : V._xaaa_
+      },
+      '.tb-_shell-bomb_' : {
+        _position_     : V._absolute_,
+        _font_size_    : V._2em_,
+        _border_       : '2px solid green',
+        _height_       : V._2em_,
+        _line_height_  : V._2em_,
+        _border_radius_: V._d5em_,
+        _padding_      : '0 .5em 0 .5em'
       }
     }
   };

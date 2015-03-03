@@ -9,7 +9,9 @@
 //noinspection MagicNumberJS,NonShortCircuitBooleanExpressionJS
 var tb = (function () {
   'use strict';
-  var vMap, nMap, fMap, swapFn, getVarType, createObj;
+  var
+    vMap, nMap, fMap, swapFn,
+    getVarType, createObj, fillTmplt;
 
   vMap = {
     _0_str_          : '0',
@@ -27,6 +29,7 @@ var tb = (function () {
     _null_           : null,
     _propIsEnum_     : 'propertyIsEnumerable',
     _push_           : 'push',
+    _replace_        : 'replace',
     _show_           : 'show',
     _splice_         : 'splice',
     _slice_          : 'slice',
@@ -120,7 +123,6 @@ var tb = (function () {
           )
         );
     };
-
     return get_type_fn;
   }());
   // END non-browser utility /getVarType/
@@ -142,6 +144,31 @@ var tb = (function () {
   }());
   // END non-browser utility /createObj/
 
+  // BEGIN non-browser utility /fillTmplt/
+  fillTmplt = (function () {
+    var replace_fn, fill_fn, lookup_map, tmplt_regex;
+
+    tmplt_regex = /%!%([^%]+)%!%/g;
+
+    replace_fn = function ( match_str, name ) {
+      return lookup_map[ name ];
+    };
+
+    fill_fn = function ( arg_map ) {
+      var tmplt_str;
+
+      lookup_map = arg_map._lookup_map_;
+      tmplt_str  = arg_map._tmplt_str_ || vMap._blank_;
+
+      return tmplt_str[ vMap._replace_ ](
+        tmplt_regex, replace_fn
+      );
+    };
+
+    return fill_fn;
+  }());
+  // END non-browser utility /fillTmplt/
+
 
   return {
     _vMap_       : vMap,
@@ -149,6 +176,7 @@ var tb = (function () {
     _fMap_       : fMap,
 
     _createObj_  : createObj,
+    _fillTmplt_  : fillTmplt,
     _getVarType_ : getVarType,
     _swapFn_     : swapFn
   };

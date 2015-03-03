@@ -23,7 +23,7 @@ tb._model_ = (function () {
         _typebox_str_ : 'Type here ...'
       },
       _max_typebox_int_ : nMap._22_,
-      _timetick_ms_     : nMap._100_
+      _timetick_ms_     : 32
     },
     stateMap = {
       _typebox_str_ : vMap._blank_,
@@ -67,15 +67,15 @@ tb._model_ = (function () {
 
         bomb_list = sMap._bomb_list_;
         bomb_list_count = bomb_list[ vMap._length_ ];
-        _BLIST_ : for ( idx = nMap._0_; idx < bomb_list_count; idx++ ) {
+        for ( idx = nMap._0_; idx < bomb_list_count; idx++ ) {
           bomb_obj = bomb_list[ idx ];
-          if ( bomb_list._id_ === this._id_ ) {
+          if ( bomb_obj._id_ === this._id_ ) {
             found_obj = bomb_obj;
-            break _BLIST_;
+            break;
           }
         }
         if ( found_obj ) {
-          $.gevent.publish( '_bomb_explode_', this );
+          $.gevent.publish( '_bomb_explode_', found_obj );
           bomb_list[ vMap._splice_ ]( idx );
         }
       },
@@ -89,19 +89,20 @@ tb._model_ = (function () {
       }
     };
 
-    addBomb = function ( type_str ){
+    addBomb = function ( label_str ){
       var bomb_obj, bomb_list;
-      // TODO update all this
       bomb_obj = tb._createObj_( bombProto );
-      bomb_obj._id_          = 'bomb_' + fMap._String_( sMap._bomb_int_ );
+      bomb_obj._id_          = 'bb' + fMap._String_( sMap._bomb_int_ );
       bomb_obj._y_ratio_     = nMap._1_;
-      bomb_obj._delta_y_num_ = -0.01;
+      bomb_obj._delta_y_num_ = -0.0016;
       bomb_obj._x_ratio_     = 0.5;
-      bomb_obj._type_str_    = type_str || vMap._blank_;
+      bomb_obj._label_str_   = label_str || vMap._blank_;
 
       bomb_list = sMap._bomb_list_;
-      $.gevent.publish( '_bomb_init_', bomb_obj );
       bomb_list[ vMap._push_ ]( bomb_obj );
+
+      $.gevent.publish( '_bomb_init_', bomb_obj );
+      $.gevent.publish( '_bomb_move_', bomb_obj );
     };
 
     updateBombList = function (){
@@ -147,7 +148,6 @@ tb._model_ = (function () {
   // Initiate all game-based periodic actions here.
   runTimeTick = function () {
     bombMgrUtil._updateBombList_();
-    console.log( 'tick' );
     if ( stateMap._is_ingame_ ) {
       __setTo( runTimeTick, cfgMap._timetick_ms_ );
     }

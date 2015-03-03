@@ -42,6 +42,11 @@ tb._shell_ = (function () {
           + '<div class="tb-_shell-score-label_">Score</div>'
           + '<div class="tb-_shell-score-count_"></div>'
         + '</div>',
+      _bomb_id_prefix_ : 'tb-_shell_bomb_-' ,
+      _bomb_html_ : vMap._blank_
+        + '<div id="%!%_id_%!%" class="tb-_shell-bomb_">'
+          + '%!%_label_str_%!%'
+        + '</div>',
       _lives_char_code_ : '&#9825;',
       _key_sound_map_ : {
         _bkspc_     : 'clack',
@@ -141,7 +146,7 @@ tb._shell_ = (function () {
 
       snd_obj = snd_obj_map[ snd_name ];
       if ( ! snd_obj ) {
-        console.warn( 'Snd name not known' );
+        console.warn( '_snd_name_not_known_' );
         return false;
       }
 
@@ -209,10 +214,6 @@ tb._shell_ = (function () {
   onAcknowledgeKey = function ( event, key_name ) {
     var snd_name = cfgMap._key_sound_map_[ key_name ];
     playSnd( snd_name );
-    if ( key_name === '_returnd_' ) {
-      animateExplode();
-      playSnd( 'thunder' );
-    }
   };
   onUpdateLevel = function ( event, level_count ) {
     jqueryMap._$level_count_.text( String( level_count ) );
@@ -241,16 +242,42 @@ tb._shell_ = (function () {
   };
 
   onBombInit = function ( event, bomb_obj ) {
-    console.warn( '_bomb_init_', bomb_obj );
+    var lookup_map, filled_str;
+
+    lookup_map = {
+      _id_        : cfgMap._bomb_id_prefix_ + bomb_obj._id_,
+      _label_str_ : bomb_obj._label_str_
+    };
+
+    filled_str = tb._fillTmplt_({
+      _tmplt_str_  : cfgMap._bomb_html_,
+      _lookup_map_ : lookup_map
+    });
+
+    jqueryMap._$body_.append( $( filled_str ) );
+    // console.warn( '_bomb_init_', bomb_obj );
   };
   onBombMove = function ( event, bomb_obj ) {
-    console.warn( '_bomb_move_', bomb_obj );
+    var left_percent, btm_percent, $bomb, css_map;
+    btm_percent  = fMap._floor_( bomb_obj._y_ratio_ * nMap._100_ );
+    left_percent = fMap._floor_( bomb_obj._x_ratio_ * nMap._100_ );
+    $bomb =  $( '#' + cfgMap._bomb_id_prefix_+ bomb_obj._id_ );
+    css_map = {
+      left   : fMap._String_( left_percent ) + '%',
+      bottom : fMap._String_( btm_percent  ) + '%'
+    };
+
+    $bomb.css( css_map );
+    // console.warn( '_bomb_move_', css_map, $bomb );
   };
   onBombExplode = function ( event, bomb_obj ) {
-    console.warn( '_bomb_explode_', bomb_obj );
+    $( '#' + cfgMap._bomb_id_prefix_ + bomb_obj._id_ ).remove();
+    animateExplode();
+    playSnd( 'thunder' );
+    // console.warn( '_bomb_explode_', bomb_obj );
   };
   onBombClear = function ( event, bomb_obj ) {
-    console.warn( '_bomb_clear_', bomb_obj );
+    $( '#tb-_shell_bomb_-' + bomb_obj._id_ ).remove();
   };
   // End model-event handlers
   //-------------------- END EVENT HANDLERS --------------------
