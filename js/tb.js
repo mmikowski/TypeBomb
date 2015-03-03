@@ -6,15 +6,15 @@
 */
 
 /*global $, tb:true*/
-'use strict';
 //noinspection MagicNumberJS,NonShortCircuitBooleanExpressionJS
-var tb;
-tb = (function () {
-  var vMap, nMap, fMap, swapFn, getVarType;
+var tb = (function () {
+  'use strict';
+  var vMap, nMap, fMap, swapFn, getVarType, createObj;
 
   vMap = {
     _0_str_          : '0',
     _blank_          : '',
+    _create_         : 'create',
     _call_           : 'call',
     _cssRules_       : 'cssRules',
     _false_          : false,
@@ -28,6 +28,7 @@ tb = (function () {
     _propIsEnum_     : 'propertyIsEnumerable',
     _push_           : 'push',
     _show_           : 'show',
+    _splice_         : 'splice',
     _slice_          : 'slice',
     _toString_       : 'toString',
     _true_           : true,
@@ -121,16 +122,35 @@ tb = (function () {
     };
 
     return get_type_fn;
-  }()
-  );
+  }());
   // END non-browser utility /getVarType/
+
+  // BEGIN non-browser utility /createObj/
+  // Purpose : Emulates Object.create on shitty browsers
+  //
+  createObj = (function () {
+    var create_object = fMap._Object_[ vMap._create_ ]
+      || function ( o ) {
+        var fn = function () { return; };
+        fn.prototype = o;
+        return new fn();
+      };
+
+    return function ( proto_obj ) {
+      return create_object( proto_obj );
+    };
+  }());
+  // END non-browser utility /createObj/
+
 
   return {
     _vMap_       : vMap,
     _nMap_       : nMap,
     _fMap_       : fMap,
-    _swapFn_     : swapFn,
-    _getVarType_ : getVarType
+
+    _createObj_  : createObj,
+    _getVarType_ : getVarType,
+    _swapFn_     : swapFn
   };
-}()
-);
+}());
+

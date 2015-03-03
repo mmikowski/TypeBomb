@@ -57,6 +57,8 @@ tb._shell_ = (function () {
     onAcknowledgeKey, onUpdateIngame, onUpdateLevel, onUpdateLives,
     onUpdateScore, onUpdateTypebox,
 
+    onBombInit, onBombMove, onBombExplode, onBombClear,
+
     initModule
     ;
   //----------------- END MODULE SCOPE VARIABLES ---------------
@@ -237,6 +239,19 @@ tb._shell_ = (function () {
   onUpdateTypebox = function ( event, typebox_str ) {
     jqueryMap._$type_box_.text( typebox_str );
   };
+
+  onBombInit = function ( event, bomb_obj ) {
+    console.warn( '_bomb_init_', bomb_obj );
+  };
+  onBombMove = function ( event, bomb_obj ) {
+    console.warn( '_bomb_move_', bomb_obj );
+  };
+  onBombExplode = function ( event, bomb_obj ) {
+    console.warn( '_bomb_explode_', bomb_obj );
+  };
+  onBombClear = function ( event, bomb_obj ) {
+    console.warn( '_bomb_clear_', bomb_obj );
+  };
   // End model-event handlers
   //-------------------- END EVENT HANDLERS --------------------
 
@@ -263,6 +278,11 @@ tb._shell_ = (function () {
     $.gevent.subscribe( $body, '_update_lives_',    onUpdateLives    );
     $.gevent.subscribe( $body, '_update_score_',    onUpdateScore    );
     $.gevent.subscribe( $body, '_update_typebox_',  onUpdateTypebox  );
+
+    $.gevent.subscribe( $body, '_bomb_init_',    onBombInit    );
+    $.gevent.subscribe( $body, '_bomb_move_',    onBombMove    );
+    $.gevent.subscribe( $body, '_bomb_explode_', onBombExplode );
+    $.gevent.subscribe( $body, '_bomb_clear_',   onBombClear   );
     // End Shell model event bindings
 
     // Initialize model after we hook up our event handlers

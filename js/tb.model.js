@@ -32,14 +32,96 @@ tb._model_ = (function () {
       _score_count_ : vMap._undef_,
       _is_ingame_   : vMap._true_
     },
-    initGameVals, setIsIngame,
-    reportKeyPress,
+    bombMgrUtil,
+
+    initGameVals,
     runTimeTick,
-    startGame, stopGame, initModule
+    setIsIngame,
+
+    reportKeyPress,  startGame,
+    stopGame, initModule
     ;
   //----------------- END MODULE SCOPE VARIABLES ---------------
 
   //-------------------- BEGIN UTILITY METHODS -----------------
+
+  // Begin utility object /bombMgrUtil/
+  bombMgrUtil = (function () {
+    var
+      sMap = {
+        // TODO: replace list with a map by id
+        _bomb_list_ : [],
+        _bomb_int_  : nMap._0_
+      },
+      bombProto,
+      addBomb, updateBombList
+      ;
+
+    bombProto = {
+      //_id_          : 'bomb',   // instance var
+      //_delta_y_num_ : nMap._0_, // instance var
+      //_y_ratio_     : nMap._1_, // instance var
+      //_x_ratio_     : nMap._0_, // instance var
+      _explode_ : function () {
+        var idx, bomb_list, bomb_list_count, bomb_obj, found_obj;
+
+        bomb_list = sMap._bomb_list_;
+        bomb_list_count = bomb_list[ vMap._length_ ];
+        _BLIST_ : for ( idx = nMap._0_; idx < bomb_list_count; idx++ ) {
+          bomb_obj = bomb_list[ idx ];
+          if ( bomb_list._id_ === this._id_ ) {
+            found_obj = bomb_obj;
+            break _BLIST_;
+          }
+        }
+        if ( found_obj ) {
+          $.gevent.publish( '_bomb_explode_', this );
+          bomb_list[ vMap._splice_ ]( idx );
+        }
+      },
+      _move_ :  function (){
+        this._y_ratio_ += this._delta_y_num_;
+        if ( this._y_ratio_ < nMap._0_ ) {
+          this._explode_();
+          return;
+        }
+        $.gevent.publish( '_bomb_move_', this );
+      }
+    };
+
+    addBomb = function ( type_str ){
+      var bomb_obj, bomb_list;
+      // TODO update all this
+      bomb_obj = tb._createObj_( bombProto );
+      bomb_obj._id_          = 'bomb_' + fMap._String_( sMap._bomb_int_ );
+      bomb_obj._y_ratio_     = nMap._1_;
+      bomb_obj._delta_y_num_ = -0.01;
+      bomb_obj._x_ratio_     = 0.5;
+      bomb_obj._type_str_    = type_str || vMap._blank_;
+
+      bomb_list = sMap._bomb_list_;
+      $.gevent.publish( '_bomb_init_', bomb_obj );
+      bomb_list[ vMap._push_ ]( bomb_obj );
+    };
+
+    updateBombList = function (){
+      var idx, bomb_list, bomb_list_count, bomb_obj;
+      bomb_list = sMap._bomb_list_;
+      bomb_list_count = bomb_list[ vMap._length_ ];
+
+      for ( idx = nMap._0_; idx < bomb_list_count; idx++ ) {
+        bomb_obj = bomb_list[ idx ];
+        bomb_obj._move_();
+      }
+    };
+
+    return {
+      _addBomb_ : addBomb,
+      _updateBombList_ : updateBombList
+    };
+  }());
+  // End utility object /bombMgrUtil/
+
   // Begin utility method /initGameVals/
   initGameVals = function () {
     var init_map, key_list, key_name, list_count, i;
@@ -64,6 +146,7 @@ tb._model_ = (function () {
   // Begin utility method /runTimeTick/
   // Initiate all game-based periodic actions here.
   runTimeTick = function () {
+    bombMgrUtil._updateBombList_();
     console.log( 'tick' );
     if ( stateMap._is_ingame_ ) {
       __setTo( runTimeTick, cfgMap._timetick_ms_ );
@@ -178,6 +261,7 @@ tb._model_ = (function () {
   // Begin public method /startGame/
   startGame = function ( level_count ){
     setIsIngame( vMap._true_, level_count );
+    bombMgrUtil._addBomb_( 'asdf' );
   };
   // End public method /startGame/
 
