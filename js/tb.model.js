@@ -17,20 +17,52 @@ tb._model_ = (function () {
     __setTo  = fMap._setTo_,
     cfgMap   = {
       _init_map_ : {
-        _level_count_ : nMap._1_,
+        _level_count_ : nMap._0_,
+        _wave_count_  : nMap._0_,
         _lives_count_ : nMap._5_,
         _score_count_ : nMap._0_,
         _typebox_str_ : 'Type here ...'
       },
       _max_typebox_int_ : nMap._22_,
-      _timetick_ms_     : 32
+      _timetick_ms_     : nMap._32_,
+
+      _level_pause_ms_   : nMap._3000_,
+      _wave_pause_ms_    : nMap._5000_,
+
+      _wave_onscreen_int_   : vMap._undef_,
+      _wave_complexity_int_ : vMap._undef_,
+      _wave_max_move_pct_   : vMap._undef_,
+      _wave_drop_range_num_ : vMap._undef_,
+      _wave_complete_int_   : vMap._undef_,
+
+      // levelWaveList[ level ][ wave ] = [
+      //   0 wave_onscreen_int,    // how many bombs to try to keep onscreen
+      //   1 wave_complex_int,     // how difficult the words should be (0-5?)
+      //   2 wave_max_move_pct_,   // max drop speed in percent of screen height
+      //   3 wave_drop_range_num,  // variation from max speed allowed
+      //   4 wave_complete_int     // number of matched bombs to complete wave
+      // ];
+      level_wave_list : [
+        [
+          [ nMap._1_, nMap._0_, nMap._d12_, nMap._0_,   nMap._4_  ],
+          [ nMap._1_, nMap._0_, nMap._d16_, nMap._d04_, nMap._8_  ],
+          [ nMap._1_, nMap._0_, nMap._d20_, nMap._d04_, nMap._12_ ]
+        ],
+        [
+          [ nMap._2_, nMap._1_, nMap._d12_, nMap._d04_, nMap._4_  ],
+          [ nMap._2_, nMap._1_, nMap._d16_, nMap._d04_, nMap._8_  ],
+          [ nMap._2_, nMap._1_, nMap._d20_, nMap._d04_, nMap._12_ ],
+          [ nMap._2_, nMap._1_, nMap._d24_, nMap._d04_, nMap._16_ ]
+        ]
+      ]
     },
     stateMap = {
-      _typebox_str_ : vMap._blank_,
+      _is_ingame_   : vMap._true_,
       _level_count_ : vMap._undef_,
       _lives_count_ : vMap._undef_,
       _score_count_ : vMap._undef_,
-      _is_ingame_   : vMap._true_
+      _tick_toid_   : vMap._undef_,
+      _typebox_str_ : vMap._blank_
     },
     bombMgrUtil,
 
@@ -53,30 +85,23 @@ tb._model_ = (function () {
         _bomb_list_ : [],
         _bomb_int_  : nMap._0_
       },
-      bombProto,
-      addBomb, updateBombList
+      bombProto,        addBomb,
+      checkBombDestroy, clearBombList,
+      getBombByKey,     getBombCount,
+      updateBombList
       ;
 
     bombProto = {
-      //_id_          : 'bomb',   // instance var
-      //_delta_y_num_ : nMap._0_, // instance var
-      //_y_ratio_     : nMap._1_, // instance var
-      //_x_ratio_     : nMap._0_, // instance var
+      // instance vars:
+      //_id_          : 'bb<serial_num>', // eg. bb25
+      //_delta_y_num_ : -<0-1> // move amount per tick, eg. -0.0016
+      //_y_ratio_     : <0-1>  // btm of bomb.  1 = 100%
+      //_x_ratio_     : <0-1>  // left position of bomb
+      //
       _explode_ : function () {
-        var idx, bomb_list, bomb_list_count, bomb_obj, found_obj;
-
-        bomb_list = sMap._bomb_list_;
-        bomb_list_count = bomb_list[ vMap._length_ ];
-        for ( idx = nMap._0_; idx < bomb_list_count; idx++ ) {
-          bomb_obj = bomb_list[ idx ];
-          if ( bomb_obj._id_ === this._id_ ) {
-            found_obj = bomb_obj;
-            break;
-          }
-        }
-        if ( found_obj ) {
-          $.gevent.publish( '_bomb_explode_', found_obj );
-          bomb_list[ vMap._splice_ ]( idx );
+        var bomb_obj = getBombByKey( '_id_', this._id_, vMap._true_ );
+        if ( bomb_obj ) {
+          $.gevent.publish( '_bomb_explode_', bomb_obj );
         }
       },
       _move_ :  function (){
@@ -97,12 +122,47 @@ tb._model_ = (function () {
       bomb_obj._delta_y_num_ = -0.0016;
       bomb_obj._x_ratio_     = 0.5;
       bomb_obj._label_str_   = label_str || vMap._blank_;
+      sMap._bomb_int_++;
 
       bomb_list = sMap._bomb_list_;
       bomb_list[ vMap._push_ ]( bomb_obj );
 
       $.gevent.publish( '_bomb_init_', bomb_obj );
       $.gevent.publish( '_bomb_move_', bomb_obj );
+    };
+
+    checkBombDestroy = function ( label_str ) {
+      var bomb_obj = getBombByKey( '_label_str_', label_str, true );
+      if ( bomb_obj ) {
+        $.gevent.publish( '_bomb_destroy_', bomb_obj );
+      }
+    };
+
+    clearBombList = function () {
+      $.gevent.publish( '_bomb_allclear_' );
+      sMap._bomb_list_[ vMap._length_ ] = nMap._0_;
+    };
+
+    getBombByKey = function ( bomb_key, bomb_val, do_delete ) {
+      var idx, bomb_list, bomb_list_count, bomb_obj, found_obj;
+
+      bomb_list = sMap._bomb_list_;
+      bomb_list_count = bomb_list[ vMap._length_ ];
+      for ( idx = nMap._0_; idx < bomb_list_count; idx++ ) {
+        bomb_obj = bomb_list[ idx ];
+        if ( bomb_obj[ bomb_key ] === bomb_val ) {
+          found_obj = bomb_obj;
+          break;
+        }
+      }
+      if ( found_obj && do_delete ) {
+        bomb_list[ vMap._splice_ ]( idx );
+      }
+      return found_obj;
+    };
+
+    getBombCount = function () {
+      return sMap._bomb_list_[ vMap._length_ ];
     };
 
     updateBombList = function (){
@@ -117,8 +177,11 @@ tb._model_ = (function () {
     };
 
     return {
-      _addBomb_ : addBomb,
-      _updateBombList_ : updateBombList
+      _addBomb_          : addBomb,
+      _checkBombDestroy_ : checkBombDestroy,
+      _clearBombList_    : clearBombList,
+      _getBombCount_     : getBombCount,
+      _updateBombList_   : updateBombList
     };
   }());
   // End utility object /bombMgrUtil/
@@ -136,20 +199,20 @@ tb._model_ = (function () {
       stateMap[ key_name ] = init_map[ key_name ];
     }
 
-    $.gevent.publish( '_update_ingame_', stateMap._is_ingame_ );
-    $.gevent.publish( '_update_level_', stateMap._level_count_ );
-    $.gevent.publish( '_update_lives_', stateMap._lives_count_ );
-    $.gevent.publish( '_update_score_', stateMap._score_count_ );
+    $.gevent.publish( '_update_ingame_',  stateMap._is_ingame_ );
+    $.gevent.publish( '_update_level_',   stateMap._level_count_ );
+    $.gevent.publish( '_update_lives_',   stateMap._lives_count_ );
+    $.gevent.publish( '_update_score_',   stateMap._score_count_ );
     $.gevent.publish( '_update_typebox_', stateMap._typebox_str_ );
   };
   // End utility method /initGameVals/
 
   // Begin utility method /runTimeTick/
-  // Initiate all game-based periodic actions here.
+  // Execute all game-based periodic actions here.
   runTimeTick = function () {
     bombMgrUtil._updateBombList_();
     if ( stateMap._is_ingame_ ) {
-      __setTo( runTimeTick, cfgMap._timetick_ms_ );
+      stateMap._tick_toid_ = __setTo( runTimeTick, cfgMap._timetick_ms_ );
     }
   };
   // End utility method /runTimeTick/
@@ -216,6 +279,7 @@ tb._model_ = (function () {
 
         case return_code :
           if ( type_length > nMap._0_ ) {
+            bombMgrUtil._checkBombDestroy_( typebox_str );
             typebox_str = '';
             type_length = nMap._0_;
             resp_name = '_returnd_';
@@ -223,7 +287,7 @@ tb._model_ = (function () {
           break;
 
         default : // everything else
-          typebox_str += String.fromCharCode( key_code );
+          typebox_str += fMap._String_.fromCharCode( key_code );
           type_length = typebox_str[ vMap._length_ ];
           resp_name = '_char_add_';
           break;
@@ -254,12 +318,21 @@ tb._model_ = (function () {
 
   // Begin public method /stopGame/
   stopGame = function (){
+    if ( stateMap._tick_toid_ ) {
+      clearTimeout( stateMap._tick_toid_ );
+      stateMap._tick_toid_ = vMap._undef_;
+    }
+    bombMgrUtil._clearBombList_();
     setIsIngame( vMap._false_);
+    $.gevent.publish( '_bomb_allclear_' );
   };
   // End public method /stopGame/
 
   // Begin public method /startGame/
   startGame = function ( level_count ){
+    if ( stateMap._is_ingame_ ) {
+      stopGame();
+    }
     setIsIngame( vMap._true_, level_count );
     bombMgrUtil._addBomb_( 'asdf' );
   };

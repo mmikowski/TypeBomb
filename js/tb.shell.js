@@ -56,13 +56,17 @@ tb._shell_ = (function () {
       }
     },
     jqueryMap,
-    playSnd, setJqueryMap, animateExplode,
+    playSnd,        setJqueryMap,
+    animateExplode, get$BombById,
 
-    onKeypress, onKeydown,
-    onAcknowledgeKey, onUpdateIngame, onUpdateLevel, onUpdateLives,
-    onUpdateScore, onUpdateTypebox,
+    onKeypress,       onKeydown,
+    onAcknowledgeKey, onUpdateIngame,
+    onUpdateLevel,    onUpdateLives,
+    onUpdateScore,    onUpdateTypebox,
 
-    onBombInit, onBombMove, onBombExplode, onBombClear,
+    onBombInit,    onBombMove,
+    onBombExplode, onBombDestroy,
+    onBombAllclear,
 
     initModule
     ;
@@ -192,6 +196,13 @@ tb._shell_ = (function () {
   }());
   // End DOM method /animateExplode/
 
+  // Begin DOM method /get$BombById/
+  get$BombById = function ( bomb_id ) {
+    var $bomb = $( '#' + cfgMap._bomb_id_prefix_+ bomb_id );
+    return $bomb;
+  };
+
+  // End DOM method /get$BombById/
   //--------------------- END DOM METHODS ----------------------
 
   //------------------- BEGIN EVENT HANDLERS -------------------
@@ -259,9 +270,12 @@ tb._shell_ = (function () {
   };
   onBombMove = function ( event, bomb_obj ) {
     var left_percent, btm_percent, $bomb, css_map;
+
+    $bomb = get$BombById( bomb_obj._id_ );
+    if ( ! $bomb ) { return false; }
+
     btm_percent  = fMap._floor_( bomb_obj._y_ratio_ * nMap._100_ );
     left_percent = fMap._floor_( bomb_obj._x_ratio_ * nMap._100_ );
-    $bomb =  $( '#' + cfgMap._bomb_id_prefix_+ bomb_obj._id_ );
     css_map = {
       left   : fMap._String_( left_percent ) + '%',
       bottom : fMap._String_( btm_percent  ) + '%'
@@ -271,13 +285,20 @@ tb._shell_ = (function () {
     // console.warn( '_bomb_move_', css_map, $bomb );
   };
   onBombExplode = function ( event, bomb_obj ) {
-    $( '#' + cfgMap._bomb_id_prefix_ + bomb_obj._id_ ).remove();
+    var $bomb = get$BombById( bomb_obj._id_ );
+    if ( ! $bomb ) { return false; }
+
+    $bomb.remove();
     animateExplode();
     playSnd( 'thunder' );
-    // console.warn( '_bomb_explode_', bomb_obj );
   };
-  onBombClear = function ( event, bomb_obj ) {
-    $( '#tb-_shell_bomb_-' + bomb_obj._id_ ).remove();
+  onBombAllclear = function ( event ) {
+    $( '.tb-_shell-bomb_' ).remove();
+  };
+  onBombDestroy = function ( event, bomb_obj ) {
+    var $bomb = get$BombById( bomb_obj._id_ );
+    if ( ! $bomb ) { return false; }
+    $bomb.fadeOut( 1000, function (){ this.remove(); } );
   };
   // End model-event handlers
   //-------------------- END EVENT HANDLERS --------------------
@@ -306,10 +327,11 @@ tb._shell_ = (function () {
     $.gevent.subscribe( $body, '_update_score_',    onUpdateScore    );
     $.gevent.subscribe( $body, '_update_typebox_',  onUpdateTypebox  );
 
-    $.gevent.subscribe( $body, '_bomb_init_',    onBombInit    );
-    $.gevent.subscribe( $body, '_bomb_move_',    onBombMove    );
-    $.gevent.subscribe( $body, '_bomb_explode_', onBombExplode );
-    $.gevent.subscribe( $body, '_bomb_clear_',   onBombClear   );
+    $.gevent.subscribe( $body, '_bomb_init_',     onBombInit     );
+    $.gevent.subscribe( $body, '_bomb_move_',     onBombMove     );
+    $.gevent.subscribe( $body, '_bomb_explode_',  onBombExplode  );
+    $.gevent.subscribe( $body, '_bomb_destroy_',  onBombDestroy  );
+    $.gevent.subscribe( $body, '_bomb_allclear_', onBombAllclear );
     // End Shell model event bindings
 
     // Initialize model after we hook up our event handlers
