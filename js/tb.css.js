@@ -24,6 +24,7 @@ tb._css_ = (function () {
     _border_left_      : 'border-left',
     _border_radius_    : 'border-radius',
     _bottom_           : 'bottom',
+    _box_shadow_       : 'box-shadow',
     _box_sizing_       : 'box-sizing',
     _clip_             : 'clip',
     _color_            : 'color',
@@ -119,7 +120,10 @@ tb._css_ = (function () {
     _xccc_         : '#ccc',
     _xc00_         : '#c00',
     _xddd_         : '#ddd',
+    _xee8_         : '#ee8',
 
+    _shadow_med_dark_str_ : '#444 0 0 0.5em 0',
+    _shadow_white_str_    : '#fff 0 0 0.5em 0',
     _typebox_border_      : '0.5em solid blue',
     _2em_2em_d5em_d5em_   : '2em 2em .5em .5em',
     _1px_solid_xaaa_      : '1px solid #aaa',
@@ -182,7 +186,8 @@ tb._css_ = (function () {
         _left_        : V._0_,
         _right_       : V._0_,
         _font_size_   : V._14px_,
-        _font_family_ : V._std_font_face_
+        _font_family_ : V._std_font_face_,
+        _overflow_    : V._hidden_
       },
       '.tb-_shell-title_, .tb-_shell-subtext_' : {
         _display_     : V._block_,
@@ -300,6 +305,7 @@ tb._css_ = (function () {
         _background_color_ : V._xddd_,
         _border_radius_    : V._2em_2em_d5em_d5em_,
         _text_align_       : V._center_,
+        _box_shadow_       : V._shadow_white_str_,
         _overflow_         : V._hidden_
       },
       '.tb-_shell-score_' : {
@@ -337,7 +343,9 @@ tb._css_ = (function () {
         _height_       : V._2em_,
         _line_height_  : V._2em_,
         _border_radius_: V._d5em_,
-        _padding_      : '0 .5em 0 .5em'
+        _padding_      : '0 .5em 0 .5em',
+        _box_shadow_   : V._shadow_med_dark_str_,
+        _background_color_ : V._xee8_
       }
     }
   };

@@ -122,14 +122,14 @@ tb._shell_ = (function () {
       init_snd, play_sound;
 
     // Begin playSnd data
-    snd_name_list = [ 'clack','click','honk','kick','thunder','wind' ];
+    snd_name_list = [ 'clack','click','honk','kick','thunder','wind','whoosh' ];
     snd_obj_map = {};
     // End playSnd data
 
     // Begin init_snd
     init_snd = function () {
       var i, name_count, snd_name;
-      if ( snd_count > 0 ) { return; }// already initialized
+      if ( snd_count > nMap._0_ ) { return; }// already initialized
 
       name_count = snd_name_list[ vMap._length_ ];
 
@@ -274,8 +274,8 @@ tb._shell_ = (function () {
     $bomb = get$BombById( bomb_obj._id_ );
     if ( ! $bomb ) { return false; }
 
-    btm_percent  = fMap._floor_( bomb_obj._y_ratio_ * nMap._100_ );
-    left_percent = fMap._floor_( bomb_obj._x_ratio_ * nMap._100_ );
+    btm_percent  = bomb_obj._y_ratio_ * nMap._100_;
+    left_percent = bomb_obj._x_ratio_ * nMap._100_;
     css_map = {
       left   : fMap._String_( left_percent ) + '%',
       bottom : fMap._String_( btm_percent  ) + '%'
@@ -296,9 +296,23 @@ tb._shell_ = (function () {
     $( '.tb-_shell-bomb_' ).remove();
   };
   onBombDestroy = function ( event, bomb_obj ) {
-    var $bomb = get$BombById( bomb_obj._id_ );
+    var
+      $bomb = get$BombById( bomb_obj._id_ ),
+      animate_map;
+
     if ( ! $bomb ) { return false; }
-    $bomb.fadeOut( 1000, function (){ this.remove(); } );
+
+    playSnd( 'whoosh' );
+    animate_map = {
+      opacity : nMap._0_,
+      left    : bomb_obj._x_ratio_ < nMap._d5_ ? "-=50%" : '+=50%'
+    };
+
+    $bomb.animate(
+      animate_map,
+      nMap._1000_,
+      function (){ this.remove(); }
+    );
   };
   // End model-event handlers
   //-------------------- END EVENT HANDLERS --------------------
