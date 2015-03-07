@@ -6,7 +6,7 @@
  */
 /*global $, tb*/
 
-// Begin model
+// BEGIN _model_
 tb._model_ = (function () {
   'use strict';
   //---------------- BEGIN MODULE SCOPE VARIABLES --------------
@@ -15,31 +15,69 @@ tb._model_ = (function () {
     nMap     = tb._nMap_,
     vMap     = tb._vMap_,
     __setTo  = fMap._setTo_,
+
     cfgMap   = {
       _init_map_        : {
         _level_count_ : nMap._0_,
-        _wave_count_  : nMap._0_,
         _lives_count_ : nMap._5_,
+        _match_count_ : nMap._0_,
         _score_count_ : nMap._0_,
-        _typebox_str_ : 'Type here ...'
+        _typebox_str_ : 'Type here ...',
+        _wave_count_  : nMap._0_
       },
       _max_typebox_int_ : nMap._22_,
       _timetick_ms_     : nMap._100_,
 
       _level_pause_ms_ : nMap._3000_,
-      _wave_pause_ms_  : nMap._5000_
+      _wave_pause_ms_  : nMap._5000_,
+
+      _wave_key_list_ : [
+        '_onscreen_count_',     // how many bombs to try to keep onscreen
+        '_word_complex_idx_',   // how difficult the words should be (0-5?)
+        '_drop_speed_num_',     // max drop speed in percent of screen height
+        '_drop_range_num_',     // variation from max speed allowed
+        '_match_goal_int_',     // number of matched bombs to complete wave
+        '_bomb_pause_ms_'       // max pause before dropping new bomb
+      ],
+      _level_wave_list_ : [
+        [
+          [ nMap._4_, nMap._0_, nMap._d12_, nMap._0_, nMap._4_, nMap._1000_ ],
+          [ nMap._1_, nMap._0_, nMap._d16_, nMap._d04_, nMap._8_,
+            nMap._1000_
+          ],
+          [ nMap._1_, nMap._0_, nMap._d20_, nMap._d04_, nMap._12_,
+            nMap._1000_
+          ]
+        ],
+        [
+          [ nMap._2_, nMap._1_, nMap._d12_, nMap._d04_, nMap._4_,
+            nMap._1000_
+          ],
+          [ nMap._2_, nMap._1_, nMap._d16_, nMap._d04_, nMap._8_,
+            nMap._1000_
+          ],
+          [ nMap._2_, nMap._1_, nMap._d20_, nMap._d04_, nMap._12_, nMap._1000_
+          ],
+          [ nMap._2_, nMap._1_, nMap._d24_, nMap._d04_, nMap._16_,
+            nMap._1000_
+          ]
+        ]
+      ],
     },
 
     stateMap = {
-      _is_ingame_   : vMap._true_,
-      _level_count_ : vMap._undef_,
-      _lives_count_ : vMap._undef_,
-      _score_count_ : vMap._undef_,
-      _tick_toid_   : vMap._undef_,
-      _typebox_str_ : vMap._blank_
+      _is_ingame_       : vMap._undef_,
+      _level_count_     : vMap._undef_,
+      _level_wave_list_ : vMap._undef_,
+      _lives_count_     : vMap._undef_,
+      _match_count_     : vMap._undef_,
+      _score_count_     : vMap._undef_,
+      _tick_toid_       : vMap._undef_,
+      _typebox_str_     : vMap._undef_,
+      _wave_count_      : vMap._undef_
     },
 
-    bombMgrObj, levelWaveMgrObj,
+    compileLevelWaveList, bombMgrObj,
 
     makeTimeStamp, initGameVals, runTimeTick, setIsIngame,
 
@@ -47,16 +85,77 @@ tb._model_ = (function () {
 
     initModule
     ;
+  // BEGIN utility method /compileWaveLevelList/
+  // This converts the terse data structure (list->list->list)
+  // in cMap._wave_level_list_ into a friendly structre
+  // (list->list->map) stored in stateMap._level_wave_list_
+  // so one can access the values like so:
+  // stateMap._level_wave_list[ level_count ][ wave_count ]._onscreen_count_
+  //
+  //noinspection FunctionWithMultipleLoopsJS
+  compileLevelWaveList = function () {
+    var
+      level_list     = cfgMap._level_wave_list_,
+      level_count    = level_list[ vMap._length_ ],
+      wave_key_list  = cfgMap._wave_key_list_,
+      wave_key_count = wave_key_list[ vMap._length_ ],
+
+      gen_level_list,
+      gen_wave_list, wave_list,    wave_count,
+      value_list,    gen_wave_map, wave_key,
+      i, j, k;
+
+    gen_level_list = [];
+    for ( i = nMap._0_; i < level_count; i++ ) {
+      gen_wave_list = [];
+      wave_list  = level_list[ i ];
+      wave_count = wave_list[ vMap._length_ ];
+
+      for ( j = nMap._0_; j < wave_count; j++ ) {
+        value_list = wave_list[ j ];
+        gen_wave_map = {};
+
+        for ( k = nMap._0_; k < wave_key_count; k++ ) {
+          wave_key = wave_key_list[ k ];
+          switch( wave_key ) {
+            case '_drop_speed_num_':
+            case '_drop_range_num_':
+              gen_wave_map[ wave_key ] = value_list[ k ] / nMap._100_;
+              break;
+
+            default:
+              gen_wave_map[ wave_key ] = value_list[ k ];
+              break;
+
+          }
+        }
+        gen_wave_list[ vMap._push_ ]( gen_wave_map );
+      }
+      gen_level_list[ vMap._push_ ]( gen_wave_list );
+    }
+    stateMap._level_wave_list_ = gen_level_list;
+  };
+  // END utility method /compileWaveLevelList/
+
   //----------------- END MODULE SCOPE VARIABLES ---------------
 
   //-------------------- BEGIN UTILITY OBJECTS -----------------
-  // Begin utility object /bombMgrObj/
+  // BEGIN utility object /bombMgrObj/
   bombMgrObj = (function () {
     var
       sMap = {
-        _bomb_list_ : [],
-        _bomb_int_  : nMap._0_
+        _bomb_list_       : [],
+        _bomb_int_        : nMap._0_,
+        _wave_map_        : vMap._undef_,
+        _addbomb_toid_    : vMap._undef_
       },
+      wordList = [
+        'asdf', 'fgh', 'jkl', 'alm', 'poe', 'qjuery', 'doe', 'dis',
+        'dat', 'dudder', 'the', 'am', 'I', 'you', 'them', 'if', 'then',
+        'that', 'power', 'tic', 'tac', 'toe', 'to', 'car', 'fart'
+      ],
+      wordCount = wordList[ vMap._length_ ],
+
       bombProto,        addBomb,
       checkBombDestroy, clearBombList,
       getBombByKey,     getBombCount,
@@ -92,8 +191,18 @@ tb._model_ = (function () {
       }
     };
 
-    addBomb = function ( label_str, drop_speed, x_ratio ){
-      var bomb_obj, bomb_list;
+    addBomb = function () {
+      var
+        wave_map, label_idx, label_str, drop_speed, x_ratio,
+        bomb_obj, bomb_list;
+
+      wave_map   = sMap._wave_map_;
+      label_idx  = fMap._floor_( wordCount * fMap._rnd_() );
+      label_str  = wordList[ label_idx ];
+      drop_speed = wave_map._drop_speed_num_
+        - ( wave_map._drop_range_num_ * fMap._rnd_() );
+      drop_speed = -drop_speed;
+      x_ratio = nMap._d25_ + nMap._d5_ * fMap._rnd_();
 
       bomb_obj = tb._createObj_( bombProto );
       bomb_obj._id_          = 'bb' + fMap._String_( sMap._bomb_int_ );
@@ -108,20 +217,33 @@ tb._model_ = (function () {
 
       $.gevent.publish( '_bomb_init_', bomb_obj );
       $.gevent.publish( '_bomb_move_', bomb_obj );
+      sMap._addbomb_toid_ = vMap._undef_;
     };
 
     checkBombDestroy = function ( label_str ) {
-      var bomb_obj = getBombByKey( '_label_str_', label_str, true );
+      var wave_map, bomb_obj;
+
+      bomb_obj = getBombByKey( '_label_str_', label_str, true );
+      wave_map   = sMap._wave_map_;
+
       if ( bomb_obj ) {
         stateMap._score_count_ += nMap._50_;
+        stateMap._match_count_ += nMap._1_;
         $.gevent.publish( '_bomb_destroy_', bomb_obj );
         $.gevent.publish( '_update_score_', stateMap._score_count_ );
+      }
+      if ( stateMap._match_count_ === wave_map._match_goal_int_ ) {
+        console.warn( 'wave complete!' );
       }
     };
 
     clearBombList = function () {
       $.gevent.publish( '_bomb_allclear_' );
       sMap._bomb_list_[ vMap._length_ ] = nMap._0_;
+      if ( sMap._addbomb_toid_ ) {
+        clearTimeout( sMap._addbomb_toid_ );
+        sMap._addbomb_toid_ = vMap._undef_;
+      }
     };
 
     getBombByKey = function ( bomb_key, bomb_val, do_delete ) {
@@ -146,19 +268,49 @@ tb._model_ = (function () {
       return sMap._bomb_list_[ vMap._length_ ];
     };
 
-    updateBombList = function (){
-      var idx, bomb_list, bomb_list_count, bomb_obj;
-      bomb_list = sMap._bomb_list_;
-      bomb_list_count = bomb_list[ vMap._length_ ];
+    // '_onscreen_count_',     // how many bombs to try to keep onscreen
+    // '_word_complex_idx_',   // how difficult the words should be (0-5?)
+    // '_drop_speed_num_',       // max drop speed in percent of screen height
+    // '_drop_range_num_',     // variation from max speed allowed
+    // '_match_goal_int_',     // number of matched bombs to complete wave
+    // '_bomb_pause_ms_'       // max pause before dropping new bomb
+    updateBombList = function () {
+      var
+        idx, bomb_list, bomb_count, bomb_obj,
+        wave_map, delay_ms;
 
-      for ( idx = nMap._0_; idx < bomb_list_count; idx++ ) {
+      // Make sure we are initiated (this should not happen!)
+      if ( stateMap._level_count_ === vMap._undef_ ) {
+        compileLevelWaveList();
+        console.warn( '_call_to_update_game_without_init_' );
+      }
+
+      // Move all bombs
+      bomb_list = sMap._bomb_list_;
+      bomb_count = bomb_list[ vMap._length_ ];
+      for ( idx = nMap._0_; idx < bomb_count; idx++ ) {
         bomb_obj = bomb_list[ idx ];
         if ( bomb_obj ) { bomb_obj._move_(); }
+      }
+
+      // Spawn a new bomb if we need a new one
+      if ( ! sMap._addbomb_toid_ ) {
+        wave_map = stateMap._level_wave_list_[
+          stateMap._level_count_ ][
+          stateMap._wave_count_];
+
+        sMap._wave_map_ = wave_map;
+        if ( stateMap._match_count_ < wave_map._match_goal_int_ ) {
+          bomb_count = bombMgrObj._getBombCount_();
+          if ( wave_map._onscreen_count_ > bomb_count ) {
+            delay_ms = wave_map._bomb_pause_ms_ * fMap._rnd_();
+            sMap._addbomb_toid_ = __setTo( addBomb, delay_ms );
+          }
+        }
       }
     };
 
     return {
-      _addBomb_          : addBomb,
       _checkBombDestroy_ : checkBombDestroy,
       _clearBombList_    : clearBombList,
       _getBombCount_     : getBombCount,
@@ -166,114 +318,14 @@ tb._model_ = (function () {
     };
   }());
   // End utility object /bombMgrObj/
-
-  // Begin utility object /levelWaveMgrObj/
-  levelWaveMgrObj = (function (){
-    var
-      cMap = {
-        _level_wave_list_ : [
-          [
-            [ nMap._1_, nMap._0_, nMap._d12_, nMap._0_, nMap._4_, nMap._1000_ ],
-            [ nMap._1_, nMap._0_, nMap._d16_, nMap._d04_, nMap._8_,
-              nMap._1000_
-            ],
-            [ nMap._1_, nMap._0_, nMap._d20_, nMap._d04_, nMap._12_,
-              nMap._1000_
-            ]
-          ],
-          [
-            [ nMap._2_, nMap._1_, nMap._d12_, nMap._d04_, nMap._4_,
-              nMap._1000_
-            ],
-            [ nMap._2_, nMap._1_, nMap._d16_, nMap._d04_, nMap._8_,
-              nMap._1000_
-            ],
-            [ nMap._2_, nMap._1_, nMap._d20_, nMap._d04_, nMap._12_, nMap._1000_
-            ],
-            [ nMap._2_, nMap._1_, nMap._d24_, nMap._d04_, nMap._16_,
-              nMap._1000_
-            ]
-          ]
-        ],
-        _wave_key_list_ : [
-          '_max_onscreen_count_', // how many bombs to try to keep onscreen
-          '_word_complex_idx_',   // how difficult the words should be (0-5?)
-          '_drop_max_num_',       // max drop speed in percent of screen height
-          '_drop_range_num_',     // variation from max speed allowed
-          '_match_goal_int_',     // number of matched bombs to complete wave
-          '_bomb_max_pause_ms_'   // max pause before dropping new bomb
-        ]
-      },
-      sMap = {
-       _level_wave_list_map_ : vMap._undef_
-      },
-      compileLevelWaveList;
-
-
-    // Begin utility method /compileWaveLevelList/
-    // This converts the terse data structure (list->list->list)
-    // in cMap._wave_level_list_ into a friendly structre
-    // (list->list->map) stored in sMap._level_wave_list_map_
-    // so one can access the values like so:
-    // sMap._level_wave_list[ level_idx ][ wave_idx ]._max_onscreen_count_
-    //
-    compileLevelWaveList = function () {
-      var
-        level_list     = cMap._level_wave_list_,
-        level_count    = level_list[ vMap._length_ ],
-        wave_key_list  = cMap._wave_key_list_,
-        wave_key_count = wave_key_list[ vMap._length_ ],
-
-        gen_level_list,
-        gen_wave_list, wave_list,    wave_count,
-        value_list,    gen_wave_map, wave_key,
-        i, j, k;
-
-      gen_level_list = [];
-      for ( i = nMap._0_; i < level_count; i++ ) {
-        gen_wave_list = [];
-        wave_list  = level_list[ i ];
-        wave_count = wave_list[ vMap._length_ ];
-
-        for ( j = nMap._0_; j < wave_count; j++ ) {
-          value_list = wave_list[ j ];
-          gen_wave_map = {};
-
-          for ( k = nMap._0_; k < wave_key_count; k++ ) {
-            wave_key = wave_key_list[ k ];
-            switch( wave_key ) {
-              case '_drop_max_num_':
-              case '_drop_range_num_':
-                gen_wave_map[ wave_key ] = value_list[ k ] / nMap._100_;
-              break;
-
-              default:
-                gen_wave_map[ wave_key ] = value_list[ k ];
-              break;
-
-            }
-          }
-          gen_wave_list[ vMap._push_ ]( gen_wave_map );
-        }
-        gen_level_list[ vMap._push_ ]( gen_wave_list );
-      }
-      sMap._level_wave_list_map_ = gen_level_list;
-      console.warn( gen_level_list );
-    };
-
-    return {
-      _compileLevelWaveList_ : compileLevelWaveList
-    };
-  }());
-  // End utility object /levelWaveMgrObj/
   //--------------------- END UTILITY OBJECTS ------------------
 
   //-------------------- BEGIN UTILITY METHODS -----------------
-  // Begin utility method /makeTimeStamp/
+  // BEGIN utility method /makeTimeStamp/
   makeTimeStamp = function () { return +new Date(); };
   // End utility method /makeTimeStamp/
 
-  // Begin utility method /initGameVals/
+  // BEGIN utility method /initGameVals/
   initGameVals = function () {
     var init_map, key_list, key_name, list_count, i;
 
@@ -294,7 +346,7 @@ tb._model_ = (function () {
   };
   // End utility method /initGameVals/
 
-  // Begin utility method /runTimeTick/
+  // BEGIN utility method /runTimeTick/
   // Execute all game-based periodic actions here.
   runTimeTick = (function () {
     var tick_ms, run_fn;
@@ -323,14 +375,18 @@ tb._model_ = (function () {
   }());
   // End utility method /runTimeTick/
 
-  // Begin utility method /setInGame/
+  // BEGIN utility method /setInGame/
   setIsIngame = function ( arg_is_ingame, arg_level_count ) {
     var is_ingame, level_count;
 
-    is_ingame   = !! arg_is_ingame;
-    level_count = fMap._parseInt_( arg_level_count );
+    if ( arg_level_count !== vMap._undef_ ) {
+      level_count = fMap._parseInt_( arg_level_count );
+    }
 
+    is_ingame   = !! arg_is_ingame;
     stateMap._is_ingame_ = is_ingame;
+
+    // level and all other fields are updated here
     if ( is_ingame ) {
       initGameVals( level_count );
       runTimeTick();
@@ -341,7 +397,7 @@ tb._model_ = (function () {
   //--------------------- END UTILITY METHODS ------------------
 
   //------------------- BEGIN PUBLIC METHODS -------------------
-  // Begin public method /reportKeyPress/
+  // BEGIN public method /reportKeyPress/
   // If key press is actionable, return true
   reportKeyPress = (function () {
     var
@@ -422,70 +478,37 @@ tb._model_ = (function () {
   }());
   // End public method /reportKeyPress/
 
-  // Begin public method /stopGame/
+  // BEGIN public method /stopGame/
   stopGame = function (){
     if ( stateMap._tick_toid_ ) {
       clearTimeout( stateMap._tick_toid_ );
       stateMap._tick_toid_ = vMap._undef_;
     }
     bombMgrObj._clearBombList_();
-    setIsIngame( vMap._false_);
+    setIsIngame( vMap._false_ );
     $.gevent.publish( '_bomb_allclear_' );
   };
   // End public method /stopGame/
 
-  // Begin public method /startGame/
+  // BEGIN public method /startGame/
   startGame = function ( level_count ){
-    var i, word_list;
-    // TODO: This is test-data only
-    // Move to levelWaveMgrObj
-    word_list = [
-      'asdf',
-      'fgh',
-      'jkl',
-      'alm',
-      'poe',
-      'qjuery',
-      'doe',
-      'dis',
-      'dat',
-      'dudder',
-      'the',
-      'am',
-      'I',
-      'you',
-      'them',
-      'if',
-      'then',
-      'that',
-      'power',
-      'tic',
-      'tac',
-      'toe',
-      'to',
-      'car',
-      'fart'
-    ];
+    if ( stateMap._level_wave_list_ === vMap._undef_ ) {
+      compileLevelWaveList();
+    }
 
     if ( stateMap._is_ingame_ ) {
       stopGame();
     }
+
+    stateMap._level_count_ = level_count;
+    stateMap._wave_count_  = nMap._0_;
+
     setIsIngame( vMap._true_, level_count );
-    // TODO: this is test only
-    // Move to levelWaveMgrObj
-    for ( i = 0; i < 20; i++ ) {
-      bombMgrObj._addBomb_(
-        word_list[ i ],
-        fMap._rnd_() * 0.0010 - 0.0020,
-        fMap._rnd_() * nMap._d5_ + nMap._d25_
-      );
-    }
   };
   // End public method /startGame/
 
-  // Begin public method /initModule/
+  // BEGIN public method /initModule/
   initModule = function () {
-    levelWaveMgrObj._compileLevelWaveList_();
     initGameVals();
     $.gevent.publish( '_acknowledge_init_' );
     setIsIngame( vMap._false_);
@@ -500,4 +523,4 @@ tb._model_ = (function () {
   };
   //-------------------- END PUBLIC METHODS --------------------
 }());
-
+// END _model_

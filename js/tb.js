@@ -6,87 +6,89 @@
 */
 
 /*global $, tb:true*/
-//noinspection MagicNumberJS,NonShortCircuitBooleanExpressionJS
 var tb = (function () {
   'use strict';
+  //noinspection MagicNumberJS,NonShortCircuitBooleanExpressionJS
   var
-    vMap, nMap, fMap, swapFn,
+    vMap = {
+      _0_str_          : '0',
+      _blank_          : '',
+      _create_         : 'create',
+      _call_           : 'call',
+      _cssRules_       : 'cssRules',
+      _false_          : false,
+      _hasOwnProperty_ : 'hasOwnProperty',
+      _hide_           : 'hide',
+      _join_           : 'join',
+      _html_           : 'html',
+      _keys_           : 'keys',
+      _length_         : 'length',
+      _null_           : null,
+      _propIsEnum_     : 'propertyIsEnumerable',
+      _push_           : 'push',
+      _replace_        : 'replace',
+      _show_           : 'show',
+      _splice_         : 'splice',
+      _slice_          : 'slice',
+      _toString_       : 'toString',
+      _true_           : true,
+      _undef_          : undefined
+    },
+
+    nMap = {
+      // cast as integers
+      _n1_   : -1   | 0,
+      _0_    : 0    | 0,
+      _1_    : 1    | 0,
+      _2_    : 2    | 0,
+      _3_    : 3    | 0,
+      _4_    : 4    | 0,
+      _5_    : 5    | 0,
+      _6_    : 6    | 0,
+      _8_    : 8    | 0,
+      _12_   : 12   | 0,
+      _13_   : 13   | 0,
+      _16_   : 16   | 0,
+      _20_   : 20   | 0,
+      _22_   : 22   | 0,
+      _25_   : 25   | 0,
+      _32_   : 32   | 0,
+      _50_   : 50   | 0,
+      _100_  : 100  | 0,
+      _1000_ : 1000 | 0,
+      _3000_ : 3000 | 0,
+      _5000_ : 5000 | 0,
+
+      // floating point
+      _d04_  : 0.04,
+      _d25_  : 0.25,
+      _d5_   : 0.5,
+      _d12_  : 0.12,
+      _d16_  : 0.16,
+      _d20_  : 0.20,
+      _d24_  : 0.24,
+      _9d99_ : 9.99
+    },
+
+    fMap = {
+      _setTo_    : setTimeout,
+      _Object_   : Object,
+      _Array_    : Array,
+      _String_   : String,
+      _floor_    : Math.floor,
+      _parseInt_ : parseInt,
+      _rnd_      : Math.random
+    },
+
+    swapFn = function ( arg ) { return arg; },
+
     getVarType, createObj, fillTmplt;
 
-  vMap = {
-    _0_str_          : '0',
-    _blank_          : '',
-    _create_         : 'create',
-    _call_           : 'call',
-    _cssRules_       : 'cssRules',
-    _false_          : false,
-    _hasOwnProperty_ : 'hasOwnProperty',
-    _hide_           : 'hide',
-    _join_           : 'join',
-    _html_           : 'html',
-    _keys_           : 'keys',
-    _length_         : 'length',
-    _null_           : null,
-    _propIsEnum_     : 'propertyIsEnumerable',
-    _push_           : 'push',
-    _replace_        : 'replace',
-    _show_           : 'show',
-    _splice_         : 'splice',
-    _slice_          : 'slice',
-    _toString_       : 'toString',
-    _true_           : true,
-    _undef_          : undefined
-  };
-
-  nMap = {
-    // cast as integers
-    _n1_   : -1   | 0,
-    _0_    : 0    | 0,
-    _1_    : 1    | 0,
-    _2_    : 2    | 0,
-    _3_    : 3    | 0,
-    _4_    : 4    | 0,
-    _5_    : 5    | 0,
-    _6_    : 6    | 0,
-    _8_    : 8    | 0,
-    _12_   : 12   | 0,
-    _13_   : 13   | 0,
-    _16_   : 16   | 0,
-    _20_   : 20   | 0,
-    _22_   : 22   | 0,
-    _32_   : 32   | 0,
-    _50_   : 50   | 0,
-    _100_  : 100  | 0,
-    _1000_ : 1000 | 0,
-    _3000_ : 3000 | 0,
-    _5000_ : 5000 | 0,
-
-    // floating point
-    _d04_  : 0.04,
-    _d25_  : 0.25,
-    _d5_   : 0.5,
-    _d12_  : 0.12,
-    _d16_  : 0.16,
-    _d20_  : 0.20,
-    _d24_  : 0.24,
-    _9d99_ : 9.99
-  };
-
-  fMap = {
-    _setTo_    : setTimeout,
-    _Object_   : Object,
-    _Array_    : Array,
-    _String_   : String,
-    _floor_    : Math.floor,
-    _parseInt_ : parseInt,
-    _rnd_      : Math.random
-  };
 
   //================= BEGIN NON-BROWSER UTILITIES ==============
   // BEGIN non-browser utility /swapFn/
   // Example: To swap foo and bar:
   //   bar = swap( foo, foo = bar );
-  swapFn = function ( arg ) { return arg; };
   // END non-browser utility /swapFn/
 
   // BEGIN non-browser utility /getVarType/
@@ -149,7 +151,10 @@ var tb = (function () {
   createObj = (function () {
     var create_object = fMap._Object_[ vMap._create_ ]
       || function ( o ) {
-        var fn = function () { return; };
+        var fn = function () {
+         //noinspection UnnecessaryReturnStatementJS
+          return;
+        };
         fn.prototype = o;
         return new fn();
       };

@@ -22,8 +22,8 @@ tb._shell_ = (function () {
           + '<path d="M 0,0 40,100 0,100 M 100,0 60,100 100,100"></path>'
         + '</svg>'
         + '<div class="tb-_shell-title_">TypeB<span>o</span>mb</div>'
-        + '<div class="tb-_shell-subtext_">subtext</div>'
-        + '<div class="tb-_shell-hiscore_">hi-score</div>'
+        + '<div class="tb-_shell-subtext_">Press Start</div>'
+        + '<div class="tb-_shell-hiscore_">High Score</div>'
         + '<div class="tb-_shell-level_">'
           + '<div class="tb-_shell-level-label_">Level</div>'
           + '<div class="tb-_shell-level-count_"></div>'
@@ -42,11 +42,12 @@ tb._shell_ = (function () {
           + '<div class="tb-_shell-score-label_">Score</div>'
           + '<div class="tb-_shell-score-count_"></div>'
         + '</div>',
-      _bomb_id_prefix_ : 'tb-_shell_bomb_-' ,
       _bomb_html_ : vMap._blank_
         + '<div id="%!%_id_%!%" class="tb-_shell-bomb_">'
           + '%!%_label_str_%!%'
         + '</div>',
+
+      _bomb_id_prefix_ : 'tb-_shell_bomb_-' ,
       _lives_char_code_ : '&#9825;',
       _key_sound_map_ : {
         _bkspc_     : 'clack',
