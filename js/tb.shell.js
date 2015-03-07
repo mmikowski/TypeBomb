@@ -199,8 +199,7 @@ tb._shell_ = (function () {
 
   // Begin DOM method /get$BombById/
   get$BombById = function ( bomb_id ) {
-    var $bomb = $( '#' + cfgMap._bomb_id_prefix_+ bomb_id );
-    return $bomb;
+    return $( '#' + cfgMap._bomb_id_prefix_+ bomb_id );
   };
 
   // End DOM method /get$BombById/
@@ -293,8 +292,9 @@ tb._shell_ = (function () {
     animateExplode();
     playSnd( 'thunder' );
   };
-  onBombAllclear = function ( event ) {
-    $( '.tb-_shell-bomb_' ).remove();
+  onBombAllclear = function ( /* event */ ) {
+    var $all_bombs = $( '.tb-_shell-bomb_');
+    $all_bombs.remove();
   };
   onBombDestroy = function ( event, bomb_obj ) {
     var
