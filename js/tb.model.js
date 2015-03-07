@@ -62,7 +62,7 @@ tb._model_ = (function () {
             nMap._1000_
           ]
         ]
-      ],
+      ]
     },
 
     stateMap = {
