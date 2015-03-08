@@ -1,4 +1,4 @@
-<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="1487" measuredH="945" mockupW="1480" mockupH="941">
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="2126" measuredH="945" mockupW="2119" mockupH="941">
   <controls>
     <control controlID="0" controlTypeID="com.balsamiq.mockups::Paragraph" x="43" y="19" w="384" h="22" measuredW="275" measuredH="80" zOrder="0" locked="false" isInGroup="-1">
       <controlProperties>
@@ -181,6 +181,12 @@
           </controlProperties>
         </control>
       </groupChildrenDescriptors>
+    </control>
+    <control controlID="57" controlTypeID="com.balsamiq.mockups::Paragraph" x="1548" y="41" w="578" h="262" measuredW="275" measuredH="80" zOrder="11" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>16</size>
+        <text>Steps%20for%20completion%202015-03-09%0A%20%0A-%20%282hr%29%20Implement%20start%20in%20tb-shell-subtext%20%22Select%20level%20to%20start%20%5B%200-3%20%5D%22%0A-%20%282hr%29%20Animate%20lives%20update%2C%20Level%20update%20with%20sounds%0A-%20%282hr%29%20Colors%20and%20size%20per%20speed%0A-%20%288hr%29%20Refine%20word%20selection%0A-%20%288hr%29%20Refine%20levels%0A-%20%288hr%29%20Instructions%20-%20show%20diagram%0A-%20%2816hr%29%20Package%20for%20Chrome%0A%20%0AEstimate%3A%2046hrs</text>
+      </controlProperties>
     </control>
   </controls>
 </mockup>

@@ -22,7 +22,7 @@ tb._shell_ = (function () {
           + '<path d="M 0,0 40,100 0,100 M 100,0 60,100 100,100"></path>'
         + '</svg>'
         + '<div class="tb-_shell-title_">TypeB<span>o</span>mb</div>'
-        + '<div class="tb-_shell-subtext_">Press Start</div>'
+        + '<div class="tb-_shell-subtext_"></div>'
         + '<div class="tb-_shell-hiscore_">High Score</div>'
         + '<div class="tb-_shell-level_">'
           + '<div class="tb-_shell-level-label_">Level</div>'
@@ -31,11 +31,6 @@ tb._shell_ = (function () {
         + '<div class="tb-_shell-lives_">'
           + '<div class="tb-_shell-lives-count_"></div>'
           + '<div class="tb-_shell-lives-gfx_"></div>'
-        + '</div>'
-        + '<div class="tb-_shell-start_">'
-          + '<div class="tb-_shell-start-label_">Start</div>'
-          + '<div class="tb-_shell-start-select_"><select><option>1</option><option>2</option><option>3</option></select></div>'
-          + '<div class="tb-_shell-start-btn_"></div>'
         + '</div>'
         + '<div class="tb-_shell-typebox_"></div>'
         + '<div class="tb-_shell-score_">'
@@ -46,6 +41,7 @@ tb._shell_ = (function () {
         + '<div id="%!%_id_%!%" class="tb-_shell-bomb_">'
           + '%!%_label_str_%!%'
         + '</div>',
+      _start_html_ : 'Select start level: ',
 
       _bomb_id_prefix_ : 'tb-_shell_bomb_-' ,
       _lives_char_code_ : '&#9825;',
@@ -61,6 +57,8 @@ tb._shell_ = (function () {
     animateExplode, get$BombById,
 
     onKeypress,       onKeydown,
+    onChangeLevel,
+
     onAcknowledgeKey, onUpdateIngame,
     onUpdateLevel,    onUpdateLives,
     onUpdateScore,    onUpdateTypebox,
@@ -85,13 +83,11 @@ tb._shell_ = (function () {
       $level   = $body.find( '.tb-_shell-level_'   ),
       $lives   = $body.find( '.tb-_shell-lives_'   ),
       $score   = $body.find( '.tb-_shell-score_'   ),
-      $start   = $body.find( '.tb-_shell-start_'   ),
       $subtext = $body.find( '.tb-_shell-subtext_' ),
       $title   = $body.find( '.tb-_shell-title_'   ),
       $pregame = $( [
         $hiscore.get(0),
         $title.get(0),
-        $start.get(0),
         $subtext.get(0)
       ] );
 
@@ -107,9 +103,6 @@ tb._shell_ = (function () {
       _$lives_gfx_    : $lives.find( '.tb-_shell-lives-gfx_'    ),
       _$score_        : $score,
       _$score_count_  : $score.find( '.tb-_shell-score-count_'  ),
-      _$start_        : $start,
-      _$start_label_  : $start.find( '.tb-_shell-start-label_'  ),
-      _$start_select_ : $start.find( '.tb-_shell-start-select_' ),
       _$subtext_      : $subtext,
       _$title_        : $title,
       _$type_box_     : $body.find(  '.tb-_shell-typebox_'      )
@@ -211,6 +204,12 @@ tb._shell_ = (function () {
 
   //------------------- BEGIN EVENT HANDLERS -------------------
   // Begin browser-event handlers
+  onChangeLevel = function ( event_obj ) {
+    var level_str = $(this).val();
+    event_obj.preventDefault();
+    if ( level_str === '--' ) { return; }
+    tb._model_._startGame_( level_str );
+  };
   onKeypress = function ( event_obj ) {
     var key_code = event_obj.keyCode;
     event_obj.preventDefault();
@@ -226,14 +225,14 @@ tb._shell_ = (function () {
   // End browser-event handlers
 
   // Begin model-event handlers
-  onAcknowledgeKey = function ( event, key_name ) {
+  onAcknowledgeKey = function ( event_obj, key_name ) {
     var snd_name = cfgMap._key_sound_map_[ key_name ];
     playSnd( snd_name );
   };
-  onUpdateLevel = function ( event, level_count ) {
+  onUpdateLevel = function ( event_obj, level_count ) {
     jqueryMap._$level_count_.text( String( level_count ) );
   };
-  onUpdateLives = function ( event, lives_count ) {
+  onUpdateLives = function ( event_obj, lives_count ) {
     var i, lives_list = [], lives_str;
     jqueryMap._$lives_count_.text( lives_count );
     for ( i = nMap._0_; i < lives_count; i++ ) {
@@ -242,20 +241,34 @@ tb._shell_ = (function () {
     lives_str = lives_list[ vMap._join_ ]( vMap._blank_ );
     jqueryMap._$lives_gfx_[ vMap._html_ ]( lives_str );
   };
-  onUpdateIngame = function ( event, is_ingame ) {
+  onUpdateIngame = function ( event_obj, is_ingame, level_count ) {
+    var i, val_list, opt_html;
     if ( is_ingame ) {
       jqueryMap._$pregame_[ vMap._hide_ ]();
       return;
     }
+
+    val_list = [ '--' ];
+    for ( i = nMap._0_; i < level_count; i++ ) {
+      val_list.push( i );
+    }
+
+    opt_html = tb._makeOptHtml_( '--', val_list );
+
+
     jqueryMap._$pregame_[ vMap._show_ ]();
+    jqueryMap._$subtext_.html(
+      cfgMap._start_html_ + ' <select>' + opt_html + '</select>'
+    );
+    jqueryMap._$subtext_.find( 'select' ).on( 'change', onChangeLevel );
   };
-  onUpdateScore = function ( event, score_count ) {
+  onUpdateScore = function ( event_obj, score_count ) {
     jqueryMap._$score_count_.text( String( score_count ) );
   };
-  onUpdateTypebox = function ( event, typebox_str ) {
+  onUpdateTypebox = function ( event_obj, typebox_str ) {
     jqueryMap._$type_box_.text( typebox_str );
   };
-  onWaveComplete = function ( event, level_count, wave_count ) {
+  onWaveComplete = function ( event_obj, level_count, wave_count ) {
     var msg_str = 'Completed level '
       + fMap._String_( level_count )
       + ' wave '
@@ -270,7 +283,7 @@ tb._shell_ = (function () {
     playSnd( 'wavechange' );
   };
 
-  onBombInit = function ( event, bomb_obj ) {
+  onBombInit = function ( event_obj, bomb_obj ) {
     var lookup_map, filled_str;
 
     lookup_map = {
@@ -285,7 +298,7 @@ tb._shell_ = (function () {
 
     jqueryMap._$body_.append( $( filled_str ) );
   };
-  onBombMove = function ( event, bomb_obj ) {
+  onBombMove = function ( event_obj, bomb_obj ) {
     var left_percent, btm_percent, $bomb, css_map;
 
     $bomb = get$BombById( bomb_obj._id_ );
@@ -301,7 +314,7 @@ tb._shell_ = (function () {
     $bomb.css( css_map );
     // console.warn( '_bomb_move_', css_map, $bomb );
   };
-  onBombExplode = function ( event, bomb_obj ) {
+  onBombExplode = function ( event_obj, bomb_obj ) {
     var $bomb = get$BombById( bomb_obj._id_ );
     if ( ! $bomb ) { return false; }
 
@@ -309,11 +322,11 @@ tb._shell_ = (function () {
     animateExplode();
     playSnd( 'thunder' );
   };
-  onBombAllclear = function ( /* event */ ) {
+  onBombAllclear = function ( /* event_obj */ ) {
     var $all_bombs = $( '.tb-_shell-bomb_');
     $all_bombs.remove();
   };
-  onBombDestroy = function ( event, bomb_obj ) {
+  onBombDestroy = function ( event_obj, bomb_obj ) {
     var
       $bomb = get$BombById( bomb_obj._id_ ),
       animate_map;

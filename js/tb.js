@@ -90,7 +90,12 @@ var tb = (function () {
 
     swapFn = function ( arg ) { return arg; },
 
-    getVarType, createObj, fillTmplt;
+    createObj,
+    fillTmplt,
+    getVarType,
+    makeOptHtml,
+    makeUcFirstStr
+    ;
 
 
   //================= BEGIN NON-BROWSER UTILITIES ==============
@@ -198,16 +203,56 @@ var tb = (function () {
   }());
   // END non-browser utility /fillTmplt/
 
+  // BEGIN public utility /makeOptHtml/
+  makeOptHtml = function ( arg_val_str, value_list, arg_title_map ) {
+    var
+      html        = '',
+      title_map   = arg_title_map || {},
+      match_str   = fMap._String_( arg_val_str ),
 
-  return {
-    _vMap_       : vMap,
-    _nMap_       : nMap,
-    _fMap_       : fMap,
+      idx, val_str, title_text
+      ;
 
-    _createObj_  : createObj,
-    _fillTmplt_  : fillTmplt,
-    _getVarType_ : getVarType,
-    _swapFn_     : swapFn
+    for ( idx = nMap._0_; idx < value_list.length; idx++ ){
+      val_str   = fMap._String_( value_list[ idx ] );
+      title_text  = title_map[ val_str ]
+        || makeUcFirstStr( val_str );
+
+      html += '<option value="' + val_str + '"';
+
+      if ( val_str === match_str ){
+        html += ' selected="selected"';
+      }
+
+      html += '>' + title_text + '</option>';
+    }
+    return html;
+  };
+  // END public utility /makeOptHtml/
+
+  // Begin public utility /makeUcFirstStr/
+  makeUcFirstStr = function ( arg_input_str ) {
+    var
+      input_str  = fMap._String_( arg_input_str ),
+      first_char = input_str.charAt( nMap._0_ ).toUpperCase();
+    return first_char + input_str.substr( nMap._1_ );
+  };
+  // End public utility /getUcFirst/
+
+
+  //================= END NON-BROWSER UTILITIES ==============
+
+ return {
+    _vMap_ : vMap,
+    _nMap_ : nMap,
+    _fMap_ : fMap,
+
+    _createObj_      : createObj,
+    _fillTmplt_      : fillTmplt,
+    _getVarType_     : getVarType,
+    _makeOptHtml_    : makeOptHtml,
+    _makeUcFirstStr_ : makeUcFirstStr,
+    _swapFn_         : swapFn
   };
 }());
 

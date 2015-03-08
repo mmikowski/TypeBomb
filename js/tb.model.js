@@ -18,7 +18,7 @@ tb._model_ = (function () {
 
     cfgMap   = {
       _init_map_        : {
-        _level_count_ : nMap._0_,
+        // _level_count_ : nMap._0_,
         _lives_count_ : nMap._5_,
         _match_count_ : nMap._0_,
         _score_count_ : nMap._0_,
@@ -46,6 +46,9 @@ tb._model_ = (function () {
           [ nMap._6_, nMap._0_, nMap._d24_, nMap._d08_, 38, 1250 ],
           [ nMap._7_, nMap._0_, nMap._d28_, nMap._d08_, 44, 1000 ],
           [ nMap._8_, nMap._0_, nMap._d32_, nMap._d08_, 50,  800 ]
+        ],
+        [
+          [ nMap._9_, nMap._1_, nMap._d32_, nMap._d08_, 60, 500 ]
         ],
         [
           [ nMap._9_, nMap._1_, nMap._d32_, nMap._d08_, 60, 500 ]
@@ -369,7 +372,7 @@ tb._model_ = (function () {
   // End utility method /makeTimeStamp/
 
   // BEGIN utility method /initGameVals/
-  initGameVals = function () {
+  initGameVals = function ( level_idx ) {
     var init_map, key_list, key_name, list_count, i;
 
     init_map   = cfgMap._init_map_;
@@ -381,7 +384,8 @@ tb._model_ = (function () {
       stateMap[ key_name ] = init_map[ key_name ];
     }
 
-    $.gevent.publish( '_update_ingame_',  stateMap._is_ingame_ );
+    stateMap._level_count_ = level_idx || nMap._0_;
+
     $.gevent.publish( '_update_level_',   stateMap._level_count_ );
     $.gevent.publish( '_update_lives_',   stateMap._lives_count_ );
     $.gevent.publish( '_update_score_',   stateMap._score_count_ );
@@ -419,22 +423,22 @@ tb._model_ = (function () {
   // End utility method /runTimeTick/
 
   // BEGIN utility method /setInGame/
-  setIsIngame = function ( arg_is_ingame, arg_level_count ) {
-    var is_ingame, level_count;
+  setIsIngame = function ( arg_is_ingame, arg_level_idx ) {
+    var is_ingame, level_idx, level_count;
 
-    if ( arg_level_count !== vMap._undef_ ) {
-      level_count = fMap._parseInt_( arg_level_count );
-    }
+    level_count = cfgMap._level_wave_list_[ vMap._length_ ];
+
+    level_idx = fMap._parseInt_( arg_level_idx ) || nMap._0_;
 
     is_ingame   = !! arg_is_ingame;
     stateMap._is_ingame_ = is_ingame;
 
     // level and all other fields are updated here
     if ( is_ingame ) {
-      initGameVals( level_count );
+      initGameVals( level_idx );
       runTimeTick();
     }
-    $.gevent.publish( '_update_ingame_', stateMap._is_ingame_ );
+    $.gevent.publish( '_update_ingame_', [ is_ingame, level_count ] );
   };
   // End utility method /setInGame/
   //--------------------- END UTILITY METHODS ------------------
@@ -533,7 +537,7 @@ tb._model_ = (function () {
   };
   // End public method /stopGame/
 
-  // BEGIN public method /startGame/
+// BEGIN public method /startGame/
   startGame = function ( level_count ){
     if ( stateMap._level_wave_list_ === vMap._undef_ ) {
       compileLevelWaveList();
