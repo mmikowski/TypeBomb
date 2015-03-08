@@ -64,6 +64,7 @@ tb._shell_ = (function () {
     onAcknowledgeKey, onUpdateIngame,
     onUpdateLevel,    onUpdateLives,
     onUpdateScore,    onUpdateTypebox,
+    onWaveComplete,
 
     onBombInit,    onBombMove,
     onBombExplode, onBombDestroy,
@@ -123,7 +124,10 @@ tb._shell_ = (function () {
       init_snd, play_sound;
 
     // Begin playSnd data
-    snd_name_list = [ 'clack','click','honk','kick','thunder','wind','whoosh' ];
+    snd_name_list = [
+      'clack','click','honk','kick',
+      'thunder','wind','wavechange','whoosh'
+    ];
     snd_obj_map = {};
     // End playSnd data
 
@@ -251,6 +255,20 @@ tb._shell_ = (function () {
   onUpdateTypebox = function ( event, typebox_str ) {
     jqueryMap._$type_box_.text( typebox_str );
   };
+  onWaveComplete = function ( event, level_count, wave_count ) {
+    var msg_str = 'Completed level '
+      + fMap._String_( level_count )
+      + ' wave '
+      + fMap._String_( wave_count );
+
+    jqueryMap._$subtext_
+      .text( msg_str )
+      .show()
+      .fadeOut( nMap._5k_ , function () { $(this).hide(); })
+      ;
+
+    playSnd( 'wavechange' );
+  };
 
   onBombInit = function ( event, bomb_obj ) {
     var lookup_map, filled_str;
@@ -266,7 +284,6 @@ tb._shell_ = (function () {
     });
 
     jqueryMap._$body_.append( $( filled_str ) );
-    // console.warn( '_bomb_init_', bomb_obj );
   };
   onBombMove = function ( event, bomb_obj ) {
     var left_percent, btm_percent, $bomb, css_map;
@@ -311,8 +328,8 @@ tb._shell_ = (function () {
 
     $bomb.animate(
       animate_map,
-      nMap._1000_,
-      function (){ this.remove(); }
+      nMap._1k_,
+      function () { this.remove(); }
     );
   };
   // End model-event handlers
@@ -341,6 +358,7 @@ tb._shell_ = (function () {
     $.gevent.subscribe( $body, '_update_lives_',    onUpdateLives    );
     $.gevent.subscribe( $body, '_update_score_',    onUpdateScore    );
     $.gevent.subscribe( $body, '_update_typebox_',  onUpdateTypebox  );
+    $.gevent.subscribe( $body, '_wave_complete_',   onWaveComplete   );
 
     $.gevent.subscribe( $body, '_bomb_init_',     onBombInit     );
     $.gevent.subscribe( $body, '_bomb_move_',     onBombMove     );

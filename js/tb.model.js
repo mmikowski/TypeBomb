@@ -28,8 +28,8 @@ tb._model_ = (function () {
       _max_typebox_int_ : nMap._22_,
       _timetick_ms_     : nMap._100_,
 
-      _level_pause_ms_ : nMap._3000_,
-      _wave_pause_ms_  : nMap._5000_,
+      _level_pause_ms_ : nMap._10k_,
+      _wave_pause_ms_  : nMap._5k_,
 
       _wave_key_list_ : [
         '_onscreen_count_',     // how many bombs to try to keep onscreen
@@ -48,17 +48,7 @@ tb._model_ = (function () {
           [ nMap._8_, nMap._0_, nMap._d32_, nMap._d08_, 50,  800 ]
         ],
         [
-          [ nMap._2_, nMap._1_, nMap._d12_, nMap._d04_, nMap._4_,
-            nMap._1000_
-          ],
-          [ nMap._2_, nMap._1_, nMap._d16_, nMap._d04_, nMap._8_,
-            nMap._1000_
-          ],
-          [ nMap._2_, nMap._1_, nMap._d20_, nMap._d04_, nMap._12_, nMap._1000_
-          ],
-          [ nMap._2_, nMap._1_, nMap._d24_, nMap._d04_, nMap._16_,
-            nMap._1000_
-          ]
+          [ nMap._9_, nMap._1_, nMap._d32_, nMap._d08_, 60, 500 ]
         ]
       ]
     },
@@ -142,10 +132,11 @@ tb._model_ = (function () {
   bombMgrObj = (function () {
     var
       sMap = {
+        _addbomb_toid_    : vMap._undef_,
         _bomb_list_       : [],
         _bomb_int_        : nMap._0_,
-        _wave_map_        : vMap._undef_,
-        _addbomb_toid_    : vMap._undef_
+        _next_wave_toid_  : vMap._undef_,
+        _wave_map_        : vMap._undef_
       },
       wordList = [
         'asdf', 'fgh', 'jkl', 'alm', 'poe', 'qjuery', 'doe', 'dis',
@@ -155,7 +146,7 @@ tb._model_ = (function () {
       wordCount = wordList[ vMap._length_ ],
 
       bombProto,        addBomb,
-      doNextLevelWave,
+      doNextWave,
       checkBombDestroy, clearBombList,
       getBombByKey,     getBombCount,
       updateBombList
@@ -219,8 +210,9 @@ tb._model_ = (function () {
       sMap._addbomb_toid_ = vMap._undef_;
     };
 
-    doNextLevelWave = function () {
+    doNextWave = function () {
       stateMap._match_count_ = nMap._0_;
+      sMap._next_wave_toid_  = vMap._undef_;
     };
 
     checkBombDestroy = function ( label_str ) {
@@ -228,7 +220,7 @@ tb._model_ = (function () {
         wave_map = sMap._wave_map_,
         bomb_obj = getBombByKey( '_label_str_', label_str, true ),
 
-        level_wave_list,
+        pause_ms, level_wave_list,
         level_count, wave_count,
         next_wave_map
         ;
@@ -243,40 +235,46 @@ tb._model_ = (function () {
         $.gevent.publish( '_update_score_', stateMap._score_count_ );
       }
 
+      if ( stateMap._match_count_ < wave_map._match_goal_int_ ) { return; }
+
       // Fire off new level or wave if all bombs are cleared
       //
-      if ( stateMap._match_count_ === wave_map._match_goal_int_ ) {
-        level_count = stateMap._level_count_;
-        wave_count  = stateMap._wave_count_;
-        console.warn( 'level-wave complete %s - %s', level_count, wave_count );
+      level_count = stateMap._level_count_;
+      wave_count  = stateMap._wave_count_;
+      $.gevent.publish( '_wave_complete_', [ level_count, wave_count ] );
 
-        wave_count++;
-        level_wave_list = stateMap._level_wave_list_;
+      wave_count++;
+      level_wave_list = stateMap._level_wave_list_;
+      next_wave_map = level_wave_list[ level_count ][ wave_count ];
+
+      // Increment to next wave if exists...
+      //
+      if ( next_wave_map ) {
+        stateMap._wave_count_ = wave_count;
+        sMap._wave_map_ = next_wave_map;
+        pause_ms = cfgMap._wave_pause_ms_;
+      }
+
+      // ..otherwise increment level, wave 0
+      //
+      else {
+        wave_count = nMap._0_;
+        if ( level_wave_list[ level_count + nMap._1_ ] ) {
+          level_count++;
+        }
         next_wave_map = level_wave_list[ level_count ][ wave_count ];
 
-        if ( next_wave_map ) {
-          stateMap._wave_count_ = wave_count;
-          stateMap._next_level_toid
-            = __setTo( doNextLevelWave, cfgMap._wave_pause_ms_);
-          sMap._wave_map_ = next_wave_map;
-        }
-
-        else {
-          wave_count = nMap._0_;
-          if ( level_wave_list[ level_count + nMap._1_ ] ) {
-            level_count++;
-          }
-          next_wave_map = level_wave_list[ level_count ][ wave_count ];
-
-          stateMap._wave_count_  = wave_count;
-          stateMap._level_count_ = level_count;
-          sMap._wave_map_ = next_wave_map;
-
-          stateMap._next_level_toid
-            = __setTo( doNextLevelWave, cfgMap._level_pause_ms_);
-        }
-        console.warn( 'Next level-wave: %s - %s', level_count, wave_count );
+        stateMap._wave_count_  = wave_count;
+        stateMap._level_count_ = level_count;
+        sMap._wave_map_ = next_wave_map;
+        pause_ms        = cfgMap._level_pause_ms_;
+        $.gevent.publish( '_update_level_',  level_count );
       }
+
+      // Set pause and notify gui
+      //
+      sMap._next_wave_toid_ = __setTo( doNextWave, pause_ms);
+      console.warn( '_wave_complete_', level_count, wave_count );
     };
 
     clearBombList = function () {
@@ -320,6 +318,9 @@ tb._model_ = (function () {
       var
         idx, bomb_list, bomb_count, bomb_obj,
         wave_map, delay_ms;
+
+      // do nothing of we have a wave break
+      if ( sMap._next_wave_toid_ ) { return; }
 
       // Make sure we are initiated (this should not happen!)
       if ( stateMap._level_count_ === vMap._undef_ ) {
@@ -499,7 +500,7 @@ tb._model_ = (function () {
 
       if ( type_length > cfgMap._max_typebox_int_ ) {
         type_length = cfgMap._max_typebox_int_;
-        $.gevent.publish( '_acknowledge_key_', [ '_at_limit_' ]); // honk
+        $.gevent.publish( '_acknowledge_key_', [ '_at_limit_' ]);
         return false;
       }
 

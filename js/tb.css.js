@@ -205,13 +205,11 @@ tb._css_ = (function () {
       '.tb-_shell-title_' : {
         _font_size_ : V._4em_,
         _top_       : V._1em_,
-        _color_     : V._xaaa_,
-        _border_    : '1px solid #800'
+        _color_     : V._xaaa_
       },
       '.tb-_shell-subtext_' : {
         _font_size_ : V._3em_,
         _top_       : V._3d5em_,
-        _border_    : '1px solid red',
         _color_     : V._x999_
       },
       '.tb-_shell-hiscore_' : {
@@ -223,7 +221,6 @@ tb._css_ = (function () {
         _padding_     : V._d5em_,
         _font_size_   : V._2em_,
         _top_         : V._8em_,
-        _border_      : '1px solid blue',
         _text_align_  : V._center_
       },
       '.tb-_shell-level_' : {
@@ -275,8 +272,7 @@ tb._css_ = (function () {
         _height_    : V._5em_,
         _left_      : V._50p_,
         _margin_left_ : V._n10p_,
-        _width_       : V._20p_,
-        _border_ : '1px solid red'
+        _width_       : V._20p_
       },
 
       '.tb-_shell-start-label_' : {
