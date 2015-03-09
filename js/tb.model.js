@@ -186,22 +186,25 @@ tb._model_ = (function () {
 
     addBomb = function () {
       var
-        wave_map, label_idx, label_str, drop_speed, x_ratio,
+        wave_map, label_idx, label_str,
+        speed_ratio, drop_speed, x_ratio,
         bomb_obj, bomb_list;
 
       wave_map   = sMap._wave_map_;
       label_idx  = fMap._floor_( wordCount * fMap._rnd_() );
       label_str  = wordList[ label_idx ];
+      speed_ratio = fMap._rnd_();
       drop_speed = wave_map._drop_speed_num_
-        - ( wave_map._drop_range_num_ * fMap._rnd_() );
+      - ( wave_map._drop_range_num_ * speed_ratio );
       drop_speed = -drop_speed;
-      x_ratio = nMap._d25_ + nMap._d5_ * fMap._rnd_();
+      x_ratio = nMap._d16_ + nMap._d66_ * fMap._rnd_();
 
       bomb_obj = tb._createObj_( bombProto );
       bomb_obj._id_          = 'bb' + fMap._String_( sMap._bomb_int_ );
       bomb_obj._y_ratio_     = nMap._1_;
       bomb_obj._delta_y_num_ = drop_speed;
       bomb_obj._x_ratio_     = x_ratio;
+      bomb_obj._speed_ratio_ = speed_ratio;
       bomb_obj._label_str_   = label_str || vMap._blank_;
       sMap._bomb_int_++;
 
@@ -228,8 +231,8 @@ tb._model_ = (function () {
         next_wave_map
         ;
 
-      // Increment score and match count.  Publish events to
-      // have GUI handle the score update and bomb destruction.
+      // Increment score and match count.
+      // Publish events for score update and bomb destruction.
       //
       if ( bomb_obj ) {
         stateMap._score_count_ += nMap._50_;

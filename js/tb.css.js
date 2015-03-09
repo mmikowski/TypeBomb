@@ -19,6 +19,7 @@ tb._css_ = (function () {
   keyMap = {
     _background_color_ : 'background-color',
     _border_           : 'border',
+    _border_color_     : 'border-color',
     _border_bottom_    : 'border-bottom',
     _border_top_       : 'border-top',
     _border_left_      : 'border-left',
@@ -78,8 +79,10 @@ tb._css_ = (function () {
     _14px_         : '14px',
     _1em_          : '1em',
     _1d5em_        : '1.5em',
+    _1d6em_        : '1.6em',
     _20p_          : '20%',
     _2em_          : '2em',
+    _2d5em_        : '2.5em',
     _36p_          : '36%',
     _3em_          : '3em',
     _3d2em_        : '3.2em',
@@ -122,10 +125,10 @@ tb._css_ = (function () {
     _xddd_         : '#ddd',
     _xee8_         : '#ee8',
 
-    _shadow_med_dark_str_ : '#444 0 0 0.5em 0',
-    _shadow_white_str_    : '#fff 0 0 0.5em 0',
-    _typebox_border_      : '0.5em solid blue',
-    _2em_2em_d5em_d5em_   : '2em 2em .5em .5em',
+    _shadow_med_dark_str_ : '#444 0 0 0.2em 0',
+    _shadow_white_str_    : '#fff 0 0 0 0.33em',
+    _typebox_border_      : '0.25em solid #080',
+    _2em_2em_d5em_d5em_   : '2em 2em 0 0',
     _1px_solid_xaaa_      : '1px solid #aaa',
     _std_font_face_       : 'arial,helvetica,sans-serif'
   };
@@ -226,7 +229,7 @@ tb._css_ = (function () {
       '.tb-_shell-level_' : {
         _display_     : V._block_,
         _position_    : V._absolute_,
-        _font_size_   : V._1d5em_,
+        _font_size_   : V._2em_,
         _bottom_      : V._4em_,
         _left_        : V._1em_,
         _width_       : V._6em_,
@@ -245,7 +248,7 @@ tb._css_ = (function () {
       '.tb-_shell-lives_' : {
         _display_   : V._block_,
         _position_  : V._absolute_,
-        _font_size_ : V._1d5em_,
+        _font_size_ : V._2em_,
         _bottom_    : V._1em_,
         _left_      : V._1em_,
         _width_     : V._6em_,
@@ -264,35 +267,12 @@ tb._css_ = (function () {
         _font_weight_ : V._800_,
         _color_       : V._x800_
       },
-      '.tb-_shell-start_' : {
-        _display_   : V._block_,
-        _position_  : V._absolute_,
-        _font_size_ : V._1d5em_,
-        _bottom_    : V._5em_,
-        _height_    : V._5em_,
-        _left_      : V._50p_,
-        _margin_left_ : V._n10p_,
-        _width_       : V._20p_
-      },
-
-      '.tb-_shell-start-label_' : {
-        _line_height_ : V._1d5em_,
-        _text_align_  : V._center_,
-        _font_weight_ : V._800_,
-        _color_       : V._x666_
-      },
-      '.tb-_shell-start-select_' : {
-        _text_align_ : V._center_
-      },
-      '.tb-_shell-start-btn_' : {
-        _text_align_ : V._center_
-      },
       '.tb-_shell-typebox_' : {
         _display_          : V._block_,
         _position_         : V._absolute_,
-        _font_size_        : V._2em_,
+        _font_size_        : V._2d5em_,
         _bottom_           : V._0_,
-        _height_           : V._3em_,
+        _height_           : V._2d5em_,
         _width_            : V._40p_,
         _line_height_      : V._2em_,
         _left_             : V._50p_,
@@ -307,7 +287,7 @@ tb._css_ = (function () {
       '.tb-_shell-score_' : {
         _display_       : V._block_,
         _position_      : V._absolute_,
-        _font_size_     : V._1d5em_,
+        _font_size_     : V._2em_,
         _bottom_        : V._1em_,
         _right_         : V._1em_,
         _width_         : V._5em_,
@@ -334,14 +314,27 @@ tb._css_ = (function () {
       },
       '.tb-_shell-bomb_' : {
         _position_     : V._absolute_,
-        _font_size_    : V._2em_,
-        _border_       : '2px solid green',
+        _font_size_  : '2.5em',
+        _border_       : '.2em solid #ee8',
         _height_       : V._2em_,
-        _line_height_  : V._2em_,
+        _line_height_  : V._1d6em_,
         _border_radius_: V._d5em_,
         _padding_      : '0 .5em 0 .5em',
         _box_shadow_   : V._shadow_med_dark_str_,
-        _background_color_ : V._xee8_
+        _color_        : '#fff',
+        _background_color_ : '#880'
+      },
+      '.tb-_x-fast_' : {
+        _font_size_  : '3em',
+        _color_      : '#fff',
+        _background_color_ : '#080',
+        _border_color_ : '#0f0'
+      },
+      '.tb-_x-slow_' : {
+        _font_size_    : V._2em_,
+        _background_color_ : V._x800_,
+        _border_color_ : '#f00'
+
       }
     }
   };

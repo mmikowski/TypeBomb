@@ -97,7 +97,7 @@
         </control>
       </groupChildrenDescriptors>
     </control>
-    <control controlID="48" controlTypeID="__group__" x="86" y="649" w="304" h="121" measuredW="304" measuredH="121" zOrder="9" locked="false" isInGroup="-1">
+    <control controlID="48" controlTypeID="__group__" x="86" y="649" w="304" h="121" measuredW="304" measuredH="121" zOrder="8" locked="false" isInGroup="-1">
       <groupChildrenDescriptors>
         <control controlID="0" controlTypeID="com.balsamiq.mockups::FieldSet" x="0" y="0" w="304" h="121" measuredW="200" measuredH="170" zOrder="0" locked="false" isInGroup="48">
           <controlProperties>
@@ -112,30 +112,6 @@
         <control controlID="2" controlTypeID="com.balsamiq.mockups::FieldSet" x="157" y="15" w="133" h="91" measuredW="200" measuredH="170" zOrder="2" locked="false" isInGroup="48">
           <controlProperties>
             <text>.tb-shell-level-count</text>
-          </controlProperties>
-        </control>
-      </groupChildrenDescriptors>
-    </control>
-    <control controlID="50" controlTypeID="__group__" x="104" y="604" w="487" h="129" measuredW="487" measuredH="129" zOrder="8" locked="false" isInGroup="-1">
-      <groupChildrenDescriptors>
-        <control controlID="0" controlTypeID="com.balsamiq.mockups::FieldSet" x="0" y="0" w="487" h="129" measuredW="200" measuredH="170" zOrder="0" locked="false" isInGroup="50">
-          <controlProperties>
-            <text>.tb-shell-start</text>
-          </controlProperties>
-        </control>
-        <control controlID="1" controlTypeID="com.balsamiq.mockups::FieldSet" x="26" y="20" w="139" h="91" measuredW="200" measuredH="170" zOrder="1" locked="false" isInGroup="50">
-          <controlProperties>
-            <text>.tb-shell-start-label</text>
-          </controlProperties>
-        </control>
-        <control controlID="2" controlTypeID="com.balsamiq.mockups::FieldSet" x="322" y="20" w="139" h="91" measuredW="200" measuredH="170" zOrder="2" locked="false" isInGroup="50">
-          <controlProperties>
-            <text>.tb-shell-start-select</text>
-          </controlProperties>
-        </control>
-        <control controlID="3" controlTypeID="com.balsamiq.mockups::FieldSet" x="174" y="20" w="139" h="91" measuredW="200" measuredH="170" zOrder="3" locked="false" isInGroup="50">
-          <controlProperties>
-            <text>.tb-shell-start-btn</text>
           </controlProperties>
         </control>
       </groupChildrenDescriptors>
@@ -163,7 +139,7 @@
         </control>
       </groupChildrenDescriptors>
     </control>
-    <control controlID="56" controlTypeID="__group__" x="1146" y="769" w="304" h="121" measuredW="304" measuredH="121" zOrder="10" locked="false" isInGroup="-1">
+    <control controlID="56" controlTypeID="__group__" x="1146" y="769" w="304" h="121" measuredW="304" measuredH="121" zOrder="9" locked="false" isInGroup="-1">
       <groupChildrenDescriptors>
         <control controlID="0" controlTypeID="com.balsamiq.mockups::FieldSet" x="0" y="0" w="304" h="121" measuredW="200" measuredH="170" zOrder="0" locked="false" isInGroup="56">
           <controlProperties>
@@ -182,10 +158,10 @@
         </control>
       </groupChildrenDescriptors>
     </control>
-    <control controlID="57" controlTypeID="com.balsamiq.mockups::Paragraph" x="1548" y="41" w="578" h="262" measuredW="275" measuredH="80" zOrder="11" locked="false" isInGroup="-1">
+    <control controlID="57" controlTypeID="com.balsamiq.mockups::Paragraph" x="1548" y="41" w="578" h="262" measuredW="275" measuredH="80" zOrder="10" locked="false" isInGroup="-1">
       <controlProperties>
         <size>16</size>
-        <text>Steps%20for%20completion%202015-03-09%0A%20%0A-%20%282hr%29%20Implement%20start%20in%20tb-shell-subtext%20%22Select%20level%20to%20start%20%5B%200-3%20%5D%22%0A-%20%282hr%29%20Animate%20lives%20update%2C%20Level%20update%20with%20sounds%0A-%20%282hr%29%20Colors%20and%20size%20per%20speed%0A-%20%288hr%29%20Refine%20word%20selection%0A-%20%288hr%29%20Refine%20levels%0A-%20%288hr%29%20Instructions%20-%20show%20diagram%0A-%20%2816hr%29%20Package%20for%20Chrome%0A%20%0AEstimate%3A%2046hrs</text>
+        <text>Steps%20for%20completion%202015-03-09%0A%20%0Ax%20%282hr%29%20Implement%20start%20in%20tb-shell-subtext%20%22Select%20level%20to%20start%20%5B%200-3%20%5D%22%0Ax%20%282hr%29%20Colors%20and%20size%20per%20speed%0A-%20%282hr%29%20Animate%20lives%20and%20levels%20update%20with%20sounds%0A-%20%288hr%29%20Refine%20word%20selection%0A-%20%288hr%29%20Refine%20levels%0A-%20%288hr%29%20Instructions%20-%20show%20diagram%0A-%20%2816hr%29%20Package%20for%20Chrome%0A%20%0AEstimate%3A%2046hrs%20%2842%20left%29</text>
       </controlProperties>
     </control>
   </controls>

@@ -86,9 +86,9 @@ tb._shell_ = (function () {
       $subtext = $body.find( '.tb-_shell-subtext_' ),
       $title   = $body.find( '.tb-_shell-title_'   ),
       $pregame = $( [
-        $hiscore.get(0),
-        $title.get(0),
-        $subtext.get(0)
+        $hiscore.get( nMap._0_ ),
+        $title.get(   nMap._0_ ),
+        $subtext.get( nMap._0_ )
       ] );
 
     jqueryMap = {
@@ -284,7 +284,7 @@ tb._shell_ = (function () {
   };
 
   onBombInit = function ( event_obj, bomb_obj ) {
-    var lookup_map, filled_str;
+    var lookup_map, filled_str, speed_ratio, class_str, $bomb;
 
     lookup_map = {
       _id_        : cfgMap._bomb_id_prefix_ + bomb_obj._id_,
@@ -296,7 +296,16 @@ tb._shell_ = (function () {
       _lookup_map_ : lookup_map
     });
 
-    jqueryMap._$body_.append( $( filled_str ) );
+    speed_ratio = bomb_obj._speed_ratio_;
+    class_str = 'tb-';
+    class_str += speed_ratio < nMap._d33_ ? '_x-fast_'
+      : speed_ratio < nMap._d66_ ? '_x-normal_'
+      : '_x-slow_';
+
+    $bomb = $( filled_str );
+    $bomb.addClass( class_str );
+
+    jqueryMap._$body_.append( $bomb );
   };
   onBombMove = function ( event_obj, bomb_obj ) {
     var left_percent, btm_percent, $bomb, css_map;
