@@ -30,6 +30,7 @@ var tb = (function () {
       _show_           : 'show',
       _splice_         : 'splice',
       _slice_          : 'slice',
+      _sort_           : 'sort',
       _toString_       : 'toString',
       _true_           : true,
       _undef_          : undefined
@@ -80,13 +81,16 @@ var tb = (function () {
     },
 
     fMap = {
-      _setTo_    : setTimeout,
-      _Object_   : Object,
-      _Array_    : Array,
-      _String_   : String,
-      _floor_    : Math.floor,
-      _parseInt_ : parseInt,
-      _rnd_      : Math.random
+      _Array_          : Array,
+      _Object_         : Object,
+      _String_         : String,
+      _clearTo_        : clearTimeout,
+      _floor_          : Math.floor,
+      _json_parse_     : JSON.parse,
+      _json_stringfy_  : JSON.stringify,
+      _parseInt_       : parseInt,
+      _rnd_            : Math.random,
+      _setTo_          : setTimeout
     },
 
     swapFn = function ( arg ) { return arg; },
@@ -98,7 +102,12 @@ var tb = (function () {
     makeUcFirstStr
     ;
 
-
+  try {
+    fMap._localStorage_ = localStorage;
+  }
+  catch ( ignored ) {
+    fMap._localStorage_ = vMap._undef_;
+  }
   //================= BEGIN NON-BROWSER UTILITIES ==============
   // BEGIN non-browser utility /swapFn/
   // Example: To swap foo and bar:

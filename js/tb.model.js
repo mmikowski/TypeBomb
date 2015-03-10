@@ -11,10 +11,11 @@ tb._model_ = (function () {
   'use strict';
   //---------------- BEGIN MODULE SCOPE VARIABLES --------------
   var
-    fMap     = tb._fMap_,
-    nMap     = tb._nMap_,
-    vMap     = tb._vMap_,
-    __setTo  = fMap._setTo_,
+    fMap      = tb._fMap_,
+    nMap      = tb._nMap_,
+    vMap      = tb._vMap_,
+    __clearTo = fMap._clearTo_,
+    __setTo   = fMap._setTo_,
 
     cfgMap   = {
       _init_map_        : {
@@ -26,6 +27,7 @@ tb._model_ = (function () {
         _wave_count_  : nMap._0_
       },
       _max_typebox_int_ : nMap._22_,
+      _storage_key_     : 'tb-hiscore_list',
       _timetick_ms_     : nMap._100_,
 
       _level_pause_ms_ : nMap._10k_,
@@ -68,14 +70,50 @@ tb._model_ = (function () {
       _wave_count_      : vMap._undef_
     },
 
-    compileLevelWaveList, bombMgrObj,
+    // utility methods
+    addHiScore,
+    compileLevelWaveList,
+    getHiScoreList, initGameVals,
+    makeTimeStamp,  runTimeTick,
+    setIsIngame,
 
-    makeTimeStamp, initGameVals, runTimeTick, setIsIngame,
+    // utility objects
+    bombMgrObj,
 
-    reportKeyPress,  startGame, stopGame,
-
-    initModule
+    // public methods
+    reportKeyPress,  startGame,
+    stopGame,        initModule
     ;
+  //----------------- END MODULE SCOPE VARIABLES ---------------
+
+  //-------------------- BEGIN UTILITY METHODS -----------------
+  // BEGIN utility method /addHiScore/
+  addHiScore = (function () {
+    var sort_fn, add_fn;
+
+    sort_fn = function ( a_map, b_map ) {
+      return b_map._score_int_ - a_map._score_int_;
+    };
+
+    add_fn = function ( score_int, name_str ) {
+      var hiscore_list = getHiScoreList();
+
+      if ( ! hiscore_list ) { hiscore_list = []; }
+
+      hiscore_list[ vMap._push_ ](
+        { _score_int_: score_int, _name_str_: name_str }
+      );
+
+      hiscore_list[ vMap._sort_ ]( sort_fn );
+
+      return vMap._true_;
+    };
+
+    return add_fn;
+  }());
+
+  // END utility method /addHiScore/
+
   // BEGIN utility method /compileWaveLevelList/
   // This converts the terse data structure (list->list->list)
   // in cMap._wave_level_list_ into a friendly structre
@@ -128,7 +166,97 @@ tb._model_ = (function () {
   };
   // END utility method /compileWaveLevelList/
 
-  //----------------- END MODULE SCOPE VARIABLES ---------------
+  // BEGIN utility method /initGameVals/
+  initGameVals = function ( level_idx ) {
+    var init_map, key_list, key_name, list_count, i;
+
+    init_map   = cfgMap._init_map_;
+    key_list   = fMap._Object_[ vMap._keys_ ]( init_map );
+    list_count = key_list[ vMap._length_ ];
+
+    for ( i = nMap._0_; i < list_count; i++ ) {
+      key_name = key_list[ i ];
+      stateMap[ key_name ] = init_map[ key_name ];
+    }
+
+    stateMap._level_count_ = level_idx || nMap._0_;
+
+    $.gevent.publish( '_update_level_',   stateMap._level_count_ );
+    $.gevent.publish( '_update_lives_',   stateMap._lives_count_ );
+    $.gevent.publish( '_update_score_',   stateMap._score_count_ );
+    $.gevent.publish( '_update_typebox_', stateMap._typebox_str_ );
+  };
+  // END utility method /initGameVals/
+
+  // BEGIN utility method /getHiScoreList/
+  getHiScoreList = function () {
+    var store_obj, json_str;
+
+    store_obj = fMap._localStorage_;
+    if ( ! store_obj ) { return vMap._undef_; }
+
+    json_str = store_obj[ cfgMap._storage_key_ ];
+    if ( ! json_str ) { return vMap._undef_; }
+
+    return fMap._json_parse_( json_str );
+  };
+  // END utility method /getHiScoreList/
+
+  // BEGIN utility method /makeTimeStamp/
+  makeTimeStamp = function () { return +new Date(); };
+  // END utility method /makeTimeStamp/
+
+
+  // BEGIN utility method /runTimeTick/
+  // Execute all game-based periodic actions here.
+  runTimeTick = (function () {
+    var tick_ms, run_fn;
+
+    run_fn = function () {
+      var
+        new_ms, elapsed_ms, adj_ticktime_ms;
+
+      if ( stateMap._is_ingame_ ) {
+        bombMgrObj._updateBombList_();
+        new_ms = makeTimeStamp();
+
+        elapsed_ms = tick_ms > nMap._0_
+          ? new_ms - tick_ms
+          : nMap._0_;
+
+        // This adjusts for actual elapsed time since the last invocation
+        adj_ticktime_ms = cfgMap._timetick_ms_ - elapsed_ms;
+
+        stateMap._tick_toid_ = __setTo( run_fn, adj_ticktime_ms );
+        tick_ms = new_ms;
+      }
+    };
+
+    return run_fn;
+  }());
+  // END utility method /runTimeTick/
+
+
+  // BEGIN utility method /setIsInGame/
+  setIsIngame = function ( arg_is_ingame, arg_level_idx ) {
+    var is_ingame, level_idx, level_count;
+
+    level_count = cfgMap._level_wave_list_[ vMap._length_ ];
+
+    level_idx = fMap._parseInt_( arg_level_idx ) || nMap._0_;
+
+    is_ingame   = !! arg_is_ingame;
+    stateMap._is_ingame_ = is_ingame;
+
+    // level and all other fields are updated here
+    if ( is_ingame ) {
+      initGameVals( level_idx );
+      runTimeTick();
+    }
+    $.gevent.publish( '_update_ingame_', [ is_ingame, level_count ] );
+  };
+  // END utility method /setIsInGame/
+  //--------------------- END UTILITY METHODS ------------------
 
   //-------------------- BEGIN UTILITY OBJECTS -----------------
   // BEGIN utility object /bombMgrObj/
@@ -287,7 +415,7 @@ tb._model_ = (function () {
       $.gevent.publish( '_bomb_allclear_' );
       sMap._bomb_list_[ vMap._length_ ] = nMap._0_;
       if ( sMap._addbomb_toid_ ) {
-        clearTimeout( sMap._addbomb_toid_ );
+        __clearTo( sMap._addbomb_toid_ );
         sMap._addbomb_toid_ = vMap._undef_;
       }
     };
@@ -366,85 +494,9 @@ tb._model_ = (function () {
       _updateBombList_   : updateBombList
     };
   }());
-  // End utility object /bombMgrObj/
+  // END utility object /bombMgrObj/
   //--------------------- END UTILITY OBJECTS ------------------
 
-  //-------------------- BEGIN UTILITY METHODS -----------------
-  // BEGIN utility method /makeTimeStamp/
-  makeTimeStamp = function () { return +new Date(); };
-  // End utility method /makeTimeStamp/
-
-  // BEGIN utility method /initGameVals/
-  initGameVals = function ( level_idx ) {
-    var init_map, key_list, key_name, list_count, i;
-
-    init_map   = cfgMap._init_map_;
-    key_list   = fMap._Object_[ vMap._keys_ ]( init_map );
-    list_count = key_list[ vMap._length_ ];
-
-    for ( i = nMap._0_; i < list_count; i++ ) {
-      key_name = key_list[ i ];
-      stateMap[ key_name ] = init_map[ key_name ];
-    }
-
-    stateMap._level_count_ = level_idx || nMap._0_;
-
-    $.gevent.publish( '_update_level_',   stateMap._level_count_ );
-    $.gevent.publish( '_update_lives_',   stateMap._lives_count_ );
-    $.gevent.publish( '_update_score_',   stateMap._score_count_ );
-    $.gevent.publish( '_update_typebox_', stateMap._typebox_str_ );
-  };
-  // End utility method /initGameVals/
-
-  // BEGIN utility method /runTimeTick/
-  // Execute all game-based periodic actions here.
-  runTimeTick = (function () {
-    var tick_ms, run_fn;
-
-    run_fn = function () {
-      var
-        new_ms, elapsed_ms, adj_ticktime_ms;
-
-      if ( stateMap._is_ingame_ ) {
-        bombMgrObj._updateBombList_();
-        new_ms = makeTimeStamp();
-
-        elapsed_ms = tick_ms > nMap._0_
-          ? new_ms - tick_ms
-          : nMap._0_;
-
-        // This adjusts for actual elapsed time since the last invocation
-        adj_ticktime_ms = cfgMap._timetick_ms_ - elapsed_ms;
-
-        stateMap._tick_toid_ = __setTo( run_fn, adj_ticktime_ms );
-        tick_ms = new_ms;
-      }
-    };
-
-    return run_fn;
-  }());
-  // End utility method /runTimeTick/
-
-  // BEGIN utility method /setInGame/
-  setIsIngame = function ( arg_is_ingame, arg_level_idx ) {
-    var is_ingame, level_idx, level_count;
-
-    level_count = cfgMap._level_wave_list_[ vMap._length_ ];
-
-    level_idx = fMap._parseInt_( arg_level_idx ) || nMap._0_;
-
-    is_ingame   = !! arg_is_ingame;
-    stateMap._is_ingame_ = is_ingame;
-
-    // level and all other fields are updated here
-    if ( is_ingame ) {
-      initGameVals( level_idx );
-      runTimeTick();
-    }
-    $.gevent.publish( '_update_ingame_', [ is_ingame, level_count ] );
-  };
-  // End utility method /setInGame/
-  //--------------------- END UTILITY METHODS ------------------
 
   //------------------- BEGIN PUBLIC METHODS -------------------
   // BEGIN public method /reportKeyPress/
@@ -526,21 +578,21 @@ tb._model_ = (function () {
 
     return report_keypress;
   }());
-  // End public method /reportKeyPress/
+  // END public method /reportKeyPress/
 
   // BEGIN public method /stopGame/
   stopGame = function (){
     if ( stateMap._tick_toid_ ) {
-      clearTimeout( stateMap._tick_toid_ );
+      __clearTo( stateMap._tick_toid_ );
       stateMap._tick_toid_ = vMap._undef_;
     }
     bombMgrObj._clearBombList_();
     setIsIngame( vMap._false_ );
     $.gevent.publish( '_bomb_allclear_' );
   };
-  // End public method /stopGame/
+  // END public method /stopGame/
 
-// BEGIN public method /startGame/
+  // BEGIN public method /startGame/
   startGame = function ( level_count ){
     if ( stateMap._level_wave_list_ === vMap._undef_ ) {
       compileLevelWaveList();
@@ -555,7 +607,7 @@ tb._model_ = (function () {
 
     setIsIngame( vMap._true_, level_count );
   };
-  // End public method /startGame/
+  // END public method /startGame/
 
   // BEGIN public method /initModule/
   initModule = function () {
@@ -563,9 +615,11 @@ tb._model_ = (function () {
     $.gevent.publish( '_acknowledge_init_' );
     setIsIngame( vMap._false_);
   };
-  // End public method /initModule/
+  // END public method /initModule/
 
   return {
+    // TODO: delete _addHiScore_; this is a hack for jslint
+    _addHiScore_     : addHiScore,
     _initModule_     : initModule,
     _stopGame_       : stopGame,
     _startGame_      : startGame,
