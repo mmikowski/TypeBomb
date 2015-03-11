@@ -6,6 +6,7 @@
 */
 /*global $, tb, Audio*/
 
+// BEGIN tb._shell_
 tb._shell_ = (function () {
   //---------------- BEGIN MODULE SCOPE VARIABLES --------------
   'use strict';
@@ -358,7 +359,7 @@ tb._shell_ = (function () {
   //-------------------- END EVENT HANDLERS --------------------
 
   //------------------- BEGIN PUBLIC METHODS -------------------
-  // Begin Shell public method /initModule/
+  // Begin public method /initModule/
   initModule = function () {
     var $body = $( 'body' );
 
@@ -368,12 +369,12 @@ tb._shell_ = (function () {
     $body.html( cfgMap._main_html_ );
     setJqueryMap( $body );
 
-    // Begin Shell browser event bindings
+    // Begin browser event bindings
     $body.on( 'keypress', onKeypress );
     $body.on( 'keydown',  onKeydown  );
-    // End Shell browser event bindings
+    // End browser event bindings
 
-    // Begin Shell model event bindings
+    // Begin model event bindings
     $.gevent.subscribe( $body, '_acknowledge_key_', onAcknowledgeKey );
     $.gevent.subscribe( $body, '_update_ingame_',   onUpdateIngame   );
     $.gevent.subscribe( $body, '_update_level_',    onUpdateLevel    );
@@ -387,14 +388,15 @@ tb._shell_ = (function () {
     $.gevent.subscribe( $body, '_bomb_explode_',  onBombExplode  );
     $.gevent.subscribe( $body, '_bomb_destroy_',  onBombDestroy  );
     $.gevent.subscribe( $body, '_bomb_allclear_', onBombAllclear );
-    // End Shell model event bindings
+    // End model event bindings
 
-    // Initialize model after we hook up our event handlers
+    // Initialize model *after* we have subscribed all our handlers
     tb._model_._initModule_();
   };
-  // End Shell public method /initModule/
+  // End public method /initModule/
 
   // Start the entire application
   $(function (){ initModule(); });
   //------------------- END PUBLIC METHODS ---------------------
 }());
+// END tb._shell_

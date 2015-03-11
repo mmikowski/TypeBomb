@@ -6,10 +6,10 @@
  */
 /*global $, tb*/
 
-// BEGIN _model_
+// BEGIN tb._model_
 tb._model_ = (function () {
-  'use strict';
   //---------------- BEGIN MODULE SCOPE VARIABLES --------------
+  'use strict';
   var
     fMap      = tb._fMap_,
     nMap      = tb._nMap_,
@@ -19,7 +19,6 @@ tb._model_ = (function () {
 
     cfgMap   = {
       _init_map_        : {
-        // _level_count_ : nMap._0_,
         _lives_count_ : nMap._5_,
         _match_count_ : nMap._0_,
         _score_count_ : nMap._0_,
@@ -35,25 +34,65 @@ tb._model_ = (function () {
 
       _wave_key_list_ : [
         '_onscreen_count_',     // how many bombs to try to keep onscreen
-        '_word_complex_idx_',   // how difficult the words should be (0-5?)
         '_drop_speed_num_',     // max drop speed in percent of screen height
         '_drop_range_num_',     // variation from max speed allowed
         '_match_goal_int_',     // number of matched bombs to complete wave
         '_bomb_pause_ms_'       // max pause before dropping new bomb
       ],
       _level_wave_list_ : [
-        [
-          [ nMap._4_, nMap._0_, nMap._d16_, nMap._d04_, 24, 2000 ],
-          [ nMap._5_, nMap._0_, nMap._d20_, nMap._d06_, 32, 1500 ],
-          [ nMap._6_, nMap._0_, nMap._d24_, nMap._d08_, 38, 1250 ],
-          [ nMap._7_, nMap._0_, nMap._d28_, nMap._d08_, 44, 1000 ],
-          [ nMap._8_, nMap._0_, nMap._d32_, nMap._d08_, 50,  800 ]
+        [ [ nMap._4_, nMap._d16_, nMap._d04_, 24, 2000 ],
+          [ nMap._5_, nMap._d20_, nMap._d06_, 32, 1500 ],
+          [ nMap._6_, nMap._d24_, nMap._d08_, 38, 1250 ],
+          [ nMap._7_, nMap._d28_, nMap._d08_, 44, 1000 ],
+          [ nMap._8_, nMap._d32_, nMap._d08_, 50,  800 ]
         ],
-        [
-          [ nMap._9_, nMap._1_, nMap._d32_, nMap._d08_, 60, 500 ]
+        [ [ nMap._4_, nMap._d16_, nMap._d04_, 24, 2000 ],
+          [ nMap._5_, nMap._d20_, nMap._d06_, 32, 1500 ],
+          [ nMap._6_, nMap._d24_, nMap._d08_, 38, 1250 ],
+          [ nMap._7_, nMap._d28_, nMap._d08_, 44, 1000 ],
+          [ nMap._8_, nMap._d32_, nMap._d08_, 50,  800 ]
         ],
-        [
-          [ nMap._9_, nMap._1_, nMap._d32_, nMap._d08_, 60, 500 ]
+        [ [ nMap._4_, nMap._d16_, nMap._d04_, 24, 2000 ],
+          [ nMap._5_, nMap._d20_, nMap._d06_, 32, 1500 ],
+          [ nMap._6_, nMap._d24_, nMap._d08_, 38, 1250 ],
+          [ nMap._7_, nMap._d28_, nMap._d08_, 44, 1000 ],
+          [ nMap._8_, nMap._d32_, nMap._d08_, 50,  800 ],
+          [ nMap._9_, nMap._d32_, nMap._d08_, 60,  500 ]
+        ],
+        [ [ nMap._4_, nMap._d16_, nMap._d04_, 24, 2000 ],
+          [ nMap._5_, nMap._d20_, nMap._d06_, 32, 1500 ],
+          [ nMap._6_, nMap._d24_, nMap._d08_, 38, 1250 ],
+          [ nMap._7_, nMap._d28_, nMap._d08_, 44, 1000 ],
+          [ nMap._8_, nMap._d32_, nMap._d08_, 50,  800 ],
+          [ nMap._9_, nMap._d32_, nMap._d08_, 60,  500 ]
+        ],
+        [ [ nMap._4_, nMap._d16_, nMap._d04_, 24, 2000 ],
+          [ nMap._5_, nMap._d20_, nMap._d06_, 32, 1500 ],
+          [ nMap._6_, nMap._d24_, nMap._d08_, 38, 1250 ],
+          [ nMap._7_, nMap._d28_, nMap._d08_, 44, 1000 ],
+          [ nMap._8_, nMap._d32_, nMap._d08_, 50,  800 ],
+          [ nMap._9_, nMap._d32_, nMap._d08_, 60,  500 ]
+        ],
+        [ [ nMap._4_, nMap._d16_, nMap._d04_, 24, 2000 ],
+          [ nMap._5_, nMap._d20_, nMap._d06_, 32, 1500 ],
+          [ nMap._6_, nMap._d24_, nMap._d08_, 38, 1250 ],
+          [ nMap._7_, nMap._d28_, nMap._d08_, 44, 1000 ],
+          [ nMap._8_, nMap._d32_, nMap._d08_, 50,  800 ],
+          [ nMap._9_, nMap._d32_, nMap._d08_, 60,  500 ]
+        ],
+        [ [ nMap._4_, nMap._d16_, nMap._d04_, 24, 2000 ],
+          [ nMap._5_, nMap._d20_, nMap._d06_, 32, 1500 ],
+          [ nMap._6_, nMap._d24_, nMap._d08_, 38, 1250 ],
+          [ nMap._7_, nMap._d28_, nMap._d08_, 44, 1000 ],
+          [ nMap._8_, nMap._d32_, nMap._d08_, 50,  800 ],
+          [ nMap._9_, nMap._d32_, nMap._d08_, 60,  500 ]
+        ],
+        [ [ nMap._4_, nMap._d16_, nMap._d04_, 24, 2000 ],
+          [ nMap._5_, nMap._d20_, nMap._d06_, 32, 1500 ],
+          [ nMap._6_, nMap._d24_, nMap._d08_, 38, 1250 ],
+          [ nMap._7_, nMap._d28_, nMap._d08_, 44, 1000 ],
+          [ nMap._8_, nMap._d32_, nMap._d08_, 50,  800 ],
+          [ nMap._9_, nMap._d32_, nMap._d08_, 60,  500 ]
         ]
       ]
     },
@@ -62,6 +101,7 @@ tb._model_ = (function () {
       _is_ingame_       : vMap._undef_,
       _level_count_     : vMap._undef_,
       _level_wave_list_ : vMap._undef_,
+      _weight_ratio_    : vMap._undef_,
       _lives_count_     : vMap._undef_,
       _match_count_     : vMap._undef_,
       _score_count_     : vMap._undef_,
@@ -153,7 +193,11 @@ tb._model_ = (function () {
               break;
 
             default:
-              gen_wave_map[ wave_key ] = value_list[ k ];
+              try { gen_wave_map[ wave_key ] = value_list[ k ]; }
+              catch ( error_obj ) {
+                console.warn( i, j, wave_count, wave_list );
+                throw error_obj;
+              }
               break;
 
           }
@@ -269,12 +313,6 @@ tb._model_ = (function () {
         _next_wave_toid_  : vMap._undef_,
         _wave_map_        : vMap._undef_
       },
-      wordList = [
-        'asdf', 'fgh', 'jkl', 'alm', 'poe', 'qjuery', 'doe', 'dis',
-        'dat', 'dudder', 'the', 'am', 'I', 'you', 'them', 'if', 'then',
-        'that', 'power', 'tic', 'tac', 'toe', 'to', 'car', 'fart'
-      ],
-      wordCount = wordList[ vMap._length_ ],
 
       bombProto,        addBomb,
       doNextWave,
@@ -314,20 +352,27 @@ tb._model_ = (function () {
 
     addBomb = function () {
       var
-        wave_map, label_idx, label_str,
-        speed_ratio, drop_speed, x_ratio,
-        bomb_obj, bomb_list;
+        wave_map, label_str, speed_ratio,
+        drop_speed, x_ratio, bomb_obj, bomb_list
+        ;
 
-      wave_map   = sMap._wave_map_;
-      label_idx  = fMap._floor_( wordCount * fMap._rnd_() );
-      label_str  = wordList[ label_idx ];
+      wave_map  = sMap._wave_map_;
+      // TODO: use value based on difficulty (add to bomb obj).
+      // This means we will need to get difficulty along with string
+      // from this selection.
+      //
+      label_str = tb._model_._data_._getWord_(
+        stateMap._level_count_, 1 // stateMap._weight_ratio_
+      );
+
+      x_ratio     = nMap._d16_ + nMap._d66_ * fMap._rnd_();
       speed_ratio = fMap._rnd_();
-      drop_speed = wave_map._drop_speed_num_
-      - ( wave_map._drop_range_num_ * speed_ratio );
-      drop_speed = -drop_speed;
-      x_ratio = nMap._d16_ + nMap._d66_ * fMap._rnd_();
+      drop_speed  = wave_map._drop_speed_num_
+        - ( wave_map._drop_range_num_ * speed_ratio );
+      drop_speed  = -drop_speed;
 
       bomb_obj = tb._createObj_( bombProto );
+
       bomb_obj._id_          = 'bb' + fMap._String_( sMap._bomb_int_ );
       bomb_obj._y_ratio_     = nMap._1_;
       bomb_obj._delta_y_num_ = drop_speed;
@@ -363,6 +408,7 @@ tb._model_ = (function () {
       // Publish events for score update and bomb destruction.
       //
       if ( bomb_obj ) {
+        // TODO: use value based on level and difficulty (add to bomb obj)
         stateMap._score_count_ += nMap._50_;
         stateMap._match_count_ += nMap._1_;
         $.gevent.publish( '_bomb_destroy_', bomb_obj );
@@ -393,9 +439,14 @@ tb._model_ = (function () {
       //
       else {
         wave_count = nMap._0_;
+
         if ( level_wave_list[ level_count + nMap._1_ ] ) {
           level_count++;
         }
+        else {
+          stateMap._weight_ratio_ += 0.2;
+        }
+
         next_wave_map = level_wave_list[ level_count ][ wave_count ];
 
         stateMap._wave_count_  = wave_count;
@@ -497,7 +548,6 @@ tb._model_ = (function () {
   // END utility object /bombMgrObj/
   //--------------------- END UTILITY OBJECTS ------------------
 
-
   //------------------- BEGIN PUBLIC METHODS -------------------
   // BEGIN public method /reportKeyPress/
   // If key press is actionable, return true
@@ -511,7 +561,10 @@ tb._model_ = (function () {
     report_keypress = function ( key_code ) {
       var typebox_str, type_length, end_idx, resp_name;
 
-      // do not handle if not in game
+      // Do not handle if not in game.
+      // TODO: when not in game, pass the key press to another routine
+      // that will allow user to press 'i' for instructions, etc.
+      //
       if ( ! stateMap._is_ingame_ ) { return vMap._false_; }
 
       // get typebox content and length
@@ -602,8 +655,9 @@ tb._model_ = (function () {
       stopGame();
     }
 
-    stateMap._level_count_ = level_count;
-    stateMap._wave_count_  = nMap._0_;
+    stateMap._level_count_   = level_count;
+    stateMap._wave_count_    = nMap._0_;
+    stateMap._weight_ratio_  = nMap._0_;
 
     setIsIngame( vMap._true_, level_count );
   };
@@ -611,6 +665,7 @@ tb._model_ = (function () {
 
   // BEGIN public method /initModule/
   initModule = function () {
+    tb._model_._data_._initModule_();
     initGameVals();
     $.gevent.publish( '_acknowledge_init_' );
     setIsIngame( vMap._false_);
@@ -627,4 +682,4 @@ tb._model_ = (function () {
   };
   //-------------------- END PUBLIC METHODS --------------------
 }());
-// END _model_
+// END tb._model_

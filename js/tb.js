@@ -4,9 +4,11 @@
  regexp  : true,      vars : false,    white  : true
  unparam : true,      todo : true,    bitwise : true
 */
-
 /*global $, tb:true*/
+
+// BEGIN tb
 var tb = (function () {
+  //---------------- BEGIN MODULE SCOPE VARIABLES --------------
   'use strict';
   //noinspection MagicNumberJS,NonShortCircuitBooleanExpressionJS
   var
@@ -93,13 +95,13 @@ var tb = (function () {
       _setTo_          : setTimeout
     },
 
-    swapFn = function ( arg ) { return arg; },
-
     createObj,
     fillTmplt,
     getVarType,
     makeOptHtml,
-    makeUcFirstStr
+    makeUcFirstStr,
+    shuffleList,
+    swapFn
     ;
 
   try {
@@ -108,13 +110,10 @@ var tb = (function () {
   catch ( ignored ) {
     fMap._localStorage_ = vMap._undef_;
   }
-  //================= BEGIN NON-BROWSER UTILITIES ==============
-  // BEGIN non-browser utility /swapFn/
-  // Example: To swap foo and bar:
-  //   bar = swap( foo, foo = bar );
-  // END non-browser utility /swapFn/
+  //----------------- END MODULE SCOPE VARIABLES ---------------
 
-  // BEGIN non-browser utility /getVarType/
+  //------------------- BEGIN PUBLIC METHODS -------------------
+  // BEGIN public method /getVarType/
   // Returns 'Function', 'Object', 'Array',
   // 'String', 'Number', 'Null', 'Boolean', or 'Undefined'
   //
@@ -166,9 +165,9 @@ var tb = (function () {
     };
     return get_type_fn;
   }());
-  // END non-browser utility /getVarType/
+  // END public method /getVarType/
 
-  // BEGIN non-browser utility /createObj/
+  // BEGIN public method /createObj/
   // Purpose : Emulates Object.create on shitty browsers
   //
   createObj = (function () {
@@ -186,9 +185,9 @@ var tb = (function () {
       return create_object( proto_obj );
     };
   }());
-  // END non-browser utility /createObj/
+  // END public method /createObj/
 
-  // BEGIN non-browser utility /fillTmplt/
+  // BEGIN public method /fillTmplt/
   fillTmplt = (function () {
     var replace_fn, fill_fn, lookup_map, tmplt_regex;
 
@@ -211,9 +210,9 @@ var tb = (function () {
 
     return fill_fn;
   }());
-  // END non-browser utility /fillTmplt/
+  // END public method /fillTmplt/
 
-  // BEGIN public utility /makeOptHtml/
+  // BEGIN public method /makeOptHtml/
   makeOptHtml = function ( arg_val_str, value_list, arg_title_map ) {
     var
       html        = '',
@@ -238,19 +237,40 @@ var tb = (function () {
     }
     return html;
   };
-  // END public utility /makeOptHtml/
+  // END public method /makeOptHtml/
 
-  // Begin public utility /makeUcFirstStr/
+  // BEGIN public method /makeUcFirstStr/
   makeUcFirstStr = function ( arg_input_str ) {
     var
       input_str  = fMap._String_( arg_input_str ),
       first_char = input_str.charAt( nMap._0_ ).toUpperCase();
     return first_char + input_str.substr( nMap._1_ );
   };
-  // End public utility /getUcFirst/
+  // END public method /makeUcFirstStr/
 
+  // BEGIN public method /shuffleList/
+  // Purpose : Shuffles elements in an array
+  //
+  shuffleList = function ( list ) {
+    var j, k, x, i, c;
+    c = list[ vMap._length_ ];
+    for ( i = c; i > nMap._0_; i-- ) {
+      j = fMap._floor_( fMap._rnd_() * i );
+      k = i - nMap._1_;
+      x = list[ k ];
+      list[ k ] = list[ j ];
+      list[ j ] = x;
+    }
+    return list;
+  };
+  // END public method /shuffleList/
 
-  //================= END NON-BROWSER UTILITIES ==============
+  // BEGIN public method /swapFn/
+  // Example: To swap foo and bar:
+  //   bar = swap( foo, foo = bar );
+  swapFn = function ( arg ) { return arg; };
+  // END public method /swapFn/
+  //-------------------- END PUBLIC METHODS --------------------
 
  return {
     _vMap_ : vMap,
@@ -262,7 +282,8 @@ var tb = (function () {
     _getVarType_     : getVarType,
     _makeOptHtml_    : makeOptHtml,
     _makeUcFirstStr_ : makeUcFirstStr,
+    _shuffleList_    : shuffleList,
     _swapFn_         : swapFn
   };
 }());
-
+// END tb
