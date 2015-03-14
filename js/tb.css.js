@@ -218,7 +218,7 @@ tb._css_ = (function () {
         _top_       : V._3d5em_,
         _color_     : V._x999_
       },
-      '.tb-_shell-hiscore_' : {
+      '.tb-_shell-hi_score_' : {
         _display_     : V._block_,
         _position_    : V._absolute_,
         _left_        : V._50p_,

@@ -187,7 +187,6 @@ tb._model_._data_ = (function () {
       word_count = word_list[ vMap._length_ ];
       wordSetIdxList[ i ] = { _idx_ : 0, _count_ : word_count };
     }
-    console.warn( wordSetList, wordSetIdxList );
   };
   // END public method /initModule/
 

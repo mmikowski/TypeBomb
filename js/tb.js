@@ -21,6 +21,7 @@ var tb = (function () {
       _false_          : false,
       _hasOwnProperty_ : 'hasOwnProperty',
       _hide_           : 'hide',
+      _indexOf_        : 'indexOf',
       _join_           : 'join',
       _html_           : 'html',
       _keys_           : 'keys',
@@ -33,6 +34,7 @@ var tb = (function () {
       _splice_         : 'splice',
       _slice_          : 'slice',
       _sort_           : 'sort',
+      _substring_      : 'substring',
       _toString_       : 'toString',
       _true_           : true,
       _undef_          : undefined

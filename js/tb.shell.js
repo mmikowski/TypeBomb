@@ -24,7 +24,7 @@ tb._shell_ = (function () {
         + '</svg>'
         + '<div class="tb-_shell-title_">TypeB<span>o</span>mb</div>'
         + '<div class="tb-_shell-subtext_"></div>'
-        + '<div class="tb-_shell-hiscore_">High Score</div>'
+        + '<div class="tb-_shell-hi_score_">High Score</div>'
         + '<div class="tb-_shell-level_">'
           + '<div class="tb-_shell-level-label_">Level</div>'
           + '<div class="tb-_shell-level-count_"></div>'
@@ -56,13 +56,12 @@ tb._shell_ = (function () {
     jqueryMap,
     playSnd,        setJqueryMap,
     animateExplode, get$BombById,
+    updateLivesCount,
 
-    onKeypress,       onKeydown,
-    onChangeLevel,
+    onChangeLevel, onKeypress,
+    onKeydown,     onAcknowledgeKey,
+    onSetMode,     onUpdateField,
 
-    onAcknowledgeKey, onUpdateIngame,
-    onUpdateLevel,    onUpdateLives,
-    onUpdateScore,    onUpdateTypebox,
     onWaveComplete,
 
     onBombInit,    onBombMove,
@@ -77,17 +76,17 @@ tb._shell_ = (function () {
   //--------------------- END UTILITY METHODS ------------------
 
   //--------------------- BEGIN DOM METHODS --------------------
-  // Begin DOM method /setJqueryMap/
+  // BEGIN DOM method /setJqueryMap/
   setJqueryMap = function ( $body ) {
     var
-      $hiscore = $body.find( '.tb-_shell-hiscore_' ),
-      $level   = $body.find( '.tb-_shell-level_'   ),
-      $lives   = $body.find( '.tb-_shell-lives_'   ),
-      $score   = $body.find( '.tb-_shell-score_'   ),
-      $subtext = $body.find( '.tb-_shell-subtext_' ),
-      $title   = $body.find( '.tb-_shell-title_'   ),
-      $pregame = $( [
-        $hiscore.get( nMap._0_ ),
+      $hi_score = $body.find( '.tb-_shell-hi_score_' ),
+      $level    = $body.find( '.tb-_shell-level_'   ),
+      $lives    = $body.find( '.tb-_shell-lives_'   ),
+      $score    = $body.find( '.tb-_shell-score_'   ),
+      $subtext  = $body.find( '.tb-_shell-subtext_' ),
+      $title    = $body.find( '.tb-_shell-title_'   ),
+      $sell_fields = $( [
+        $hi_score.get( nMap._0_ ),
         $title.get(   nMap._0_ ),
         $subtext.get( nMap._0_ )
       ] );
@@ -95,8 +94,8 @@ tb._shell_ = (function () {
     jqueryMap = {
       _$body_         : $body,
       _$bg_svg_       : $body.find( '.tb-_shell-bg-svg_' ),
-      _$pregame_      : $pregame,
-      _$hiscore_      : $hiscore,
+      _$sell_fields_  : $sell_fields,
+      _$hi_score_     : $hi_score,
       _$level_        : $level,
       _$level_count_  : $level.find( '.tb-_shell-level-count_'  ),
       _$lives_        : $lives,
@@ -106,26 +105,26 @@ tb._shell_ = (function () {
       _$score_count_  : $score.find( '.tb-_shell-score-count_'  ),
       _$subtext_      : $subtext,
       _$title_        : $title,
-      _$type_box_     : $body.find(  '.tb-_shell-typebox_'      )
+      _$typebox_      : $body.find(  '.tb-_shell-typebox_'      )
     };
   };
-  // End DOM method /setJqueryMap/
+  // END DOM method /setJqueryMap/
 
-  // Begin DOM method /playSnd/
+  // BEGIN DOM method /playSnd/
   playSnd = (function () {
     var
       snd_name_list, snd_count, snd_obj_map,
       init_snd, play_sound;
 
-    // Begin playSnd data
+    // BEGIN playSnd data
     snd_name_list = [
       'clack','click','honk','kick',
       'thunder','wind','wavechange','whoosh'
     ];
     snd_obj_map = {};
-    // End playSnd data
+    // END playSnd data
 
-    // Begin init_snd
+    // BEGIN init_snd
     init_snd = function () {
       var i, name_count, snd_name;
       if ( snd_count > nMap._0_ ) { return; }// already initialized
@@ -138,9 +137,9 @@ tb._shell_ = (function () {
       }
       snd_count = name_count;
     };
-    // End init_snd
+    // END init_snd
 
-    // Begin playI
+    // BEGIN playI
     play_sound = function ( snd_name ) {
       var snd_obj;
 
@@ -149,20 +148,19 @@ tb._shell_ = (function () {
 
       snd_obj = snd_obj_map[ snd_name ];
       if ( ! snd_obj ) {
-        console.warn( '_snd_name_not_known_' );
-        return false;
+        throw '_snd_name_not_known_';
       }
 
       snd_obj.currentTime = nMap._0_;
       snd_obj.play();
     };
-    // End play_sound
+    // END play_sound
 
     return play_sound;
   }());
-  // End DOM method /playSnd/
+  // END DOM method /playSnd/
 
-  // Begin DOM method /animateExplode/
+  // BEGIN DOM method /animateExplode/
   animateExplode = (function () {
     var flash_count, animate_explode;
 
@@ -193,18 +191,26 @@ tb._shell_ = (function () {
     };
     return animate_explode;
   }());
-  // End DOM method /animateExplode/
+  // END DOM method /animateExplode/
 
-  // Begin DOM method /get$BombById/
+  // BEGIN DOM method /get$BombById/
   get$BombById = function ( bomb_id ) {
     return $( '#' + cfgMap._bomb_id_prefix_+ bomb_id );
   };
-
-  // End DOM method /get$BombById/
+  // END DOM method /get$BombById/
+  updateLivesCount = function ( lives_count ) {
+    var i, lives_list = [], lives_str;
+    jqueryMap._$lives_count_.text( lives_count );
+    for ( i = nMap._0_; i < lives_count; i++ ) {
+      lives_list.push( cfgMap._lives_char_code_ );
+    }
+    lives_str = lives_list[ vMap._join_ ]( vMap._blank_ );
+    jqueryMap._$lives_gfx_[ vMap._html_ ]( lives_str );
+  };
   //--------------------- END DOM METHODS ----------------------
 
   //------------------- BEGIN EVENT HANDLERS -------------------
-  // Begin browser-event handlers
+  // BEGIN browser-event handlers
   onChangeLevel = function ( event_obj ) {
     var level_str = $(this).val();
     event_obj.preventDefault();
@@ -223,51 +229,76 @@ tb._shell_ = (function () {
     event_obj.preventDefault();
     tb._model_._reportKeyPress_( key_code );
   };
-  // End browser-event handlers
+  // END browser-event handlers
 
-  // Begin model-event handlers
+  // BEGIN model-event handlers
   onAcknowledgeKey = function ( event_obj, key_name ) {
     var snd_name = cfgMap._key_sound_map_[ key_name ];
     playSnd( snd_name );
   };
-  onUpdateLevel = function ( event_obj, level_count ) {
-    jqueryMap._$level_count_.text( String( level_count ) );
-  };
-  onUpdateLives = function ( event_obj, lives_count ) {
-    var i, lives_list = [], lives_str;
-    jqueryMap._$lives_count_.text( lives_count );
-    for ( i = nMap._0_; i < lives_count; i++ ) {
-      lives_list.push( cfgMap._lives_char_code_ );
+
+  onUpdateField = function( event_obj, arg_map ) {
+    var
+      field_name = arg_map._field_name_,
+      field_val  = arg_map._field_val_;
+
+    switch ( field_name ) {
+      case '_level_count_' :
+        jqueryMap._$level_count_.text( fMap._String_( field_val ) );
+        break;
+      case '_lives_count_' :
+        updateLivesCount( field_val );
+        break;
+      case '_score_count_' :
+        jqueryMap._$score_count_.text( fMap._String_( field_val ) );
+        break;
+      case '_typebox_str_' :
+        jqueryMap._$typebox_.text( field_val );
+        break;
+      case '_match_count_':
+      case '_wave_count_':
+        break;
+      default :
+        throw '_unknown_field_update_ ' + field_name;
     }
-    lives_str = lives_list[ vMap._join_ ]( vMap._blank_ );
-    jqueryMap._$lives_gfx_[ vMap._html_ ]( lives_str );
   };
-  onUpdateIngame = function ( event_obj, is_ingame, level_count ) {
-    var i, val_list, opt_html;
-    if ( is_ingame ) {
-      jqueryMap._$pregame_[ vMap._hide_ ]();
-      return;
+
+  onSetMode = function ( event_obj, arg_map ) {
+    var
+      mode_str = arg_map._mode_str_,
+      all_level_count, i, val_list, opt_html;
+
+
+    switch ( mode_str ) {
+      case '_sell_' :
+        all_level_count = arg_map._all_level_count_;
+        val_list = [ '--' ];
+        for ( i = nMap._0_; i < all_level_count; i++ ) {
+          val_list.push( i );
+        }
+
+        opt_html = tb._makeOptHtml_( '--', val_list );
+
+        jqueryMap._$subtext_.html(
+          cfgMap._start_html_ + ' <select>' + opt_html + '</select>'
+        );
+        jqueryMap._$subtext_.find( 'select' ).on( 'change', onChangeLevel );
+        jqueryMap._$sell_fields_[ vMap._show_ ]();
+        break;
+
+      case '_play_' :
+        jqueryMap._$sell_fields_[ vMap._hide_ ]();
+        break;
+
+      case '_add_' :
+        jqueryMap._$sell_fields_[ vMap._hide_ ]();
+        jqueryMap._$hi_score_.html(  );
+        break;
+
+      default:
+        throw '_unknown_mode_str_' + mode_str;
     }
 
-    val_list = [ '--' ];
-    for ( i = nMap._0_; i < level_count; i++ ) {
-      val_list.push( i );
-    }
-
-    opt_html = tb._makeOptHtml_( '--', val_list );
-
-
-    jqueryMap._$pregame_[ vMap._show_ ]();
-    jqueryMap._$subtext_.html(
-      cfgMap._start_html_ + ' <select>' + opt_html + '</select>'
-    );
-    jqueryMap._$subtext_.find( 'select' ).on( 'change', onChangeLevel );
-  };
-  onUpdateScore = function ( event_obj, score_count ) {
-    jqueryMap._$score_count_.text( String( score_count ) );
-  };
-  onUpdateTypebox = function ( event_obj, typebox_str ) {
-    jqueryMap._$type_box_.text( typebox_str );
   };
   onWaveComplete = function ( event_obj, level_count, wave_count ) {
     var msg_str = 'Completed level '
@@ -299,9 +330,9 @@ tb._shell_ = (function () {
 
     speed_ratio = bomb_obj._speed_ratio_;
     class_str = 'tb-';
+    //noinspection NestedConditionalExpressionJS
     class_str += speed_ratio < nMap._d33_ ? '_x-fast_'
-      : speed_ratio < nMap._d66_ ? '_x-normal_'
-      : '_x-slow_';
+      : speed_ratio < nMap._d66_ ? '_x-normal_' : '_x-slow_';
 
     $bomb = $( filled_str );
     $bomb.addClass( class_str );
@@ -355,11 +386,11 @@ tb._shell_ = (function () {
       function () { this.remove(); }
     );
   };
-  // End model-event handlers
+  // END model-event handlers
   //-------------------- END EVENT HANDLERS --------------------
 
   //------------------- BEGIN PUBLIC METHODS -------------------
-  // Begin public method /initModule/
+  // BEGIN public method /initModule/
   initModule = function () {
     var $body = $( 'body' );
 
@@ -369,31 +400,28 @@ tb._shell_ = (function () {
     $body.html( cfgMap._main_html_ );
     setJqueryMap( $body );
 
-    // Begin browser event bindings
+    // BEGIN browser event bindings
     $body.on( 'keypress', onKeypress );
     $body.on( 'keydown',  onKeydown  );
-    // End browser event bindings
+    // END browser event bindings
 
-    // Begin model event bindings
+    // BEGIN model event bindings
+    $.gevent.subscribe( $body, '_set_mode_',        onSetMode        );
+    $.gevent.subscribe( $body, '_update_field_',    onUpdateField    );
     $.gevent.subscribe( $body, '_acknowledge_key_', onAcknowledgeKey );
-    $.gevent.subscribe( $body, '_update_ingame_',   onUpdateIngame   );
-    $.gevent.subscribe( $body, '_update_level_',    onUpdateLevel    );
-    $.gevent.subscribe( $body, '_update_lives_',    onUpdateLives    );
-    $.gevent.subscribe( $body, '_update_score_',    onUpdateScore    );
-    $.gevent.subscribe( $body, '_update_typebox_',  onUpdateTypebox  );
-    $.gevent.subscribe( $body, '_wave_complete_',   onWaveComplete   );
 
+    $.gevent.subscribe( $body, '_wave_complete_', onWaveComplete );
     $.gevent.subscribe( $body, '_bomb_init_',     onBombInit     );
     $.gevent.subscribe( $body, '_bomb_move_',     onBombMove     );
     $.gevent.subscribe( $body, '_bomb_explode_',  onBombExplode  );
     $.gevent.subscribe( $body, '_bomb_destroy_',  onBombDestroy  );
     $.gevent.subscribe( $body, '_bomb_allclear_', onBombAllclear );
-    // End model event bindings
+    // END model event bindings
 
     // Initialize model *after* we have subscribed all our handlers
     tb._model_._initModule_();
   };
-  // End public method /initModule/
+  // END public method /initModule/
 
   // Start the entire application
   $(function (){ initModule(); });
