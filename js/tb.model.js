@@ -760,7 +760,7 @@ tb._model_ = (function () {
 
     if ( hi_score_idx > nMap._n1_ ) {
       hi_score_list = getHiScoreList();
-      setModeAdd( hi_score_idx, hi_score_list );
+      setModeAdd( hi_score_list, hi_score_idx );
     }
     else {
       setModeSell();

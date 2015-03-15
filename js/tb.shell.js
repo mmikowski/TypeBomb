@@ -291,8 +291,12 @@ tb._shell_ = (function () {
         break;
 
       case '_add_' :
-        jqueryMap._$sell_fields_[ vMap._hide_ ]();
-        jqueryMap._$hi_score_.html(  );
+        jqueryMap._$hi_score_.html(
+          'You have placed ' + fMap._String_( arg_map._hi_score_idx_ )
+          + 'on the hi-score list.<br/>\n'
+          +  fMap._json_stringfy_( arg_map._hi_score_list_ )
+        );
+        jqueryMap._$sell_fields_[ vMap._show_ ]();
         break;
 
       default:
