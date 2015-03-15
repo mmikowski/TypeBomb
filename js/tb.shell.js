@@ -292,9 +292,10 @@ tb._shell_ = (function () {
 
       case '_add_' :
         jqueryMap._$hi_score_.html(
-          'You have placed ' + fMap._String_( arg_map._hi_score_idx_ )
-          + 'on the hi-score list.<br/>\n'
-          +  fMap._json_stringfy_( arg_map._hi_score_list_ )
+          'You have placed ' + fMap._String_( arg_map._hi_score_idx_ + 1 )
+          + ' on the hi-score list!<br/>\n'
+          +  fMap._json_stringfy_( arg_map._hi_score_list_ ) + '<br/>'
+          + 'Please enter your initials!'
         );
         jqueryMap._$sell_fields_[ vMap._show_ ]();
         break;

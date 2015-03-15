@@ -95,6 +95,7 @@ tb._css_ = (function () {
     _50em_         : '50em',
     _50p_          : '50%',
     _56p_          : '56%',
+    _60p_          : '60%',
     _5em_          : '5em',
     _6em_          : '6em',
     _800_          : '800',
@@ -111,7 +112,7 @@ tb._css_ = (function () {
     _left_         : 'left',
     _n10p_         : '-10%',
     _n18p_         : '-18%',
-    _n20p_         : '-20%',
+    _n30p_         : '-30%',
     _n28p_         : '-28%',
     _none_         : 'none',
     _d5em_         : '.5em',
@@ -133,7 +134,8 @@ tb._css_ = (function () {
     _typebox_border_      : '0.25em solid #080',
     _2em_2em_d5em_d5em_   : '2em 2em 0 0',
     _1px_solid_xaaa_      : '1px solid #aaa',
-    _std_font_face_       : 'arial,helvetica,sans-serif'
+    _std_font_face_       : 'arial,helvetica,sans-serif',
+    _fix_font_face_       :  'Courier New,Courier,monospace'
   };
 
   V      = valMap;
@@ -276,10 +278,11 @@ tb._css_ = (function () {
         _font_size_        : V._2d5em_,
         _bottom_           : V._0_,
         _height_           : V._2d5em_,
-        _width_            : V._40p_,
+        _width_            : V._60p_,
         _line_height_      : V._2em_,
         _left_             : V._50p_,
-        _margin_left_      : V._n20p_,
+        _margin_left_      : V._n30p_,
+        _font_family_  : V._fix_font_face_,
         _border_           : V._typebox_border_,
         _background_color_ : V._xddd_,
         _border_radius_    : V._2em_2em_d5em_d5em_,
@@ -323,6 +326,7 @@ tb._css_ = (function () {
         _line_height_  : V._1d6em_,
         _border_radius_: V._d5em_,
         _padding_      : '0 .5em 0 .5em',
+        _font_family_  : V._fix_font_face_,
         _box_shadow_   : V._shadow_med_dark_str_,
         _color_        : '#fff',
         _background_color_ : '#880'
