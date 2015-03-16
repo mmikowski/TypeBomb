@@ -161,7 +161,7 @@
     <control controlID="58" controlTypeID="com.balsamiq.mockups::Paragraph" x="1548" y="41" w="578" h="262" measuredW="275" measuredH="80" zOrder="10" locked="false" isInGroup="-1">
       <controlProperties>
         <size>16</size>
-        <text>Steps%20for%20completion%202015-03-09%20%28updated%202015-03-14%29%0A%20%0Ax%20%282hr%29%20Implement%20start%20in%20tb-shell-subtext%20%22Select%20level%20to%20start%20%5B%200-3%20%5D%22%0Ax%20%282hr%29%20Colors%20and%20size%20per%20speed%0Ax%20%288hr%29%20Refine%20word%20selection%0Ax%20%288hr%29%20Refine%20levels%0A-%20%282/6hr%29%20Add%20hi-score%20support%0A-%20%282hr%29%20Animate%20lives%20and%20levels%20update%20with%20sounds%0A-%20%288hr%29%20Instructions%20-%20show%20diagram%0A-%20%2816hr%29%20Package%20for%20Chrome%0A%20%0AEstimates%3A%20%2820/50%29</text>
+        <text>Steps%20for%20completion%202015-03-09%20%28updated%202015-03-14%29%0A%20%0Ax%20%282hr%29%20Implement%20start%20in%20tb-shell-subtext%20%22Select%20level%20to%20start%20%5B%200-3%20%5D%22%0Ax%20%282hr%29%20Colors%20and%20size%20per%20speed%0Ax%20%288hr%29%20Refine%20word%20selection%0Ax%20%288hr%29%20Refine%20levels%0A-%20%286/8hr%29%20Add%20hi-score%20support%0A-%20%282hr%29%20Animate%20lives%20and%20levels%20update%20with%20sounds%0A-%20%288hr%29%20Instructions%20-%20show%20diagram%0A-%20%2816hr%29%20Package%20for%20Chrome%0A%20%0AEstimates%3A%20%2826/54%29</text>
       </controlProperties>
     </control>
   </controls>
