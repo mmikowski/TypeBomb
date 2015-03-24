@@ -197,7 +197,7 @@ tb._css_ = (function () {
         _font_family_ : V._std_font_face_,
         _overflow_    : V._hidden_
       },
-      '.tb-_shell-title_, .tb-_shell-subtext_' : {
+      '.tb-_shell_title_, .tb-_shell_subtext_' : {
         _display_     : V._block_,
         _position_    : V._absolute_,
         _left_        : V._50p_,
@@ -206,21 +206,21 @@ tb._css_ = (function () {
         _text_align_  : V._center_,
         _font_weight_ : V._800_
       },
-      '.tb-_shell-title_ span' : {
+      '.tb-_shell_title_ span' : {
         _vertical_align_ : V._sub_,
         _color_          : V._xc00_
       },
-      '.tb-_shell-title_' : {
+      '.tb-_shell_title_' : {
         _font_size_ : V._4em_,
         _top_       : V._1em_,
         _color_     : V._xaaa_
       },
-      '.tb-_shell-subtext_' : {
+      '.tb-_shell_subtext_' : {
         _font_size_ : V._3em_,
         _top_       : V._3d5em_,
         _color_     : V._x999_
       },
-      '.tb-_shell-hi_score_' : {
+      '.tb-_shell_hi_score_' : {
         _display_     : V._block_,
         _position_    : V._absolute_,
         _left_        : V._50p_,
@@ -231,7 +231,7 @@ tb._css_ = (function () {
         _top_         : V._8em_,
         _text_align_  : V._center_
       },
-      '.tb-_shell-level_' : {
+      '.tb-_shell_level_' : {
         _display_     : V._block_,
         _position_    : V._absolute_,
         _font_size_   : V._2em_,
@@ -244,13 +244,13 @@ tb._css_ = (function () {
         _border_bottom_ : V._1px_solid_xaaa_,
         _color_       : V._x666_
       },
-      '.tb-_shell-level-label_' : {
+      '.tb-_shell_level_label_' : {
         _float_ : V._left_
       },
-      '.tb-_shell-level-count_' : {
+      '.tb-_shell_level_count_' : {
         _float_ : V._right_
       },
-      '.tb-_shell-lives_' : {
+      '.tb-_shell_lives_' : {
         _display_   : V._block_,
         _position_  : V._absolute_,
         _font_size_ : V._2em_,
@@ -263,16 +263,16 @@ tb._css_ = (function () {
 
         _border_bottom_ : V._1px_solid_xaaa_
       },
-      '.tb-_shell-lives-count_' : {
+      '.tb-_shell_lives_count_' : {
         _color_ : V._x666_,
         _float_ : V._right_
       },
-      '.tb-_shell-lives-gfx_' : {
+      '.tb-_shell_lives_gfx_' : {
         _float_       : V._left_,
         _font_weight_ : V._800_,
         _color_       : V._x800_
       },
-      '.tb-_shell-typebox_' : {
+      '.tb-_shell_typebox_' : {
         _display_          : V._block_,
         _position_         : V._absolute_,
         _font_size_        : V._2d5em_,
@@ -290,7 +290,7 @@ tb._css_ = (function () {
         _box_shadow_       : V._shadow_white_str_,
         _overflow_         : V._hidden_
       },
-      '.tb-_shell-score_' : {
+      '.tb-_shell_score_' : {
         _display_       : V._block_,
         _position_      : V._absolute_,
         _font_size_     : V._2em_,
@@ -302,15 +302,15 @@ tb._css_ = (function () {
         _border_bottom_ : V._1px_solid_xaaa_,
         _color_         : V._x666_
       },
-      '.tb-_shell-score-label_' : {
+      '.tb-_shell_score_label_' : {
         _line_height_: V._1d5em_,
         _text_align_ : V._center_
       },
-      '.tb-_shell-score-count_' : {
+      '.tb-_shell_score_count_' : {
         _line_height_: V._1d5em_,
         _text_align_ : V._center_
       },
-      '.tb-_shell-bg-svg_' : {
+      '.tb-_shell_bg_svg_' : {
         _position_     : V._absolute_,
         _width_        : V._100p_,
         _height_       : V._100p_,
@@ -318,7 +318,7 @@ tb._css_ = (function () {
         _stroke_width_ : V._0_,
         _stroke_       : V._xaaa_
       },
-      '.tb-_shell-bomb_' : {
+      '.tb-_shell_bomb_' : {
         _position_     : V._absolute_,
         _font_size_  : '2.5em',
         _border_       : '.2em solid #ee8',
@@ -425,7 +425,7 @@ tb._css_ = (function () {
   // Example   :
   //   fillSheetObj(
   //     document.styleSheets[0],
-  //     {  '.tb-_shell-title_, .tb-_shell-subtext_ ' : {
+  //     {  '.tb-_shell_title_, .tb-_shell_subtext_ ' : {
   //          _display_     : 'block',
   //          _position_    : 'absolute',
   //          _left_        : '50%',

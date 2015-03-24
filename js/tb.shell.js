@@ -18,28 +18,28 @@ tb._shell_ = (function () {
     cfgMap = {
       _main_html_ : vMap._blank_
         + '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"'
-          + 'class="tb-_shell-bg-svg_"'
+          + 'class="tb-_shell_bg_svg_"'
           + 'viewbox="0 0 100 100" preserveAspectRatio="none">'
           + '<path d="M 0,0 40,100 0,100 M 100,0 60,100 100,100"></path>'
         + '</svg>'
-        + '<div class="tb-_shell-title_">TypeB<span>o</span>mb</div>'
-        + '<div class="tb-_shell-subtext_"></div>'
-        + '<div class="tb-_shell-hi_score_">High Score</div>'
-        + '<div class="tb-_shell-level_">'
-          + '<div class="tb-_shell-level-label_">Level</div>'
-          + '<div class="tb-_shell-level-count_"></div>'
+        + '<div class="tb-_shell_title_">TypeB<span>o</span>mb</div>'
+        + '<div class="tb-_shell_subtext_"></div>'
+        + '<div class="tb-_shell_hi_score_">High Score</div>'
+        + '<div class="tb-_shell_level_">'
+          + '<div class="tb-_shell_level_label_">Level</div>'
+          + '<div class="tb-_shell_level_count_"></div>'
         + '</div>'
-        + '<div class="tb-_shell-lives_">'
-          + '<div class="tb-_shell-lives-count_"></div>'
-          + '<div class="tb-_shell-lives-gfx_"></div>'
+        + '<div class="tb-_shell_lives_">'
+          + '<div class="tb-_shell_lives_count_"></div>'
+          + '<div class="tb-_shell_lives_gfx_"></div>'
         + '</div>'
-        + '<div class="tb-_shell-typebox_"></div>'
-        + '<div class="tb-_shell-score_">'
-          + '<div class="tb-_shell-score-label_">Score</div>'
-          + '<div class="tb-_shell-score-count_"></div>'
+        + '<div class="tb-_shell_typebox_"></div>'
+        + '<div class="tb-_shell_score_">'
+          + '<div class="tb-_shell_score_label_">Score</div>'
+          + '<div class="tb-_shell_score_count_"></div>'
         + '</div>',
       _bomb_html_ : vMap._blank_
-        + '<div id="%!%_id_%!%" class="tb-_shell-bomb_">'
+        + '<div id="%!%_id_%!%" class="tb-_shell_bomb_">'
           + '%!%_label_str_%!%'
         + '</div>',
       _start_html_ : 'Select start level: ',
@@ -79,12 +79,12 @@ tb._shell_ = (function () {
   // BEGIN DOM method /setJqueryMap/
   setJqueryMap = function ( $body ) {
     var
-      $hi_score = $body.find( '.tb-_shell-hi_score_' ),
-      $level    = $body.find( '.tb-_shell-level_'   ),
-      $lives    = $body.find( '.tb-_shell-lives_'   ),
-      $score    = $body.find( '.tb-_shell-score_'   ),
-      $subtext  = $body.find( '.tb-_shell-subtext_' ),
-      $title    = $body.find( '.tb-_shell-title_'   ),
+      $hi_score = $body.find( '.tb-_shell_hi_score_' ),
+      $level    = $body.find( '.tb-_shell_level_'   ),
+      $lives    = $body.find( '.tb-_shell_lives_'   ),
+      $score    = $body.find( '.tb-_shell_score_'   ),
+      $subtext  = $body.find( '.tb-_shell_subtext_' ),
+      $title    = $body.find( '.tb-_shell_title_'   ),
       $sell_fields = $( [
         $hi_score.get( nMap._0_ ),
         $title.get(   nMap._0_ ),
@@ -93,19 +93,19 @@ tb._shell_ = (function () {
 
     jqueryMap = {
       _$body_         : $body,
-      _$bg_svg_       : $body.find( '.tb-_shell-bg-svg_' ),
+      _$bg_svg_       : $body.find( '.tb-_shell_bg_svg_' ),
       _$sell_fields_  : $sell_fields,
       _$hi_score_     : $hi_score,
       _$level_        : $level,
-      _$level_count_  : $level.find( '.tb-_shell-level-count_'  ),
+      _$level_count_  : $level.find( '.tb-_shell_level_count_'  ),
       _$lives_        : $lives,
-      _$lives_count_  : $lives.find( '.tb-_shell-lives-count_'  ),
-      _$lives_gfx_    : $lives.find( '.tb-_shell-lives-gfx_'    ),
+      _$lives_count_  : $lives.find( '.tb-_shell_lives_count_'  ),
+      _$lives_gfx_    : $lives.find( '.tb-_shell_lives_gfx_'    ),
       _$score_        : $score,
-      _$score_count_  : $score.find( '.tb-_shell-score-count_'  ),
+      _$score_count_  : $score.find( '.tb-_shell_score_count_'  ),
       _$subtext_      : $subtext,
       _$title_        : $title,
-      _$typebox_      : $body.find(  '.tb-_shell-typebox_'      )
+      _$typebox_      : $body.find(  '.tb-_shell_typebox_'      )
     };
   };
   // END DOM method /setJqueryMap/
@@ -369,7 +369,7 @@ tb._shell_ = (function () {
     playSnd( 'thunder' );
   };
   onBombAllclear = function ( /* event_obj */ ) {
-    var $all_bombs = $( '.tb-_shell-bomb_');
+    var $all_bombs = $( '.tb-_shell_bomb_');
     $all_bombs.remove();
   };
   onBombDestroy = function ( event_obj, bomb_obj ) {
@@ -411,16 +411,16 @@ tb._shell_ = (function () {
     // END browser event bindings
 
     // BEGIN model event bindings
-    $.gevent.subscribe( $body, '_set_mode_',        onSetMode        );
-    $.gevent.subscribe( $body, '_update_field_',    onUpdateField    );
-    $.gevent.subscribe( $body, '_acknowledge_key_', onAcknowledgeKey );
+    $[ vMap._gevent_][ vMap._subscribe_ ]( $body, '_set_mode_',        onSetMode        );
+    $[ vMap._gevent_][ vMap._subscribe_ ]( $body, '_update_field_',    onUpdateField    );
+    $[ vMap._gevent_][ vMap._subscribe_ ]( $body, '_acknowledge_key_', onAcknowledgeKey );
 
-    $.gevent.subscribe( $body, '_wave_complete_', onWaveComplete );
-    $.gevent.subscribe( $body, '_bomb_init_',     onBombInit     );
-    $.gevent.subscribe( $body, '_bomb_move_',     onBombMove     );
-    $.gevent.subscribe( $body, '_bomb_explode_',  onBombExplode  );
-    $.gevent.subscribe( $body, '_bomb_destroy_',  onBombDestroy  );
-    $.gevent.subscribe( $body, '_bomb_allclear_', onBombAllclear );
+    $[ vMap._gevent_][ vMap._subscribe_ ]( $body, '_wave_complete_', onWaveComplete );
+    $[ vMap._gevent_][ vMap._subscribe_ ]( $body, '_bomb_init_',     onBombInit     );
+    $[ vMap._gevent_][ vMap._subscribe_ ]( $body, '_bomb_move_',     onBombMove     );
+    $[ vMap._gevent_][ vMap._subscribe_ ]( $body, '_bomb_explode_',  onBombExplode  );
+    $[ vMap._gevent_][ vMap._subscribe_ ]( $body, '_bomb_destroy_',  onBombDestroy  );
+    $[ vMap._gevent_][ vMap._subscribe_ ]( $body, '_bomb_allclear_', onBombAllclear );
     // END model event bindings
 
     // Initialize model *after* we have subscribed all our handlers
