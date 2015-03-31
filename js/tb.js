@@ -29,6 +29,7 @@ var tb = (function () {
       _length_         : 'length',
       _null_           : null,
       _propIsEnum_     : 'propertyIsEnumerable',
+      _publish_        : 'publish',
       _push_           : 'push',
       _replace_        : 'replace',
       _show_           : 'show',

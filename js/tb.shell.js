@@ -11,10 +11,11 @@ tb._shell_ = (function () {
   //---------------- BEGIN MODULE SCOPE VARIABLES --------------
   'use strict';
   var
-    fMap     = tb._fMap_,
-    nMap     = tb._nMap_,
-    vMap     = tb._vMap_,
-    __setTo  = fMap._setTo_,
+    fMap       = tb._fMap_,
+    nMap       = tb._nMap_,
+    vMap       = tb._vMap_,
+    __setTo    = fMap._setTo_,
+    __$sub     = $[ vMap._gevent_ ][ vMap._subscribe_],
     cfgMap = {
       _main_html_ : vMap._blank_
         + '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"'
@@ -336,13 +337,13 @@ tb._shell_ = (function () {
     speed_ratio = bomb_obj._speed_ratio_;
     class_str = 'tb-';
     //noinspection NestedConditionalExpressionJS
-    class_str += speed_ratio < nMap._d33_ ? '_x-fast_'
-      : speed_ratio < nMap._d66_ ? '_x-normal_' : '_x-slow_';
+    class_str += speed_ratio < nMap._d33_ ? '_x_fast_'
+      : speed_ratio < nMap._d66_ ? '_x_normal_' : '_x_slow_';
 
     $bomb = $( filled_str );
     $bomb.addClass( class_str );
 
-    jqueryMap._$body_.append( $bomb );
+    jqueryMap._$body_.append( $bomb, null );
   };
   onBombMove = function ( event_obj, bomb_obj ) {
     var left_percent, btm_percent, $bomb, css_map;
@@ -382,7 +383,7 @@ tb._shell_ = (function () {
     playSnd( 'whoosh' );
     animate_map = {
       opacity : nMap._0_,
-      left    : bomb_obj._x_ratio_ < nMap._d5_ ? "-=50%" : '+=50%'
+      left    : bomb_obj._x_ratio_ < nMap._d5_ ? '-=50%' : '+=50%'
     };
 
     $bomb.animate(
@@ -411,16 +412,16 @@ tb._shell_ = (function () {
     // END browser event bindings
 
     // BEGIN model event bindings
-    $[ vMap._gevent_][ vMap._subscribe_ ]( $body, '_set_mode_',        onSetMode        );
-    $[ vMap._gevent_][ vMap._subscribe_ ]( $body, '_update_field_',    onUpdateField    );
-    $[ vMap._gevent_][ vMap._subscribe_ ]( $body, '_acknowledge_key_', onAcknowledgeKey );
+    __$sub( $body, '_set_mode_',        onSetMode        );
+    __$sub( $body, '_update_field_',    onUpdateField    );
+    __$sub( $body, '_acknowledge_key_', onAcknowledgeKey );
 
-    $[ vMap._gevent_][ vMap._subscribe_ ]( $body, '_wave_complete_', onWaveComplete );
-    $[ vMap._gevent_][ vMap._subscribe_ ]( $body, '_bomb_init_',     onBombInit     );
-    $[ vMap._gevent_][ vMap._subscribe_ ]( $body, '_bomb_move_',     onBombMove     );
-    $[ vMap._gevent_][ vMap._subscribe_ ]( $body, '_bomb_explode_',  onBombExplode  );
-    $[ vMap._gevent_][ vMap._subscribe_ ]( $body, '_bomb_destroy_',  onBombDestroy  );
-    $[ vMap._gevent_][ vMap._subscribe_ ]( $body, '_bomb_allclear_', onBombAllclear );
+    __$sub( $body, '_wave_complete_', onWaveComplete );
+    __$sub( $body, '_bomb_init_',     onBombInit     );
+    __$sub( $body, '_bomb_move_',     onBombMove     );
+    __$sub( $body, '_bomb_explode_',  onBombExplode  );
+    __$sub( $body, '_bomb_destroy_',  onBombDestroy  );
+    __$sub( $body, '_bomb_allclear_', onBombAllclear );
     // END model event bindings
 
     // Initialize model *after* we have subscribed all our handlers

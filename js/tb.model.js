@@ -17,6 +17,7 @@ tb._model_ = (function () {
     vMap      = tb._vMap_,
     __clearTo = fMap._clearTo_,
     __setTo   = fMap._setTo_,
+    __$pub    = $[ vMap._gevent_ ][ vMap._publish_],
 
     cfgMap   = {
       _init_map_        : {
@@ -139,7 +140,7 @@ tb._model_ = (function () {
   // BEGIN utility /setModeAdd/
   setModeAdd = function ( hi_score_list, hi_score_idx ) {
     stateMap._mode_str_ = '_add_';
-    $.gevent.publish( '_set_mode_', {
+    __$pub( '_set_mode_', {
       _mode_str_      : '_add_',
       _hi_score_list_ : hi_score_list,
       _hi_score_idx_  : hi_score_idx
@@ -159,7 +160,7 @@ tb._model_ = (function () {
 
     // Publish events to set play mode
     stateMap._mode_str_ = '_play_';
-    $.gevent.publish( '_set_mode_', { _mode_str_ : '_play_' } );
+    __$pub( '_set_mode_', { _mode_str_ : '_play_' } );
 
     // Kick-off run-time game heartbeat
     runTimeTick();
@@ -171,7 +172,7 @@ tb._model_ = (function () {
     var all_level_count = cfgMap._level_wave_list_[ vMap._length_ ];
 
     stateMap._mode_str_ = '_sell_';
-    $.gevent.publish( '_set_mode_', {
+    __$pub( '_set_mode_', {
       _mode_str_        : '_sell_',
       _all_level_count_ : all_level_count
     });
@@ -350,7 +351,7 @@ tb._model_ = (function () {
     }
     for ( i = nMap._0_; i < list_count; i++ ) {
       field_name = field_list[ i ];
-      $.gevent.publish( '_update_field_', {
+      __$pub( '_update_field_', {
         _field_name_: field_name,
         _field_val_ : stateMap[ field_name ]
       });
@@ -427,8 +428,8 @@ tb._model_ = (function () {
         if ( ! bomb_obj ) { return; }
 
         stateMap._lives_count_--;
-        $.gevent.publish( '_bomb_explode_', bomb_obj );
-        $.gevent.publish( '_update_field_', {
+        __$pub( '_bomb_explode_', bomb_obj );
+        __$pub( '_update_field_', {
           _field_name_ : '_lives_count_',
           _field_val_  :  stateMap._lives_count_
         });
@@ -443,7 +444,7 @@ tb._model_ = (function () {
           this._explode_();
           return;
         }
-        $.gevent.publish( '_bomb_move_', this );
+        __$pub( '_bomb_move_', this );
       }
     };
 
@@ -477,8 +478,8 @@ tb._model_ = (function () {
       bomb_list = sMap._bomb_list_;
       bomb_list[ vMap._push_ ]( bomb_obj );
 
-      $.gevent.publish( '_bomb_init_', bomb_obj );
-      $.gevent.publish( '_bomb_move_', bomb_obj );
+      __$pub( '_bomb_init_', bomb_obj );
+      __$pub( '_bomb_move_', bomb_obj );
       sMap._addbomb_toid_ = vMap._undef_;
     };
 
@@ -503,8 +504,8 @@ tb._model_ = (function () {
       if ( bomb_obj ) {
         stateMap._score_count_ += nMap._50_;
         stateMap._match_count_ += nMap._1_;
-        $.gevent.publish( '_bomb_destroy_', bomb_obj );
-        $.gevent.publish( '_update_field_', {
+        __$pub( '_bomb_destroy_', bomb_obj );
+        __$pub( '_update_field_', {
           _field_name_ : '_score_count_',
           _field_val_  : stateMap._score_count_
         });
@@ -516,7 +517,7 @@ tb._model_ = (function () {
       //
       level_count = stateMap._level_count_;
       wave_count  = stateMap._wave_count_;
-      $.gevent.publish( '_wave_complete_', [ level_count, wave_count ] );
+      __$pub( '_wave_complete_', [ level_count, wave_count ] );
 
       wave_count++;
       level_wave_list = stateMap._level_wave_list_;
@@ -549,7 +550,7 @@ tb._model_ = (function () {
         stateMap._level_count_ = level_count;
         sMap._wave_map_ = next_wave_map;
         pause_ms        = cfgMap._level_pause_ms_;
-        $.gevent.publish( '_update_field_', {
+        __$pub( '_update_field_', {
           _field_name_ : '_level_count_',
           _field_val_  : level_count
         });
@@ -562,7 +563,7 @@ tb._model_ = (function () {
     };
 
     clearBombList = function () {
-      $.gevent.publish( '_bomb_allclear_' );
+      __$pub( '_bomb_allclear_' );
       sMap._bomb_list_[ vMap._length_ ] = nMap._0_;
       if ( sMap._addbomb_toid_ ) {
         __clearTo( sMap._addbomb_toid_ );
@@ -711,7 +712,7 @@ tb._model_ = (function () {
 
       if ( type_length > cfgMap._max_typebox_int_ ) {
         type_length = cfgMap._max_typebox_int_;
-        $.gevent.publish( '_acknowledge_key_', [ '_at_limit_' ]);
+        __$pub( '_acknowledge_key_', [ '_at_limit_' ]);
         return false;
       }
 
@@ -722,11 +723,12 @@ tb._model_ = (function () {
         return false;
       }
 
-      $.gevent.publish( '_update_field_', {
+      __$pub( '_update_field_', {
         _field_name_ : '_typebox_str_',
         _field_val_  : typebox_str + '|'
       });
-      $.gevent.publish( '_acknowledge_key_', resp_name );
+
+      __$pub( '_acknowledge_key_', resp_name );
       stateMap._typebox_str_  = typebox_str;
       return vMap._true_;
     };
@@ -746,7 +748,8 @@ tb._model_ = (function () {
     score_count  = stateMap._score_count_;
 
     bombMgrObj._clearBombList_();
-    $.gevent.publish( '_bomb_allclear_' );
+
+    __$pub( '_bomb_allclear_' );
 
     hi_score_idx  = addHiScore( score_count, '' );
     hi_score_list = stateMap._hi_score_list_;
@@ -783,7 +786,7 @@ tb._model_ = (function () {
     stateMap._level_count_ = nMap._0_;
 
     initGameVals();
-    $.gevent.publish( '_acknowledge_init_' );
+    __$pub( '_acknowledge_init_' );
     setModeSell();
   };
   // END public method /initModule/

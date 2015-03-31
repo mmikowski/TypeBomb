@@ -336,13 +336,13 @@ tb._css_ = (function () {
         _color_        : '#fff',
         _background_color_ : '#880'
       },
-      '.tb-_x-fast_' : {
+      '.tb-_x_fast_' : {
         _font_size_  : '3em',
         _color_      : '#fff',
         _background_color_ : '#080',
         _border_color_ : '#0f0'
       },
-      '.tb-_x-slow_' : {
+      '.tb-_x_slow_' : {
         _font_size_    : V._2em_,
         _background_color_ : V._x800_,
         _border_color_ : '#f00'
