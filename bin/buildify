@@ -1,6 +1,7 @@
 #!/bin/bash
 
-set -e -u;
+## These checks are disabled as they cause trouble
+## set -e -u;
 
 ## BEGIN function to echo to STDERR
 echose () {
@@ -47,7 +48,7 @@ EXAMPLES
       $ ${APP_NAME} ./gallery.${APP_NAME}
 
   will result in the following files:
-  
+
       gallery-raw.js  # concatenated JS
       gallery-min.js  # uglified JS
       gallery-sp.js   # superpacked JS
@@ -84,7 +85,7 @@ EXAMPLES
   Then running buildify with this configuration:
 
       ${APP_NAME} -o /tmp ./gallery.${APP_NAME}
-  
+
   will result in the following files:
 
       gallery-raw.js  # concatenated JS
@@ -123,12 +124,45 @@ OPTIONS
   * -v | --verbose (OPTIONAL)
     Be noisy when processing
 
+REQUIRED PATCH
+  Please adjust the first next_mangled function in
+  /usr/lib/node_modules/uglify-js/lib/scope.js with this superior function to
+  allow superpack.pl to work optimally (~line 244):
+
+  AST_Scope.DEFMETHOD('next_mangled', function(options) {
+    var sym, name, m, n, j, i, ext = this.enclosed;
+    OUT: for ( j = 0; j < 1000; j++ ) {
+      m = base54(++this.cname);
+      n = '_' + m + '_';
+
+      if ( ! is_identifier( n ) ){ continue OUT; }
+
+      // https://github.com/mishoo/UglifyJS2/issues/242 -- do not
+      // shadow a name excepted from mangling.
+      //
+      if (options.except.indexOf( n ) >= 0) continue OUT;
+
+      // we must ensure that the mangled name does not shadow a name from
+      // some parent scope that is referenced in this or in inner scopes.
+      //
+      for ( i = ext.length; --i >= 0; ) {
+        sym = ext[i];
+        name = sym.mangled_name
+          || (sym.unmangleable(options) && sym.name);
+
+        if ( n === name ){ continue OUT; }
+      }
+      return n;
+     }
+     throw 'Cannot find unique key after 1000 iterations';
+  });
+
 SEE ALSO
   * UglifyJS
   * UglifyCSS
 
 AUTHOR and COPYRIGHT
-  Michael S. Mikowski (c) 2015
+  Michael S. Mikowski (c) 2008-2015
 ";
 
   exit 1;
@@ -146,7 +180,7 @@ loggit () {
     echo "${STRING_LOG}" >> "${PATH_FILE_CONCAT_LOG}";
   elif [ "${PATH_FILE_GLOBAL_LOG}" != "" ]; then
     echo "${STRING_LOG}" >> "${PATH_FILE_GLOBAL_LOG}";
-  else 
+  else
     echose "${STRING_LOG}"
   fi
 
@@ -249,6 +283,12 @@ abort () {
     loggit " # See Michael Mikowski for original executable.";
     abort;
   fi
+  if ( ! perl -cw "${SP_EXE}" >/dev/null 2>&1 ); then
+    SW_VERBOSE=1;
+    loggit "## ! SuperPack is not valid perl.";
+    loggit " # See Michael Mikowski for original executable.";
+    abort;
+  fi
   ## END Find SUPERPACK
 
   ## BEGIN Find UglifyJS
@@ -262,7 +302,7 @@ abort () {
   ## END Find UglifyJS
 
   ## BEGIN Find UglifyCSS
-  UGCSS_EXE=$(which uglifycss);
+  UGCSS_EXE="$(which uglifycss)";
   if [ "${UGCSS_EXE}" == '' ]; then
     SW_VERBOSE=1;
     loggit "## ! Unable to locate the UglifyCSS Compressor.";
@@ -293,7 +333,7 @@ abort () {
   ## END validate output dir if provided and move global log there
 
   ## BEGIN validiate input files
-  ARY_BUILDFILES=();
+  BUILDFILE_LIST=();
   COUNTBF=0;
 
   for BUILDFILE in $@; do
@@ -309,11 +349,11 @@ abort () {
       abort;
     fi
 
-    ARY_BUILDFILES[${#ARY_BUILDFILES[*]}]="${BUILDFILE}"
+    BUILDFILE_LIST[${#BUILDFILE_LIST[*]}]="${BUILDFILE}"
     loggit "  # Adding ${BUILDFILE} to process list"
   done
 
-  if [ "${#ARY_BUILDFILES[*]}" = 0 ]; then
+  if [ "${#BUILDFILE_LIST[*]}" = 0 ]; then
     loggit "## ! No build file provided."
     abort;
   fi
@@ -321,12 +361,13 @@ abort () {
 
 
   ## BEGIN process each buildfile in turn
-  for (( IDX_BF = 0; IDX_BF < ${#ARY_BUILDFILES[*]}; IDX_BF++ )); do
+  for (( IDX_BF = 0; IDX_BF < ${#BUILDFILE_LIST[*]}; IDX_BF++ )); do
     ## BEGIN get path of buildfile and determine output names
-    PATH_FILE_BF="${ARY_BUILDFILES[$IDX_BF]}";
-    FILENAME_BF=$( basename ${PATH_FILE_BF} );
+    PATH_FILE_BF="${BUILDFILE_LIST[$IDX_BF]}";
+    FILENAME_BF=$( basename "${PATH_FILE_BF}" );
     ROOTNAME_BF=$( echo $FILENAME_BF |cut -f1 -d'.' );
-    PATH_DIR_BF=$( cd ${PATH_FILE_BF%/*} && echo $PWD );
+    PATH_DIR_BF=$( dirname "${PATH_FILE_BF}" );
+    PATH_DIR_BF=$( cd "${PATH_DIR_BF}" && echo "${PWD}" );
 
     PATH_DIR_TARGET="${PATH_DIR_OUTPUT}";
     if [ "${PATH_DIR_OUTPUT}" == "" ]; then
@@ -431,7 +472,7 @@ abort () {
             loggit "# Extension for css file ${LINE} must be 'css'";
             abort;
           fi
-        
+
           ARY_CSS_FILES[${#ARY_CSS_FILES[*]}]=${PATH_FILE_SRC};
           loggit "  # Added file ${LINE} to css processing queue.";
           ;;
@@ -560,7 +601,7 @@ abort () {
           loggit "Could not move ${SRC} to ${DST}";
           abort;
         fi
-      fi 
+      fi
     done
     ## END move over remaining files
   done

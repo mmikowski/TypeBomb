@@ -81,7 +81,7 @@ tb._css_ = (function () {
     _100p_         : '100%',
     _14px_         : '14px',
     _1em_          : '1em',
-    _d8em_         : '.8em',
+    _d6em_         : '.6em',
     _1d5em_        : '1.5em',
     _1d6em_        : '1.6em',
     _20p_          : '20%',
@@ -121,6 +121,8 @@ tb._css_ = (function () {
     _sub_          : 'sub',
     _text_         : 'text',
     _transparent_  : 'transparent',
+    _x080_         : '#080',
+    _x444_         : '#444',
     _x666_         : '#666',
     _x800_         : '#800',
     _x999_         : '#999',
@@ -208,12 +210,17 @@ tb._css_ = (function () {
         _font_weight_ : V._800_
       },
       '.tb-_shell_subtext_ select' : {
-        _color_ : V._x666_,
-        _font_size_ : V._d8em_
+        _color_ : V._x444_,
+        _font_size_ : V._d6em_
       },
-      '.tb-_shell_title_ span' : {
+      '.tb-_x_down_' : {
         _vertical_align_ : V._sub_,
         _color_          : V._xc00_
+      },
+      '.tb-_x_greeny_' : {
+        _vertical_align_ : V._sub_,
+        _font_size_      : V._d6em_,
+        _color_          : V._x080_
       },
       '.tb-_shell_title_' : {
         _font_size_ : V._4em_,

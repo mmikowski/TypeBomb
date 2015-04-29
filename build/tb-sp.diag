@@ -1,7 +1,8 @@
-Skipped token candidates : $VAR1 = ['r','g','w','_','m','s','f','q','d','b','c','t','y','l','o','z','i','h','a','u','p','v','k','x','j','e','n','re','rt','gm','ge','gi','g5','gt','go','g6','we','w3','wt','_x','_e','_t','mn','me','mb','mt','ms','s8','se','s2','s9','s3','st','fx','fn','fe','f4','f7','ft','qe','qt','d8','de','da','d3','dt','do','br','be','by','bb','bt'];
-Number of candidates skipped : 72
-Total skip loops : 72 
-Total tokens replaced: 323
+
+Skipped token candidates : $VAR1 = ['z','_','o','f','h','q','g','c','a','d','x','w','r','j','t','s','i','n','px','_x','of','on','f7','f4','fn','fx','bb','by','be','br','mb','ms','mn','h5','hi','hr','h6','gt','go','g5','gm','gi','g6','ah','a0','ab','a2','a1','do','da','d3','d8'];
+Number of candidates skipped : 52
+Total skip loops : 52 
+Total tokens replaced: 475
 
 Tokens with only one use: 
-$VAR1 = ['_shell_','_border_left_','_no_means_to_add_css_rule_','_border_top_','_snd_name_not_known_','_call_to_update_game_without_init_','_unknown_attribute_key_','_11_','_$level_','_20p_','_$lives_','_16_','_str_','_makeUcFirstStr_','_25_','_2_','_unknown_field_update_','_hasOwnProperty_','_$title_','_stopGame_','_acknowledge_init_','_xee8_','_40p_','_22_','_margin_right_','_12_','_n10p_','_d12_','_name_str_','_x_normal_','_$score_','_swapFn_','_unknown_mode_str_'];
+$VAR1 = ['_22_','_acknowledge_init_','_border_top_','_d12_','_margin_right_','_no_means_to_add_css_rule_','_swapFn_','_name_str_','_x_normal_','_unknown_mode_str_','_unknown_field_update_','_n10p_','_border_left_','_20p_','_16_','_makeUcFirstStr_','_$score_','_snd_name_not_known_','_$level_','_25_','_hasOwnProperty_','_11_','_str_','_shell_','_$title_','_2_','_xee8_','_unknown_attribute_key_','_40p_','_12_','_call_to_update_game_without_init_','_$lives_','_stopGame_'];
