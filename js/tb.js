@@ -7,7 +7,7 @@
 /*global $, tb:true*/
 
 // BEGIN tb
-var tb = (function () {
+tb = (function () {
   //---------------- BEGIN MODULE SCOPE VARIABLES --------------
   'use strict';
   //noinspection MagicNumberJS,NonShortCircuitBooleanExpressionJS
