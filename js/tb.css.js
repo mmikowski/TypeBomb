@@ -8,7 +8,7 @@
 
 // BEGIN tb._css_
 tb._css_ = (function () {
-  //---------------- BEGIN MODULE SCOPE VARIABLES --------------
+  /***************** BEGIN MODULE SCOPE VARIABLES **************/
   'use strict';
   //noinspection MagicNumberJS,NonShortCircuitBooleanExpressionJS
   var
@@ -357,9 +357,9 @@ tb._css_ = (function () {
       }
     }
   };
-  //----------------- END MODULE SCOPE VARIABLES ---------------
+  /****************** END MODULE SCOPE VARIABLES ***************/
 
-  //-------------------- BEGIN UTILITY METHODS -----------------
+  /********************* BEGIN UTILITY METHODS *****************/
   // Begin utility method /addCssRule/
   // Example   :
   //   addCssRule( sheet_obj,
@@ -535,9 +535,9 @@ tb._css_ = (function () {
     return sel_x_sheetobj_map;
   };
   // End utility method /fillSheetObj/
-  //--------------------- END UTILITY METHODS ------------------
+  /********************** END UTILITY METHODS ******************/
 
-  //------------------- BEGIN PUBLIC METHODS -------------------
+  /******************** BEGIN PUBLIC METHODS *******************/
   initModule = function () {
     fillSheetObj(
       document.styleSheets[ nMap._0_],
@@ -549,6 +549,6 @@ tb._css_ = (function () {
   return {
     _initModule_ : initModule
   };
-  //-------------------- END PUBLIC METHODS --------------------
+  /********************* END PUBLIC METHODS ********************/
 }());
 // END tb._css_

@@ -8,7 +8,7 @@
 
 // BEGIN tb
 tb = (function () {
-  //---------------- BEGIN MODULE SCOPE VARIABLES --------------
+  /***************** BEGIN MODULE SCOPE VARIABLES **************/
   'use strict';
   //noinspection MagicNumberJS,NonShortCircuitBooleanExpressionJS
   var
@@ -117,9 +117,9 @@ tb = (function () {
   catch ( ignored ) {
     fMap._localStorage_ = vMap._undef_;
   }
-  //----------------- END MODULE SCOPE VARIABLES ---------------
+  /****************** END MODULE SCOPE VARIABLES ***************/
 
-  //------------------- BEGIN PUBLIC METHODS -------------------
+  /******************** BEGIN PUBLIC METHODS *******************/
   // BEGIN public method /getVarType/
   // Returns 'Function', 'Object', 'Array',
   // 'String', 'Number', 'Null', 'Boolean', or 'Undefined'
@@ -277,7 +277,7 @@ tb = (function () {
   //   bar = swap( foo, foo = bar );
   swapFn = function ( arg ) { return arg; };
   // END public method /swapFn/
-  //-------------------- END PUBLIC METHODS --------------------
+  /********************* END PUBLIC METHODS ********************/
 
  return {
     _vMap_ : vMap,
