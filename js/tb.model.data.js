@@ -8,7 +8,7 @@
 
 // BEGIN tb._model_._data_
 tb._model_._data_ = (function () {
-  //---------------- BEGIN MODULE SCOPE VARIABLES --------------
+  /***************** BEGIN MODULE SCOPE VARIABLES **************/
   'use strict';
   var
     fMap = tb._fMap_,
@@ -123,12 +123,12 @@ tb._model_._data_ = (function () {
     // Public methods
     getWord, initModule
     ;
-  //----------------- END MODULE SCOPE VARIABLES ---------------
+  /****************** END MODULE SCOPE VARIABLES ***************/
 
-  //-------------------- BEGIN UTILITY METHODS -----------------
-  //--------------------- END UTILITY METHODS ------------------
+  /********************* BEGIN UTILITY METHODS *****************/
+  /********************** END UTILITY METHODS ******************/
 
-  //------------------- BEGIN PUBLIC METHODS -------------------
+  /******************** BEGIN PUBLIC METHODS *******************/
   // BEGIN public method /getWord/
   // Purpose: Get word from shuffled list.
   //   * max_set_idx is the maximum difficulty level allowed
@@ -194,6 +194,6 @@ tb._model_._data_ = (function () {
     _getWord_    : getWord,
     _initModule_ : initModule
   };
-  //-------------------- END PUBLIC METHODS --------------------
+  /********************* END PUBLIC METHODS ********************/
 }());
 // END tb._model_._data_

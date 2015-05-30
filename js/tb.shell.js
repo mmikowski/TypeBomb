@@ -8,7 +8,7 @@
 
 // BEGIN tb._shell_
 tb._shell_ = (function () {
-  //---------------- BEGIN MODULE SCOPE VARIABLES --------------
+  /***************** BEGIN MODULE SCOPE VARIABLES **************/
   'use strict';
   var
     fMap       = tb._fMap_,
@@ -71,12 +71,12 @@ tb._shell_ = (function () {
 
     initModule
     ;
-  //----------------- END MODULE SCOPE VARIABLES ---------------
+  /****************** END MODULE SCOPE VARIABLES ***************/
 
-  //-------------------- BEGIN UTILITY METHODS -----------------
-  //--------------------- END UTILITY METHODS ------------------
+  /********************* BEGIN UTILITY METHODS *****************/
+  /********************** END UTILITY METHODS ******************/
 
-  //--------------------- BEGIN DOM METHODS --------------------
+  /********************** BEGIN DOM METHODS ********************/
   // BEGIN DOM method /setJqueryMap/
   setJqueryMap = function ( $body ) {
     var
@@ -208,9 +208,9 @@ tb._shell_ = (function () {
     lives_str = lives_list[ vMap._join_ ]( vMap._blank_ );
     jqueryMap._$lives_gfx_[ vMap._html_ ]( lives_str );
   };
-  //--------------------- END DOM METHODS ----------------------
+  /********************** END DOM METHODS **********************/
 
-  //------------------- BEGIN EVENT HANDLERS -------------------
+  /******************** BEGIN EVENT HANDLERS *******************/
   // BEGIN browser-event handlers
   onChangeLevel = function ( event_obj ) {
     var level_str = $(this).val();
@@ -393,9 +393,9 @@ tb._shell_ = (function () {
     );
   };
   // END model-event handlers
-  //-------------------- END EVENT HANDLERS --------------------
+  /********************* END EVENT HANDLERS ********************/
 
-  //------------------- BEGIN PUBLIC METHODS -------------------
+  /******************** BEGIN PUBLIC METHODS *******************/
   // BEGIN public method /initModule/
   initModule = function () {
     var $body = $( 'body' );
@@ -431,6 +431,6 @@ tb._shell_ = (function () {
 
   // Start the entire application
   $(function (){ initModule(); });
-  //------------------- END PUBLIC METHODS ---------------------
+  /******************** END PUBLIC METHODS *********************/
 }());
 // END tb._shell_

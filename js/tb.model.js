@@ -8,7 +8,7 @@
 
 // BEGIN tb._model_
 tb._model_ = (function () {
-  //---------------- BEGIN MODULE SCOPE VARIABLES --------------
+  /***************** BEGIN MODULE SCOPE VARIABLES **************/
   'use strict';
   //noinspection MagicNumberJS
   var
@@ -134,9 +134,9 @@ tb._model_ = (function () {
     reportKeyPress,  startGame,
     stopGame,        initModule
     ;
-  //----------------- END MODULE SCOPE VARIABLES ---------------
+  /***************** END MODULE SCOPE VARIABLES ***************/
 
-  //-------------------- BEGIN UTILITY METHODS -----------------
+  /******************** BEGIN UTILITY METHODS *****************/
   // BEGIN utility /setModeAdd/
   setModeAdd = function ( hi_score_list, hi_score_idx ) {
     stateMap._mode_str_ = '_add_';
@@ -395,9 +395,9 @@ tb._model_ = (function () {
     return run_fn;
   }());
   // END utility method /runTimeTick/
-  //--------------------- END UTILITY METHODS ------------------
+  /********************* END UTILITY METHODS ******************/
 
-  //-------------------- BEGIN UTILITY OBJECTS -----------------
+  /******************** BEGIN UTILITY OBJECTS *****************/
   // BEGIN utility object /bombMgrObj/
   bombMgrObj = (function () {
     var
@@ -559,7 +559,6 @@ tb._model_ = (function () {
       // Set pause and notify gui
       //
       sMap._next_wave_toid_ = __setTo( doNextWave, pause_ms);
-      // console.warn( '_wave_complete_', level_count, wave_count );
     };
 
     clearBombList = function () {
@@ -595,7 +594,7 @@ tb._model_ = (function () {
 
     // '_onscreen_count_',     // how many bombs to try to keep onscreen
     // '_word_complex_idx_',   // how difficult the words should be (0-5?)
-    // '_drop_speed_num_',       // max drop speed in percent of screen height
+    // '_drop_speed_num_',     // max drop speed in percent of screen height
     // '_drop_range_num_',     // variation from max speed allowed
     // '_match_goal_int_',     // number of matched bombs to complete wave
     // '_bomb_pause_ms_'       // max pause before dropping new bomb
@@ -646,9 +645,9 @@ tb._model_ = (function () {
     };
   }());
   // END utility object /bombMgrObj/
-  //--------------------- END UTILITY OBJECTS ------------------
+  /********************* END UTILITY OBJECTS ******************/
 
-  //------------------- BEGIN PUBLIC METHODS -------------------
+  /******************* BEGIN PUBLIC METHODS *******************/
   // BEGIN public method /reportKeyPress/
   // If key press is actionable, return true
   reportKeyPress = (function () {
@@ -797,6 +796,6 @@ tb._model_ = (function () {
     _startGame_      : startGame,
     _reportKeyPress_ : reportKeyPress
   };
-  //-------------------- END PUBLIC METHODS --------------------
+  /******************** END PUBLIC METHODS ********************/
 }());
 // END tb._model_
