@@ -28,7 +28,7 @@ gulp.task('zz', function(){
     'js/tb.css.js',
     'js/tb.model.js',
     'js/tb.model.data.js',
-    'js/tb.shell.js',
+    'js/tb.shell.js'
   ]).pipe(gp_concat('concat.js'))
     .pipe(gulp.dest('./dist'))
     .pipe(gp_rename('uglify.js'))

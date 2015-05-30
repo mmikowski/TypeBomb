@@ -23,7 +23,10 @@ tb._shell_ = (function () {
           + 'viewbox="0 0 100 100" preserveAspectRatio="none">'
           + '<path d="M 0,0 40,100 0,100 M 100,0 60,100 100,100"></path>'
         + '</svg>'
-        + '<div class="tb-_shell_title_">TypeB<span>o</span>mb</div>'
+        + '<div class="tb-_shell_title_">TypeB'
+          + '<span class="tb-_x_down_">o</span>mb'
+          + '<span class="tb-_x_greeny_">alpha</span>'
+        + '</div>'
         + '<div class="tb-_shell_subtext_"></div>'
         + '<div class="tb-_shell_hi_score_">High Score</div>'
         + '<div class="tb-_shell_level_">'
@@ -407,8 +410,8 @@ tb._shell_ = (function () {
     setJqueryMap( $body );
 
     // BEGIN browser event bindings
-    $body.on( 'keypress', onKeypress );
-    $body.on( 'keydown',  onKeydown  );
+    $body.on( vMap._keypress_, onKeypress );
+    $body.on( vMap._keydown_,  onKeydown  );
     // END browser event bindings
 
     // BEGIN model event bindings
