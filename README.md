@@ -1,7 +1,5 @@
 # TypeBomb #
-
 ## Summary ##
-
 TypeBomb is an update of the classic game used to teach
 typing.
 
