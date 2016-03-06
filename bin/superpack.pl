@@ -12,6 +12,7 @@
     use Data::Dumper;
     use File::Slurp;
     use Getopt::Mixed;
+
     ## TODO: switch Getopt::Mixed to Getopt::Long
     #   See http://crumple-zone.it.uts.edu.au\
     #     /pub/mirror/cpan/modules/by-category/12_Opt_Arg_Param_Proc/\
@@ -34,15 +35,20 @@
     my %opt_map;
 
 
-    while ( my( $option, $value, $pretty ) = Getopt::Mixed::nextOption() ) {
+    while ( my( $option, $value, $pretty )
+      = Getopt::Mixed::nextOption()
+    ) {
       $opt_map{ $option } = $value;
     };
     Getopt::Mixed::cleanup();
 
     # get file paths for input file, output file, and log file
-    my $script_file = $opt_map{ 'i' } || die q(required [i]nput not  provided);
-    my $output_file = $opt_map{ 'o' } || die q(required [o]output not provided);
-    my $log_file    = $opt_map{ 'l' } || die q(required [l]og not provided);
+    my $script_file = $opt_map{ 'i' }
+      || die q(required [i]nput not  provided);
+    my $output_file = $opt_map{ 'o' }
+      || die q(required [o]utput not provided);
+    my $log_file    = $opt_map{ 'l' }
+      || die q(required [l]og not provided);
     #
     ## END process command-line options
 
@@ -54,12 +60,22 @@
     my @str_script_lines = split qq(\n), $script_str;
 
     # create a list of tokens to replace
-    my @raw_patterns = $script_str =~ m{_[A-Za-z0-9\$_]+_}g;
+    my @raw_patterns = $script_str =~ m{_[A-Za-z0-9\$_-]+_}g;
+
+    # TODO : Create a general solution to add and exclude tokens
+    my @boundry_patterns = ( 'TAFFY', 'jQuery', 'EXIT' );
+    for my $pattern( @boundry_patterns ) {
+      my @bonus_matches = $script_str =~ m{\b$pattern\b}g;
+      push @raw_patterns, @bonus_matches;
+    }
+
+    # remove '___'
+    @raw_patterns = grep( !/^___$/, @raw_patterns );
 
     # count frequency
     my $seen_mref = {};
     for my $raw_pattern( @raw_patterns ) {
-      my $count = $seen_mref->{$raw_pattern} || 1;
+      my $count = $seen_mref->{$raw_pattern} || 0;
       $count++;
       $seen_mref->{$raw_pattern} = $count;
     }
@@ -77,7 +93,7 @@
       _ a b c d e f g h i j k l m n o p q r s t u v w x y z
     );
     my @deck2_char_list = qw(
-      _ a b c d e f g h i j k l m n o p q r s t u v w x y z 
+      _ a b c d e f g h i j k l m n o p q r s t u v w x y z
       0 1 2 3 4 5 6 7 8 9
     );
 
@@ -89,7 +105,7 @@
 
       my ( @new_card_list, @copied_card_list );
 
-      if ( $deck_int < 1 ) { 
+      if ( $deck_int < 1 ) {
         @new_card_list = List::Util::shuffle( @deck1_char_list );
       }
       else {
@@ -153,7 +169,7 @@
     ## END initialize vars to create token_x_munge_map map
 
     ## BEGIN Create %token_x_munge_map
-    # 
+    #
     for my $token_str( @token_list ) {
       my $munge_str;
       my $found_count = 1;
@@ -163,7 +179,7 @@
       while ( $found_count != 0 ) {
 
         ## BEGIN build munge string
-        # 
+        #
         # use last deck to get digit
         my $deck_idx = scalar( @deck_list ) - 1;
         my $is_roll_over = 1;
@@ -216,7 +232,7 @@
       }
       #
       ## END find valid replacement token (munge_str)
-      
+
       # save the mapping
       $token_x_munge_map{$token_str} = $munge_str;
     }
@@ -226,9 +242,13 @@
     ## BEGIN collate and output
     #
     # Replace tokens in script
-    $script_str  =~ s{\b(_[A-Za-z0-9\$_]+_)\b}{$token_x_munge_map{$1}}ge;
+    for my $pattern( @boundry_patterns ) {
+      $script_str  =~ s{\b$pattern\b}{$token_x_munge_map{$pattern}}g;
+      delete $token_x_munge_map{$pattern};
+    }
+    $script_str  =~ s{\b(_[A-Za-z0-9\$_-]+_)\b}{$token_x_munge_map{$1}}ge;
     $script_str  =~ s{[\n\r]}{}g;
-    
+
     # modify dumper to turn into JSON
     my $json_str = Dumper( \%token_x_munge_map );
     $json_str    =~ s{\s*=>\s*}{:}g;
@@ -244,27 +264,26 @@
     print $fh_log $json_str;
     close $fh_log;
 
-    print STDERR "\nSkipped token candidates : "
-      . Dumper( \@skipped_list ) . "\n";
+    print STDERR qq(\nWARN: Skipped token candidates: )
+      . Dumper( \@skipped_list ) . q([)
+      . scalar( @skipped_list ) . qq(]\n);
 
-    print STDERR "Number of candidates skipped : "
-       . scalar( @skipped_list ) . "\n";
+    print STDERR qq(WARN: Total skip loops : $skipped_count \n);
 
-    print STDERR "Total skip loops : $skipped_count \n";
-    print STDERR "Total tokens replaced: " . scalar( @token_list ) . "\n\n";
-
+    my @report_list  = ();
     my @suspect_list = ();
     for my $token_str ( @token_list ) {
-      if ( $seen_mref->{ $token_str } < 3 ) {
-        push @suspect_list, $token_str;
-      }
+      my $count = $seen_mref->{ $token_str };
+      if ( $count < 2 ) { push @suspect_list, $token_str; }
+      push @report_list, $count . q( : ) . $token_str;
     }
-    print STDERR "Tokens with only one use: \n" 
-      . Dumper( \@suspect_list ) . "\n";
+    print STDERR qq(WARN: Tokens with only one use: \n)
+      . Dumper( \@suspect_list ) . qq(\n\n);
 
-    ## print STDERR join( qq(,\n), @token_list );
-    ## print STDERR Dumper( \$seen_mref );
-    #
+    print STDERR qq(Token frequency: \n);
+    print STDERR join( qq(,\n), @report_list );
+    # print STDERR Dumper( \$seen_mref );
+
     ## END collate and output
 
     exit 0;
