@@ -196,10 +196,9 @@ tb = (function () {
 
   // BEGIN public method /fillTmplt/
   fillTmplt = (function () {
-    var replace_fn, fill_fn, lookup_map, tmplt_regex;
+    var replace_fn, fill_fn, lookup_map, tmplt_rx;
 
-    tmplt_regex = /%!%([^%]+)%!%/g;
-
+    tmplt_rx   = /\{([^\{\}]+[^\\])\}/g;
     replace_fn = function ( match_str, name ) {
       return lookup_map[ name ];
     };
@@ -211,7 +210,7 @@ tb = (function () {
       tmplt_str  = arg_map._tmplt_str_ || vMap._blank_;
 
       return tmplt_str[ vMap._replace_ ](
-        tmplt_regex, replace_fn
+        tmplt_rx, replace_fn
       );
     };
 

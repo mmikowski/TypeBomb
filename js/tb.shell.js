@@ -42,10 +42,8 @@ tb._shell_ = (function () {
           + '<div class="tb-_shell_score_label_">Score</div>'
           + '<div class="tb-_shell_score_count_"></div>'
         + '</div>',
-      _bomb_html_ : vMap._blank_
-        + '<div id="%!%_id_%!%" class="tb-_shell_bomb_">'
-          + '%!%_label_str_%!%'
-        + '</div>',
+      _bomb_html_ : 
+        '<div id="{_id_}" class="tb-_shell_bomb_">{_label_str_}</div>',
       _start_html_ : 'Select start level: ',
 
       _bomb_id_prefix_ : 'tb-_shell_bomb_-' ,
