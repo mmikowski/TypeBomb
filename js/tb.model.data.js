@@ -15,6 +15,8 @@ tb._model_._data_ = (function () {
     nMap = tb._nMap_,
     vMap = tb._vMap_,
 
+    __0 = nMap._0_,
+
     wordSetList = [
       [ ';lkjh', ';lkj', 'adds', 'ah', 'alas', 'alfalfa', 'alada', 'all',
         'asdf', 'asdfg', 'ash', 'ask', 'hash', 'fall', 'fdsa', 'flag',
@@ -136,7 +138,7 @@ tb._model_._data_ = (function () {
   //   * weight_ratio is how heavily to weight the selection towards
   //     the higher difficulty.  If weight_ratio = 1, *all* words will
   //     come from the highest level (max_set_idx), wherease if
-  //     weight_ratio = 0 random distribution should occur.
+  //     weight_ratio = __0 random distribution should occur.
   //
   getWord = function ( max_set_idx, weight_ratio ) {
     var
@@ -160,7 +162,7 @@ tb._model_._data_ = (function () {
 
     // Increment word index and store
     word_idx++;
-    if ( word_idx >= word_count ) { word_idx = nMap._0_; }
+    if ( word_idx >= word_count ) { word_idx = __0; }
     word_idx_map._idx_ = word_idx;
 
     // Return selected word
@@ -181,11 +183,11 @@ tb._model_._data_ = (function () {
     // Shuffle all word sets; initialize indicies for each
     //
     wordSetIdxList = [];
-    for ( i = nMap._0_; i < set_count; i++ ) {
+    for ( i = __0; i < set_count; i++ ) {
       word_list = wordSetList[ i ];
       tb._shuffleList_( word_list );
       word_count = word_list[ vMap._length_ ];
-      wordSetIdxList[ i ] = { _idx_ : 0, _count_ : word_count };
+      wordSetIdxList[ i ] = { _idx_ : __0, _count_ : word_count };
     }
   };
   // END public method /initModule/

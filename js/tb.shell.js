@@ -14,8 +14,13 @@ tb._shell_ = (function () {
     fMap       = tb._fMap_,
     nMap       = tb._nMap_,
     vMap       = tb._vMap_,
+
+    __0        = nMap._0_,
+
+    __Str      = fMap._String_,
     __setTo    = fMap._setTo_,
     __$sub     = $[ vMap._gevent_ ][ vMap._subscribe_],
+
     cfgMap = {
       _main_html_ : vMap._blank_
         + '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"'
@@ -55,8 +60,8 @@ tb._shell_ = (function () {
         _at_limit_  : 'honk'
       }
     },
-    jqueryMap,
-    playSnd,        setJqueryMap,
+    $Map,
+    playSnd,        set$Map,
     animateExplode, get$BombById,
     updateLivesCount,
 
@@ -78,39 +83,39 @@ tb._shell_ = (function () {
   /********************** END UTILITY METHODS ******************/
 
   /********************** BEGIN DOM METHODS ********************/
-  // BEGIN DOM method /setJqueryMap/
-  setJqueryMap = function ( $body ) {
+  // BEGIN DOM method /set$Map/
+  set$Map = function ( $body ) {
     var
-      $hi_score = $body.find( '.tb-_shell_hi_score_' ),
-      $level    = $body.find( '.tb-_shell_level_'   ),
-      $lives    = $body.find( '.tb-_shell_lives_'   ),
-      $score    = $body.find( '.tb-_shell_score_'   ),
-      $subtext  = $body.find( '.tb-_shell_subtext_' ),
-      $title    = $body.find( '.tb-_shell_title_'   ),
+      $hi_score = $body[ vMap._find_ ]( '.tb-_shell_hi_score_' ),
+      $level    = $body[ vMap._find_ ]( '.tb-_shell_level_'   ),
+      $lives    = $body[ vMap._find_ ]( '.tb-_shell_lives_'   ),
+      $score    = $body[ vMap._find_ ]( '.tb-_shell_score_'   ),
+      $subtext  = $body[ vMap._find_ ]( '.tb-_shell_subtext_' ),
+      $title    = $body[ vMap._find_ ]( '.tb-_shell_title_'   ),
       $sell_fields = $( [
-        $hi_score.get( nMap._0_ ),
-        $title.get(   nMap._0_ ),
-        $subtext.get( nMap._0_ )
+        $hi_score[ vMap._get_ ]( __0 ),
+        $title[    vMap._get_ ]( __0 ),
+        $subtext[  vMap._get_ ]( __0 )
       ] );
 
-    jqueryMap = {
+    $Map = {
       _$body_         : $body,
-      _$bg_svg_       : $body.find( '.tb-_shell_bg_svg_' ),
+      _$bg_svg_       : $body[ vMap._find_ ]( '.tb-_shell_bg_svg_' ),
       _$sell_fields_  : $sell_fields,
       _$hi_score_     : $hi_score,
       _$level_        : $level,
-      _$level_count_  : $level.find( '.tb-_shell_level_count_'  ),
+      _$level_count_  : $level[ vMap._find_ ]( '.tb-_shell_level_count_'  ),
       _$lives_        : $lives,
-      _$lives_count_  : $lives.find( '.tb-_shell_lives_count_'  ),
-      _$lives_gfx_    : $lives.find( '.tb-_shell_lives_gfx_'    ),
+      _$lives_count_  : $lives[ vMap._find_ ]( '.tb-_shell_lives_count_'  ),
+      _$lives_gfx_    : $lives[ vMap._find_ ]( '.tb-_shell_lives_gfx_'    ),
       _$score_        : $score,
-      _$score_count_  : $score.find( '.tb-_shell_score_count_'  ),
+      _$score_count_  : $score[ vMap._find_ ]( '.tb-_shell_score_count_'  ),
       _$subtext_      : $subtext,
       _$title_        : $title,
-      _$typebox_      : $body.find(  '.tb-_shell_typebox_'      )
+      _$typebox_      : $body[ vMap._find_ ](  '.tb-_shell_typebox_'      )
     };
   };
-  // END DOM method /setJqueryMap/
+  // END DOM method /set$Map/
 
   // BEGIN DOM method /playSnd/
   playSnd = (function () {
@@ -129,11 +134,11 @@ tb._shell_ = (function () {
     // BEGIN init_snd
     init_snd = function () {
       var i, name_count, snd_name;
-      if ( snd_count > nMap._0_ ) { return; }// already initialized
+      if ( snd_count > __0 ) { return; }// already initialized
 
       name_count = snd_name_list[ vMap._length_ ];
 
-      for ( i = nMap._0_; i < name_count; i++ ) {
+      for ( i = __0; i < name_count; i++ ) {
         snd_name = snd_name_list[i];
         snd_obj_map[ snd_name ] = new Audio( 'snd/' + snd_name + '.mp3' );
       }
@@ -153,8 +158,8 @@ tb._shell_ = (function () {
         throw '_snd_name_not_known_';
       }
 
-      snd_obj.currentTime = nMap._0_;
-      snd_obj.play();
+      snd_obj.currentTime = __0;
+      snd_obj[ vMap._play_ ]();
     };
     // END play_sound
 
@@ -175,19 +180,19 @@ tb._shell_ = (function () {
       flash_count--;
       if ( flash_count < nMap._1_ ) {
         flash_count = vMap._undef_;
-        jqueryMap._$bg_svg_.css( 'fill', vMap._blank_ );
+        $Map._$bg_svg_[ vMap._css_ ]( 'fill', vMap._blank_ );
         return;
       }
 
       hex_list = [];
-      for ( i = nMap._0_ ; i < nMap._3_; i++ ) {
-        hex_list.push(
+      for ( i = __0 ; i < nMap._3_; i++ ) {
+        hex_list[ vMap._push_ ](
           fMap._floor_(  fMap._rnd_() * nMap._9d99_ )
         );
       }
 
       hex_str = '#' + hex_list[ vMap._join_ ]( vMap._blank_ );
-      jqueryMap._$bg_svg_.css( 'fill', hex_str );
+      $Map._$bg_svg_[ vMap._css_ ]( 'fill', hex_str );
       //noinspection DynamicallyGeneratedCodeJS
       __setTo( animate_explode, nMap._50_ );
     };
@@ -202,33 +207,34 @@ tb._shell_ = (function () {
   // END DOM method /get$BombById/
   updateLivesCount = function ( lives_count ) {
     var i, lives_list = [], lives_str;
-    jqueryMap._$lives_count_.text( lives_count );
-    for ( i = nMap._0_; i < lives_count; i++ ) {
-      lives_list.push( cfgMap._lives_char_code_ );
+    $Map._$lives_count_[ vMap._text_ ]( lives_count );
+    for ( i = __0; i < lives_count; i++ ) {
+      lives_list[ vMap._push_ ]( cfgMap._lives_char_code_ );
     }
     lives_str = lives_list[ vMap._join_ ]( vMap._blank_ );
-    jqueryMap._$lives_gfx_[ vMap._html_ ]( lives_str );
+    $Map._$lives_gfx_[ vMap._html_ ]( lives_str );
   };
   /********************** END DOM METHODS **********************/
 
   /******************** BEGIN EVENT HANDLERS *******************/
   // BEGIN browser-event handlers
   onChangeLevel = function ( event_obj ) {
-    var level_str = $(this).val();
-    event_obj.preventDefault();
+    var level_str = $(this)[ vMap._val_ ]();
+    event_obj[ vMap._preventDefault_ ]();
     if ( level_str === '--' ) { return; }
     tb._model_._startGame_( level_str );
   };
+
   onKeypress = function ( event_obj ) {
     var key_code = event_obj.keyCode;
-    event_obj.preventDefault();
+    event_obj[ vMap._preventDefault_ ]();
     tb._model_._reportKeyPress_( key_code );
   };
 
   onKeydown = function ( event_obj ) {
     var key_code = event_obj.keyCode;
     if ( key_code !== 8 ) { return; }
-    event_obj.preventDefault();
+    event_obj[ vMap._preventDefault_ ]();
     tb._model_._reportKeyPress_( key_code );
   };
   // END browser-event handlers
@@ -246,16 +252,16 @@ tb._shell_ = (function () {
 
     switch ( field_name ) {
       case '_level_count_' :
-        jqueryMap._$level_count_.text( fMap._String_( field_val ) );
+        $Map._$level_count_[ vMap._text_ ]( __Str( field_val ) );
         break;
       case '_lives_count_' :
         updateLivesCount( field_val );
         break;
       case '_score_count_' :
-        jqueryMap._$score_count_.text( fMap._String_( field_val ) );
+        $Map._$score_count_[ vMap._text_ ]( __Str( field_val ) );
         break;
       case '_typebox_str_' :
-        jqueryMap._$typebox_.text( field_val );
+        $Map._$typebox_[ vMap._text_ ]( field_val );
         break;
       case '_match_count_':
       case '_wave_count_':
@@ -275,49 +281,50 @@ tb._shell_ = (function () {
       case '_sell_' :
         all_level_count = arg_map._all_level_count_;
         val_list = [ '--' ];
-        for ( i = nMap._0_; i < all_level_count; i++ ) {
-          val_list.push( i );
+        for ( i = __0; i < all_level_count; i++ ) {
+          val_list[ vMap._push_ ]( i );
         }
 
         opt_html = tb._makeOptHtml_( '--', val_list );
 
-        jqueryMap._$subtext_.html(
+        $Map._$subtext_[ vMap._html_ ](
           cfgMap._start_html_ + ' <select>' + opt_html + '</select>'
         );
-        jqueryMap._$subtext_.find( 'select' ).on( 'change', onChangeLevel );
-        jqueryMap._$sell_fields_[ vMap._show_ ]();
+        $Map._$subtext_[ vMap._find_ ]( 'select' )[ vMap._on_ ]( 
+          vMap._change_, onChangeLevel
+        );
+        $Map._$sell_fields_[ vMap._show_ ]();
         break;
 
       case '_play_' :
-        jqueryMap._$sell_fields_[ vMap._hide_ ]();
+        $Map._$sell_fields_[ vMap._hide_ ]();
         break;
 
       case '_add_' :
-        jqueryMap._$hi_score_.html(
-          'You have placed ' + fMap._String_( arg_map._hi_score_idx_ + 1 )
+        $Map._$hi_score_[ vMap._html_ ](
+          'You have placed ' + __Str( arg_map._hi_score_idx_ + 1 )
           + ' on the hi-score list!<br/>\n'
           +  fMap._json_stringfy_( arg_map._hi_score_list_ ) + '<br/>'
           + 'Please enter your initials!'
         );
-        jqueryMap._$sell_fields_[ vMap._show_ ]();
+        $Map._$sell_fields_[ vMap._show_ ]();
         break;
 
       default:
         throw '_unknown_mode_str_' + mode_str;
     }
-
   };
+
   onWaveComplete = function ( event_obj, level_count, wave_count ) {
     var msg_str = 'Completed level '
-      + fMap._String_( level_count )
+      + __Str( level_count )
       + ' wave '
-      + fMap._String_( wave_count );
+      + __Str( wave_count );
 
-    jqueryMap._$subtext_
-      .text( msg_str )
-      .show()
-      .fadeOut( nMap._5k_ , function () { $(this).hide(); })
-      ;
+    $Map._$subtext_[ vMap._text_ ]( msg_str )[ vMap._show_ ](
+      )[ vMap._fadeOut_ ](
+        nMap._5k_ , function () { $(this)[ vMap._hide_](); }
+      );
 
     playSnd( 'wavechange' );
   };
@@ -342,10 +349,11 @@ tb._shell_ = (function () {
       : speed_ratio < nMap._d66_ ? '_x_normal_' : '_x_slow_';
 
     $bomb = $( filled_str );
-    $bomb.addClass( class_str );
+    $bomb[ vMap._addClass_ ]( class_str );
 
-    jqueryMap._$body_.append( $bomb, null );
+    $Map._$body_[ vMap._append_ ]( $bomb, null );
   };
+
   onBombMove = function ( event_obj, bomb_obj ) {
     var left_percent, btm_percent, $bomb, css_map;
 
@@ -355,25 +363,27 @@ tb._shell_ = (function () {
     btm_percent  = bomb_obj._y_ratio_ * nMap._100_;
     left_percent = bomb_obj._x_ratio_ * nMap._100_;
     css_map = {
-      left   : fMap._String_( left_percent ) + '%',
-      bottom : fMap._String_( btm_percent  ) + '%'
+      left   : __Str( left_percent ) + '%',
+      bottom : __Str( btm_percent  ) + '%'
     };
 
-    $bomb.css( css_map );
-    // console.warn( '_bomb_move_', css_map, $bomb );
+    $bomb[ vMap._css_ ]( css_map );
   };
+
   onBombExplode = function ( event_obj, bomb_obj ) {
     var $bomb = get$BombById( bomb_obj._id_ );
     if ( ! $bomb ) { return false; }
 
-    $bomb.remove();
+    $bomb[ vMap._remove_ ]();
     animateExplode();
     playSnd( 'thunder' );
   };
+
   onBombAllclear = function ( /* event_obj */ ) {
     var $all_bombs = $( '.tb-_shell_bomb_');
-    $all_bombs.remove();
+    $all_bombs[ vMap._remove_ ]();
   };
+
   onBombDestroy = function ( event_obj, bomb_obj ) {
     var
       $bomb = get$BombById( bomb_obj._id_ ),
@@ -383,14 +393,14 @@ tb._shell_ = (function () {
 
     playSnd( 'whoosh' );
     animate_map = {
-      opacity : nMap._0_,
+      opacity : __0,
       left    : bomb_obj._x_ratio_ < nMap._d5_ ? '-=50%' : '+=50%'
     };
 
-    $bomb.animate(
+    $bomb[ vMap._animate_ ](
       animate_map,
       nMap._1k_,
-      function () { this.remove(); }
+      function () { this[ vMap._remove_ ](); }
     );
   };
   // END model-event handlers
@@ -404,12 +414,12 @@ tb._shell_ = (function () {
     // initialize our styling first
     tb._css_._initModule_();
 
-    $body.html( cfgMap._main_html_ );
-    setJqueryMap( $body );
+    $body[ vMap._html_ ]( cfgMap._main_html_ );
+    set$Map( $body );
 
     // BEGIN browser event bindings
-    $body.on( vMap._keypress_, onKeypress );
-    $body.on( vMap._keydown_,  onKeydown  );
+    $body[ vMap._on_ ]( vMap._keypress_, onKeypress );
+    $body[ vMap._on_ ]( vMap._keydown_,  onKeydown  );
     // END browser event bindings
 
     // BEGIN model event bindings
@@ -435,3 +445,5 @@ tb._shell_ = (function () {
   /******************** END PUBLIC METHODS *********************/
 }());
 // END tb._shell_
+
+

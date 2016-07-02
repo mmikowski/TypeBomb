@@ -15,6 +15,9 @@ tb._css_ = (function () {
     vMap = tb._vMap_,
     fMap = tb._fMap_,
     nMap = tb._nMap_,
+
+    __0 = nMap._0_,
+
     keyMap, K, valMap, V, cssMap,
     addCssRule, fillSheetObj,
     initModule;
@@ -294,7 +297,7 @@ tb._css_ = (function () {
         _line_height_      : V._2em_,
         _left_             : V._50p_,
         _margin_left_      : V._n30p_,
-        _font_family_  : V._fix_font_face_,
+        _font_family_      : V._fix_font_face_,
         _border_           : V._typebox_border_,
         _background_color_ : V._xddd_,
         _border_radius_    : V._2em_2em_d5em_d5em_,
@@ -461,7 +464,7 @@ tb._css_ = (function () {
   //
   fillSheetObj =  function ( sheet_obj, sheet_map, do_abs ) {
     var
-      idx                = nMap._0_,
+      idx                = __0,
       sel_x_sheetobj_map = {},
       rule_list          = sheet_obj[ vMap._cssRules_ ],
 
@@ -478,7 +481,7 @@ tb._css_ = (function () {
     select_key_list = fMap._Object_[ vMap._keys_]( sheet_map );
     select_key_count = select_key_list[ vMap._length_];
 
-    _SELECT_KEY_: for ( i = nMap._0_; i < select_key_count; i++ ) {
+    _SELECT_KEY_: for ( i = __0; i < select_key_count; i++ ) {
       select_key = select_key_list[ i ];
       attr_map = sheet_map[ select_key ];
       rule_str_list = [];
@@ -486,7 +489,7 @@ tb._css_ = (function () {
       attr_key_list  = fMap._Object_[ vMap._keys_]( attr_map );
       attr_key_count = attr_key_list[ vMap._length_];
 
-      _ATTR_KEY_: for ( j = nMap._0_; j < attr_key_count; j++ ) {
+      _ATTR_KEY_: for ( j = __0; j < attr_key_count; j++ ) {
         attr_key     = attr_key_list[ j ];
         attr_key_str = K[ attr_key ];
 
@@ -503,7 +506,7 @@ tb._css_ = (function () {
 
         attr_val_count = attr_val_list[ vMap._length_ ];
 
-        for ( k = nMap._0_; k < attr_val_count; k++ ) {
+        for ( k = __0; k < attr_val_count; k++ ) {
           attr_val_str = attr_val_list[ k ];
 
           // if requested, change position from fixed to absolute
@@ -540,7 +543,7 @@ tb._css_ = (function () {
   /******************** BEGIN PUBLIC METHODS *******************/
   initModule = function () {
     fillSheetObj(
-      document.styleSheets[ nMap._0_],
+      document.styleSheets[ __0],
       cssMap._base_map_,
       vMap._false_
     );

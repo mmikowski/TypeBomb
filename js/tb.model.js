@@ -15,18 +15,23 @@ tb._model_ = (function () {
     fMap      = tb._fMap_,
     nMap      = tb._nMap_,
     vMap      = tb._vMap_,
+
+    __0       = nMap._0_,
+    __1       = nMap._1_,
+
+    __Str     = fMap._String_,
     __clearTo = fMap._clearTo_,
     __setTo   = fMap._setTo_,
     __$pub    = $[ vMap._gevent_ ][ vMap._publish_],
 
     cfgMap   = {
       _init_map_        : {
-        _level_count_ : nMap._0_,
+        _level_count_ : __0,
         _lives_count_ : nMap._5_,
-        _match_count_ : nMap._0_,
-        _score_count_ : nMap._0_,
+        _match_count_ : __0,
+        _score_count_ : __0,
         _typebox_str_ : 'Type here ...',
-        _wave_count_  : nMap._0_
+        _wave_count_  : __0
       },
       _max_typebox_int_  : nMap._32_,
       _max_hi_score_int_ : nMap._10_,
@@ -154,7 +159,7 @@ tb._model_ = (function () {
 
     // Get count of all levels and requested level
     all_level_count = cfgMap._level_wave_list_[ vMap._length_ ];
-    req_level_idx   = fMap._parseInt_( arg_req_level_idx ) || nMap._0_;
+    req_level_idx   = fMap._parseInt_( arg_req_level_idx ) || __0;
     if ( req_level_idx > all_level_count ) { req_level_idx = all_level_count; }
     initGameVals( req_level_idx );
 
@@ -201,16 +206,16 @@ tb._model_ = (function () {
       i, j, k;
 
     gen_level_list = [];
-    for ( i = nMap._0_; i < level_count; i++ ) {
+    for ( i = __0; i < level_count; i++ ) {
       gen_wave_list = [];
       wave_list  = level_list[ i ];
       wave_count = wave_list[ vMap._length_ ];
 
-      for ( j = nMap._0_; j < wave_count; j++ ) {
+      for ( j = __0; j < wave_count; j++ ) {
         value_list = wave_list[ j ];
         gen_wave_map = {};
 
-        for ( k = nMap._0_; k < wave_key_count; k++ ) {
+        for ( k = __0; k < wave_key_count; k++ ) {
           wave_key = wave_key_list[ k ];
           switch( wave_key ) {
             case '_drop_speed_num_':
@@ -221,7 +226,6 @@ tb._model_ = (function () {
             default:
               try { gen_wave_map[ wave_key ] = value_list[ k ]; }
               catch ( error_obj ) {
-                // console.warn( i, j, wave_count, wave_list );
                 throw error_obj;
               }
               break;
@@ -341,7 +345,7 @@ tb._model_ = (function () {
     field_list = fMap._Object_[ vMap._keys_ ]( init_map );
     list_count = field_list[ vMap._length_ ];
 
-    for ( i = nMap._0_; i < list_count; i++ ) {
+    for ( i = __0; i < list_count; i++ ) {
       field_name = field_list[ i ];
       stateMap[ field_name ] = init_map[ field_name ];
     }
@@ -349,7 +353,7 @@ tb._model_ = (function () {
       stateMap._level_count_ = start_level_idx;
       stateMap._score_count_ = cfgMap._level_score_int_ * start_level_idx;
     }
-    for ( i = nMap._0_; i < list_count; i++ ) {
+    for ( i = __0; i < list_count; i++ ) {
       field_name = field_list[ i ];
       __$pub( '_update_field_', {
         _field_name_: field_name,
@@ -382,9 +386,9 @@ tb._model_ = (function () {
       bombMgrObj._updateBombList_();
       new_ms = makeTimeStamp();
 
-      elapsed_ms = tick_ms > nMap._0_
+      elapsed_ms = tick_ms > __0
         ? new_ms - tick_ms
-        : nMap._0_;
+        : __0;
 
       // Compensate for elapsed time since the last invocation
       adj_ticktime_ms = cfgMap._timetick_ms_ - elapsed_ms;
@@ -404,7 +408,7 @@ tb._model_ = (function () {
       sMap = {
         _addbomb_toid_    : vMap._undef_,
         _bomb_list_       : [],
-        _bomb_int_        : nMap._0_,
+        _bomb_int_        : __0,
         _next_wave_toid_  : vMap._undef_,
         _wave_map_        : vMap._undef_
       },
@@ -434,13 +438,13 @@ tb._model_ = (function () {
           _field_val_  :  stateMap._lives_count_
         });
 
-        if ( stateMap._lives_count_ < nMap._1_ ) {
+        if ( stateMap._lives_count_ < __1 ) {
           stopGame();
         }
       },
       _move_ :  function () {
         this._y_ratio_ += this._delta_y_num_;
-        if ( this._y_ratio_ < nMap._0_ ) {
+        if ( this._y_ratio_ < __0 ) {
           this._explode_();
           return;
         }
@@ -467,8 +471,8 @@ tb._model_ = (function () {
 
       bomb_obj = tb._createObj_( bombProto );
 
-      bomb_obj._id_          = 'bb' + fMap._String_( sMap._bomb_int_ );
-      bomb_obj._y_ratio_     = nMap._1_;
+      bomb_obj._id_          = 'bb' + __Str( sMap._bomb_int_ );
+      bomb_obj._y_ratio_     = __1;
       bomb_obj._delta_y_num_ = drop_speed;
       bomb_obj._x_ratio_     = x_ratio;
       bomb_obj._speed_ratio_ = speed_ratio;
@@ -484,7 +488,7 @@ tb._model_ = (function () {
     };
 
     doNextWave = function () {
-      stateMap._match_count_ = nMap._0_;
+      stateMap._match_count_ = __0;
       sMap._next_wave_toid_  = vMap._undef_;
     };
 
@@ -503,7 +507,7 @@ tb._model_ = (function () {
       //
       if ( bomb_obj ) {
         stateMap._score_count_ += nMap._50_;
-        stateMap._match_count_ += nMap._1_;
+        stateMap._match_count_ += __1;
         __$pub( '_bomb_destroy_', bomb_obj );
         __$pub( '_update_field_', {
           _field_name_ : '_score_count_',
@@ -534,9 +538,9 @@ tb._model_ = (function () {
       // ..otherwise increment level, wave 0
       //
       else {
-        wave_count = nMap._0_;
+        wave_count = __0;
 
-        if ( level_wave_list[ level_count + nMap._1_ ] ) {
+        if ( level_wave_list[ level_count + __1 ] ) {
           level_count++;
         }
         else {
@@ -563,7 +567,7 @@ tb._model_ = (function () {
 
     clearBombList = function () {
       __$pub( '_bomb_allclear_' );
-      sMap._bomb_list_[ vMap._length_ ] = nMap._0_;
+      sMap._bomb_list_[ vMap._length_ ] = __0;
       if ( sMap._addbomb_toid_ ) {
         __clearTo( sMap._addbomb_toid_ );
         sMap._addbomb_toid_ = vMap._undef_;
@@ -575,7 +579,7 @@ tb._model_ = (function () {
 
       bomb_list = sMap._bomb_list_;
       bomb_list_count = bomb_list[ vMap._length_ ];
-      for ( idx = nMap._0_; idx < bomb_list_count; idx++ ) {
+      for ( idx = __0; idx < bomb_list_count; idx++ ) {
         bomb_obj = bomb_list[ idx ];
         if ( bomb_obj[ bomb_key ] === bomb_val ) {
           found_obj = bomb_obj;
@@ -583,7 +587,7 @@ tb._model_ = (function () {
         }
       }
       if ( found_obj && do_delete ) {
-        bomb_list[ vMap._splice_ ]( idx, nMap._1_ );
+        bomb_list[ vMap._splice_ ]( idx, __1 );
       }
       return found_obj;
     };
@@ -615,7 +619,7 @@ tb._model_ = (function () {
       // Move all bombs
       bomb_list = sMap._bomb_list_;
       bomb_count = bomb_list[ vMap._length_ ];
-      for ( idx = nMap._0_; idx < bomb_count; idx++ ) {
+      for ( idx = __0; idx < bomb_count; idx++ ) {
         bomb_obj = bomb_list[ idx ];
         if ( bomb_obj ) { bomb_obj._move_(); }
       }
@@ -673,13 +677,13 @@ tb._model_ = (function () {
       // clear default text if present
       if ( typebox_str === cfgMap._init_map_._typebox_str_ ) {
         typebox_str = '';
-        type_length = nMap._0_;
+        type_length = __0;
       }
 
       // prevent duplicate spaces
       if ( key_code === spc_code ) {
         end_idx = type_length - nMap._n1_;
-        if ( typebox_str.charAt( end_idx ) === ' ' ) {
+        if ( typebox_str[ vMap._charAt_ ]( end_idx ) === ' ' ) {
           return vMap._true_;
         }
       }
@@ -687,23 +691,23 @@ tb._model_ = (function () {
       // handle character codes
       switch( key_code ) {
         case bkspc_code :
-          if ( type_length > nMap._0_ ) {
+          if ( type_length > __0 ) {
             type_length--;
             resp_name = '_bkspc_';
           }
           break;
 
         case return_code :
-          if ( type_length > nMap._0_ ) {
+          if ( type_length > __0 ) {
             bombMgrObj._checkBombDestroy_( typebox_str );
             typebox_str = '';
-            type_length = nMap._0_;
+            type_length = __0;
             resp_name = '_returnd_';
           }
           break;
 
         default : // everything else
-          typebox_str += fMap._String_.fromCharCode( key_code );
+          typebox_str += __Str[ vMap._fromCharCode_ ]( key_code );
           type_length = typebox_str[ vMap._length_ ];
           resp_name = '_char_add_';
           break;
@@ -716,7 +720,7 @@ tb._model_ = (function () {
       }
 
       // display revised string if needed
-      typebox_str = typebox_str[ vMap._substring_]( nMap._0_, type_length );
+      typebox_str = typebox_str[ vMap._substring_]( __0, type_length );
 
       if ( typebox_str === stateMap._typebox_str_ ) {
         return false;
@@ -772,8 +776,8 @@ tb._model_ = (function () {
     }
 
     stateMap._level_count_   = level_count;
-    stateMap._wave_count_    = nMap._0_;
-    stateMap._weight_ratio_  = nMap._0_;
+    stateMap._wave_count_    = __0;
+    stateMap._weight_ratio_  = __0;
 
     setModePlay( level_count );
   };
@@ -782,7 +786,7 @@ tb._model_ = (function () {
   // BEGIN public method /initModule/
   initModule = function () {
     tb._model_._data_._initModule_();
-    stateMap._level_count_ = nMap._0_;
+    stateMap._level_count_ = __0;
 
     initGameVals();
     __$pub( '_acknowledge_init_' );

@@ -10,11 +10,11 @@ set -u;
 
 BAIL=0;
 TMP_FILE="/tmp/git-pre-commit.tmp";
-NODEUNIT_EXEC=$(which nodeunit);
 JSLINT_EXEC=$(which jslint);
 ORIG_DIR=$(pwd);
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd );
 ROOT_DIR=$(cd "$(git rev-parse --show-toplevel)" && pwd );
+NODEUNIT_EXEC="${ROOT_DIR}/node_modules/.bin/nodeunit";
 
 if [ "$JSLINT_EXEC" = "" ]; then
   echo "Please install Node.js and JSLint (sudo npm install -g jslint)";
