@@ -33,6 +33,8 @@ git status \
   | grep '\s\+\(modified\|new file\)' \
   | grep '.js$' \
   | grep -v '/js/third_party/' \
+  | grep -v 'tb-sp.js' \
+  | grep -v uglifyjs \
   | cut -d ":" -f 2- \
   | while read LINE; do
       echo -en "  Check ${LINE}: ... "
