@@ -411,9 +411,10 @@ tb._shell_ = (function () {
   initModule = function () {
     var $body = $( 'body' );
 
-    // initialize our styling first
+    // Initialize our styling first
     tb._css_._initModule_();
 
+    // Set up screen
     $body[ vMap._html_ ]( cfgMap._main_html_ );
     set$Map( $body );
 

@@ -61,7 +61,6 @@ tb = (function () {
       _val_            : 'val'
     },
 
-
     nMap = {
       // cast as integers
       _n1_   : -1    | 0,
@@ -119,6 +118,10 @@ tb = (function () {
       _setTo_          : setTimeout
     },
 
+    __null  = vMap._null_,
+    __undef = vMap._undefined_,
+    __n1    = nMap._n1_,
+
     createObj,
     fillTmplt,
     getVarType,
@@ -137,59 +140,48 @@ tb = (function () {
   /****************** END MODULE SCOPE VARIABLES ***************/
 
   /******************** BEGIN PUBLIC METHODS *******************/
-  // BEGIN public method /getVarType/
-  // Returns 'Function', 'Object', 'Array',
-  // 'String', 'Number', 'Null', 'Boolean', or 'Undefined'
+  // BEGIN Public method /getVarType/
+  // Returns '_Function_', '_Object_', '_Array_',
+  // '_String_', '_Number_', '_Null_', '_Boolean_', or '_Undefined_'
   //
   getVarType = (function () {
     var
-      get_type_fn,
-      __typeof   = function ( a ) { return typeof a; },
-      __array    = vMap._Array_,
       typeof_map = {
-        'undefined' : '_Undefined_',
         'boolean'   : '_Boolean_',
         'number'    : '_Number_',
         'string'    : '_String_',
         'function'  : '_Function_',
+        'object'    : '_Object_',
+        'undefined' : '_Undefined_',
 
-        'Undefined'      : '_Undefined_',
-        'Null'           : '_Null_',
-        'Boolean'        : '_Boolean_',
-        'Number'         : '_Number_',
-        'String'         : '_String_',
-        'Function'       : '_Function_',
-        'Array'          : '_Array_',
-        'StyleSheetList' : '_Array_'
+        'Array'     : '_Array_',
+        'Boolean'   : '_Boolean_',
+        'Function'  : '_Function_',
+        'Null'      : '_Null_',
+        'Number'    : '_Number_',
+        'Object'    : '_Object_',
+        'String'    : '_String_',
+        'Undefined' : '_Undefined_'
       };
 
-    get_type_fn = function ( data ) {
+    function get_type_fn ( data ) {
       var type_key, type_str;
 
-      if ( data === vMap._null_  ) { return '_Null_';      }
-      if ( data === vMap._undef_ ) { return '_Undefined_'; }
+      if ( data === __null  ) { return '_Null_'; }
+      if ( data === __undef ) { return '_Undefined_'; }
 
-      type_key = __typeof( data );
+      type_key = typeof data;
       type_str = typeof_map[ type_key ];
 
-      if ( type_str ) { return type_str; }
-
-      type_key = {}[ vMap._toString_ ][ vMap._call_ ]( data )[ vMap._slice_ ](
-        nMap._8_, nMap._n1_
-      );
+      if ( type_str && type_str !== '_Object_' ) { return type_str; }
+      type_key = {}[ vMap._toString_ ][ vMap._call_ ](
+        data )[ vMap._slice_ ]( nMap._8_, __n1 );
 
       //noinspection NestedConditionalExpressionJS
-      return typeof_map[ type_key ] ||
-        ( data instanceof __array ? '_Array_' :
-          ( data[ vMap._propIsEnum_ ]( vMap._0_str_ )
-          && data[ vMap._length_ ] !== vMap._undef_
-            ? '_Array_' : '_Object_'
-          )
-        );
-    };
+      return typeof_map[ type_key ] || type_key;
+    }
     return get_type_fn;
   }());
-  // END public method /getVarType/
 
   // BEGIN public method /createObj/
   // Purpose : Emulates Object.create on shitty browsers
