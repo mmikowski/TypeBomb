@@ -330,7 +330,7 @@ tb._shell_ = (function () {
   };
 
   onBombInit = function ( event_obj, bomb_obj ) {
-    var lookup_map, filled_str, speed_ratio, class_str, $bomb;
+    var lookup_map, filled_str, speed_ratio, class_str, $bomb, isBigBomb;
 
     lookup_map = {
       _id_        : cfgMap._bomb_id_prefix_ + bomb_obj._id_,
@@ -342,10 +342,12 @@ tb._shell_ = (function () {
       _lookup_map_ : lookup_map
     });
 
+    isBigBomb = bomb_obj._is_big_bomb_;
     speed_ratio = bomb_obj._speed_ratio_;
     class_str = 'tb-';
     //noinspection NestedConditionalExpressionJS
-    class_str += speed_ratio < nMap._d33_ ? '_x_fast_'
+    class_str += isBigBomb === true ? '_x_big_bomb_'
+      : speed_ratio < nMap._d33_ ? '_x_fast_'
       : speed_ratio < nMap._d66_ ? '_x_normal_' : '_x_slow_';
 
     $bomb = $( filled_str );

@@ -455,14 +455,24 @@ tb._model_ = (function () {
     addBomb = function () {
       var
         wave_map, label_str, speed_ratio,
-        drop_speed, x_ratio, bomb_obj, bomb_list
+        drop_speed, x_ratio, bomb_obj, bomb_list, big_bomb
         ;
 
+      if ( Math.random() > 0.7 ) {
+        big_bomb = true;
+      }
+      else {
+        big_bomb = false;
+      }
       wave_map  = sMap._wave_map_;
-      label_str = tb._model_._data_._getWord_(
-        stateMap._level_count_, stateMap._weight_ratio_
-      );
-
+      if ( big_bomb ) {
+        label_str = tb._model_._data_._getBigBombWord_();
+      }
+      else {
+        label_str = tb._model_._data_._getWord_(
+          stateMap._level_count_, stateMap._weight_ratio_
+        );
+      }
       x_ratio     = nMap._d16_ + nMap._d66_ * fMap._rnd_();
       speed_ratio = fMap._rnd_();
       drop_speed  = wave_map._drop_speed_num_
@@ -471,12 +481,17 @@ tb._model_ = (function () {
 
       bomb_obj = tb._createObj_( bombProto );
 
+
+      bomb_obj._is_big_bomb_ = false;
       bomb_obj._id_          = 'bb' + __Str( sMap._bomb_int_ );
       bomb_obj._y_ratio_     = __1;
       bomb_obj._delta_y_num_ = drop_speed;
       bomb_obj._x_ratio_     = x_ratio;
       bomb_obj._speed_ratio_ = speed_ratio;
       bomb_obj._label_str_   = label_str || vMap._blank_;
+      if( big_bomb ) {
+        bomb_obj._is_big_bomb_ = true;
+      }
       sMap._bomb_int_++;
 
       bomb_list = sMap._bomb_list_;

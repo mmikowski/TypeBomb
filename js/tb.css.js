@@ -354,9 +354,14 @@ tb._css_ = (function () {
       },
       '.tb-_x_slow_' : {
         _font_size_    : V._2em_,
-        _background_color_ : V._x800_,
-        _border_color_ : '#f00'
+        _background_color_ :'#800',
+        _border_color_ : '#fff'
 
+      },
+      '.tb-_x_big_bomb_' : {
+        _font_size_     : V._2em_,
+        _background_color_ : '#333',
+        _border_color_  : '#f05'
       }
     }
   };

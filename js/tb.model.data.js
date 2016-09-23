@@ -17,6 +17,11 @@ tb._model_._data_ = (function () {
 
     __0 = nMap._0_,
 
+    bigBombWordList = [ '717273949', '90fdx093', 'cambria_01.', 'elephantdinosaur',
+        'crazycrazycrazy', 'dingobingo999.>,', 'gta89898~~', 'earplugs2000',
+        'mozillabananabread', 'orangatangwalnuts', ';emon;rass'
+    ],
+
     wordSetList = [
       [ ';lkjh', ';lkj', 'adds', 'ah', 'alas', 'alfalfa', 'alada', 'all',
         'asdf', 'asdfg', 'ash', 'ask', 'hash', 'fall', 'fdsa', 'flag',
@@ -123,7 +128,7 @@ tb._model_._data_ = (function () {
     // Utility methods
 
     // Public methods
-    getWord, initModule
+    getWord, initModule, getBigBombWord
     ;
   /****************** END MODULE SCOPE VARIABLES ***************/
 
@@ -192,9 +197,16 @@ tb._model_._data_ = (function () {
   };
   // END public method /initModule/
 
+  // START public method /getBigBomb/
+  getBigBombWord = function () {
+    var idx = Math.floor( Math.random()*bigBombWordList.length + 1 );
+    return bigBombWordList[ idx ];
+  };
+  // END public method /getBigBomb/
   return {
-    _getWord_    : getWord,
-    _initModule_ : initModule
+    _getWord_        : getWord,
+    _initModule_     : initModule,
+    _getBigBombWord_ : getBigBombWord
   };
   /********************* END PUBLIC METHODS ********************/
 }());
