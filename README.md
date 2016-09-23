@@ -57,6 +57,19 @@ This build requires Perl 5.10+ and the following standard libraries:
 
   Always declare all variables at the top of functions to avoid
   hoisting confusion.
+
+
+  Git structure
+  [ Local Files ] => [ Local Repository ] => [ Origin Repo ]
+
+  git fetch                 # refresh list of branches
+  git branch -a             # show all branches
+  git checkout <branch>     # checkout a branch
+  git checkout -b <new>     # create a new branch
+  git branch -d <new>       # delete a local branch
+  git branch -D <new>       # delete a local branch with changes
+  git diff <alt_branch>     # compare with <alt_branch>
+  git difftool <alt_branch> # use visual diff to compare branches
 ```
 
 
