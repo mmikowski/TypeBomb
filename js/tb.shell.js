@@ -23,8 +23,8 @@ tb._shell_ = (function () {
 
     cfgMap = {
       _main_html_ : vMap._blank_
-        + '<svg xmlns="http://www.w3.org/2000/svg" version="1.1"'
-          + 'class="tb-_shell_bg_svg_"'
+        + '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" '
+          + 'class="tb-_shell_bg_svg_" '
           + 'viewbox="0 0 100 100" preserveAspectRatio="none">'
           + '<path d="M 0,0 40,100 0,100 M 100,0 60,100 100,100"></path>'
         + '</svg>'
