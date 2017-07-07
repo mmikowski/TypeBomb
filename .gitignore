@@ -1,2 +1,16 @@
 .idea
+.git
+*.swp
+npm-debug.log
 node_modules
+coverage
+js-cov
+.coveralls.yml
+img/vendor
+js/vendor
+css/vendor
+font/vendor
+build
+index.html
+README*.html
+
